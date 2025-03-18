@@ -2,11 +2,9 @@ import React from 'react'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import CircularProgress from '@mui/material/CircularProgress'
-import zxcvbn from 'zxcvbn'
 
 export default class Reset extends React.Component {
   state = {
-    score: 0,
     oldPassword: '',
     oldPasswordVerifyFail: false,
     password: '',
@@ -14,9 +12,7 @@ export default class Reset extends React.Component {
     confirmPasswordVerifyFail: false,
     doing: false
   }
-
-  scoreWords = ['密码太简单', '密码太简单', '密码强度一般', '密码强度较高', '密码强度极高']
-
+  
   handleOldPasswordChange = (e) => {
     const oldPassword = e.target.value
     this.setState({ oldPassword, oldPasswordVerifyFail: false })
@@ -24,18 +20,25 @@ export default class Reset extends React.Component {
 
   handlePasswordChange = (e) => {
     const password = e.target.value
-    const score = password ? zxcvbn(password).score : 0
-    this.setState({ password, score })
+    const { confirmPassword } = this.state
+    this.setState({
+      password,
+      confirmPasswordVerifyFail: confirmPassword && password !== confirmPassword
+    })
   }
 
   handleConfirmPasswordChange = (e) => {
-    const confirmPassword = e.target.value
-    this.setState({ confirmPassword, confirmPasswordVerifyFail: false })
-  }
+      const confirmPassword = e.target.value
+      const { password } = this.state
+      this.setState({ 
+        confirmPassword,
+        confirmPasswordVerifyFail: password !== confirmPassword
+      })
+    }
 
   handleReset = () => {
-    const { score, oldPassword, password, confirmPassword } = this.state
-    if (!oldPassword || !password || !confirmPassword || score < 2) return
+    const { oldPassword, password, confirmPassword } = this.state
+    if (!oldPassword || !password || !confirmPassword || password.length < 6) return
     if (password !== confirmPassword) return this.setState({ confirmPasswordVerifyFail: true })
     const oldKeyIV = window.services.verifyPassword(oldPassword)
     if (!oldKeyIV) return this.setState({ oldPasswordVerifyFail: true })
@@ -50,7 +53,7 @@ export default class Reset extends React.Component {
           try {
             const plainVal = window.services.decryptValue(oldKeyIV, item[f])
             item[f] = window.services.encryptValue(newKeyIV, plainVal)
-          } catch (e) {}
+          } catch (e) { }
         })
       })
       window.utools.db.bulkDocs(accounts)
@@ -58,71 +61,188 @@ export default class Reset extends React.Component {
     }, 50)
   }
 
-  render () {
-    const { doing, oldPassword, oldPasswordVerifyFail, score, password, confirmPassword, confirmPasswordVerifyFail } = this.state
+  render() {
+    const { doing, oldPassword, oldPasswordVerifyFail, password, confirmPassword, confirmPasswordVerifyFail } = this.state
     if (doing) {
       return (
-        <div className='reset-doing'>
-          <CircularProgress color='secondary' />
-          <div className='reset-doing-text'>修改中...</div>
-        </div>)
+        <div className='reset-doing' style={{
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '15px'
+        }}>
+          <CircularProgress color='secondary' size={40} />
+          <div style={{ color: '#666', fontSize: '16px' }}>修改中...</div>
+        </div>
+      )
     }
     return (
-      <div className='setting-body'>
-        <div className='setting-container'>
-          <div>
-            <TextField
-              error={oldPasswordVerifyFail}
-              variant='standard'
-              autoFocus
-              type='password'
-              fullWidth
-              label='旧的开门密码'
-              value={oldPassword}
-              onChange={this.handleOldPasswordChange}
-              helperText={oldPasswordVerifyFail ? '密码错误' : ''}
-            />
-          </div>
-          <div>
-            <TextField
-              error={password && score < 2}
-              variant='standard'
-              type='password'
-              fullWidth
-              label='新的开门密码'
-              value={password}
-              onChange={this.handlePasswordChange}
-              helperText={password ? this.scoreWords[score] : ''}
-            />
-          </div>
-          <div>
-            <TextField
-              error={confirmPasswordVerifyFail}
-              variant='standard'
-              type='password'
-              fullWidth
-              label='确认开门密码'
-              value={confirmPassword}
-              onChange={this.handleConfirmPasswordChange}
-              helperText={confirmPasswordVerifyFail ? '密码不一致' : ''}
-            />
-          </div>
-          <div>
-            <div className='reset-btns'>
-              <Button onClick={this.props.onOut} size='small' variant='outlined'>取消</Button>
+      <div className='setting-body' style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+      }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '25px',
+          padding: '40px',
+          background: 'rgba(255, 255, 255, 0.9)',
+          borderRadius: '16px',
+          boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
+          backdropFilter: 'blur(10px)',
+          width: '360px'
+        }}>
+          <h2 style={{
+            margin: 0,
+            color: '#2c3e50',
+            fontSize: '24px',
+            fontWeight: '500',
+            textAlign: 'center'
+          }}>修改开门密码</h2>
+
+          <TextField
+            error={oldPasswordVerifyFail}
+            variant='outlined'
+            autoFocus
+            type='password'
+            fullWidth
+            label='旧的开门密码'
+            value={oldPassword}
+            onChange={this.handleOldPasswordChange}
+            inputProps={{
+              maxLength: 6,
+              style: {
+                fontSize: '18px',
+                letterSpacing: '4px'
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '12px',
+                backgroundColor: '#ffffff',
+                '& input': {
+                  padding: '12px 14px',  // 调整输入框内边距
+                  height: '1.4em',  // 设置输入框高度
+                  lineHeight: '1.4em'  // 设置行高
+                }
+              }
+            }}
+            helperText={oldPasswordVerifyFail ? '密码错误' : ''}
+          />
+
+          <TextField
+            error={password && password.length < 6}
+            variant='outlined'
+            type='password'
+            fullWidth
+            label='新的开门密码'
+            value={password}
+            onChange={this.handlePasswordChange}
+            inputProps={{
+              maxLength: 6,
+              style: {
+                fontSize: '18px',
+                letterSpacing: '4px'
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '12px',
+                backgroundColor: '#ffffff',
+                '& input': {
+                  padding: '12px 14px',
+                  height: '1.4em',
+                  lineHeight: '1.4em'
+                }
+              }
+            }}
+            helperText={password ? (password.length < 6 ? '请输入6位密码' : '密码可用') : ''}
+          />
+
+          <TextField
+            error={confirmPasswordVerifyFail}
+            variant='outlined'
+            type='password'
+            fullWidth
+            label='确认开门密码'
+            value={confirmPassword}
+            onChange={this.handleConfirmPasswordChange}
+            inputProps={{
+              maxLength: 6,
+              style: {
+               fontSize: '18px',
+                letterSpacing: '4px'
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '12px',
+                backgroundColor: '#ffffff',
+                '& input': {
+                  padding: '12px 14px',  // 调整输入框内边距
+                  height: '1.4em',  // 设置输入框高度
+                  lineHeight: '1.4em'  // 设置行高
+                }
+              }
+            }}
+            helperText={confirmPasswordVerifyFail ? '密码不一致' : ''}
+          />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <Button
+                onClick={this.props.onOut}
+                size='large'
+                variant='outlined'
+                sx={{
+                  flex: 1,
+                  borderRadius: '12px',
+                  padding: '12px',
+                  fontSize: '16px',
+                  textTransform: 'none'
+                }}
+              >
+                取消
+              </Button>
               <Button
                 onClick={this.handleReset}
-                disabled={!oldPassword || !password || !confirmPassword || score < 2 || confirmPasswordVerifyFail || oldPasswordVerifyFail}
+                disabled={!oldPassword || !password || !confirmPassword || password.length < 6 || confirmPasswordVerifyFail || oldPasswordVerifyFail}
                 color='secondary'
                 size='large'
                 variant='contained'
+                sx={{
+                  flex: 2,
+                  borderRadius: '12px',
+                  padding: '12px',
+                  fontSize: '16px',
+                  textTransform: 'none',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                  background: 'linear-gradient(45deg, #FF4081 30%, #F50057 90%)',
+                  '&:hover': {
+                    background: 'linear-gradient(45deg, #F50057 30%, #C51162 90%)'
+                  }
+                }}
               >
                 修改密码
               </Button>
             </div>
-            <div className='setting-remark'>修改开门密码将所有帐号数据解密再重新加密</div>
+            <div style={{
+              color: '#666',
+              fontSize: '13px',
+              textAlign: 'center',
+              marginTop: '5px'
+            }}>
+              修改开门密码将所有帐号数据解密再重新加密
+            </div>
           </div>
         </div>
-      </div>)
+      </div>
+    )
   }
 }

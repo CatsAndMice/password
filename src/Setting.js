@@ -34,37 +34,93 @@ export default class Setting extends React.Component {
   render() {
     const { password, confirmPassword, confirmPasswordVerifyFail } = this.state
     return (
-      <div className='setting-body'>
-        <h2>请先设置开门密码</h2>
-        <div className='setting-container'>
-          <div>
-            <TextField
-              error={password && password.length < 6}
-              variant='standard'
-              autoFocus
-              type='password'
-              fullWidth
-              label='开门密码'
-              value={password}
-              onChange={this.handlePasswordChange}
-              inputProps={{ maxLength: 6 }}
-              helperText={password ? (password.length < 6 ? '请输入6位密码' : '密码可用') : ''}
-            />
-          </div>
-          <div>
-            <TextField
-              error={confirmPasswordVerifyFail}
-              variant='standard'
-              type='password'
-              fullWidth
-              label='确认开门密码'
-              value={confirmPassword}
-              onChange={this.handleConfirmPasswordChange}
-              inputProps={{ maxLength: 6 }}
-              helperText={confirmPasswordVerifyFail ? '密码不一致' : ''}
-            />
-          </div>
-          <div>
+      <div className='setting-body' style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+      }}>
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '25px',
+          padding: '40px',
+          background: 'rgba(255, 255, 255, 0.9)',
+          borderRadius: '16px',
+          boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
+          backdropFilter: 'blur(10px)',
+          width: '360px'
+        }}>
+          <h2 style={{ 
+            margin: 0, 
+            color: '#2c3e50',
+            fontSize: '24px',
+            fontWeight: '500',
+            textAlign: 'center'
+          }}>请设置开门密码</h2>
+          
+          <TextField
+            error={password && password.length < 6}
+            variant='outlined'
+            autoFocus
+            type='password'
+            fullWidth
+            label='开门密码'
+            value={password}
+            onChange={this.handlePasswordChange}
+            inputProps={{ 
+              maxLength: 6,
+              style: { 
+                fontSize: '18px',
+                letterSpacing: '4px'
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '12px',
+                backgroundColor: '#ffffff',
+                '& input': {
+                  padding: '12px 14px',
+                  height: '1.4em',
+                  lineHeight: '1.4em'
+                }
+              }
+            }}
+            helperText={password ? (password.length < 6 ? '请输入6位密码' : '密码可用') : ''}
+          />
+          
+          <TextField
+            error={confirmPasswordVerifyFail}
+            variant='outlined'
+            type='password'
+            fullWidth
+            label='确认开门密码'
+            value={confirmPassword}
+            onChange={this.handleConfirmPasswordChange}
+            inputProps={{ 
+              maxLength: 6,
+              style: { 
+                fontSize: '18px',
+                letterSpacing: '4px'
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '12px',
+                backgroundColor: '#ffffff',
+                '& input': {
+                  padding: '12px 14px',
+                  height: '1.4em',
+                  lineHeight: '1.4em'
+                }
+              }
+            }}
+            helperText={confirmPasswordVerifyFail ? '密码不一致' : ''}
+          />
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <Button
               onClick={this.handleOkClick}
               disabled={!password || !confirmPassword || password.length < 6 || confirmPasswordVerifyFail}
@@ -72,10 +128,31 @@ export default class Setting extends React.Component {
               color='primary'
               size='large'
               variant='contained'
-            >确认</Button>
-            <div className='setting-remark'>开门密码用于验证进入及加密数据，忘记开门密码无法找回</div>
+              sx={{
+                borderRadius: '12px',
+                padding: '12px',
+                fontSize: '16px',
+                textTransform: 'none',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                '&:hover': {
+                  background: 'linear-gradient(45deg, #1976D2 30%, #00BCD4 90%)'
+                }
+              }}
+            >
+              确认
+            </Button>
+            <div style={{
+              color: '#666',
+              fontSize: '13px',
+              textAlign: 'center',
+              marginTop: '5px'
+            }}>
+              开门密码用于验证进入及加密数据，忘记开门密码无法找回
+            </div>
           </div>
         </div>
-      </div>)
+      </div>
+    )
   }
 }
