@@ -39,10 +39,10 @@ const themeDic = {
 export default class App extends React.Component {
   state = {
     code: '',
-    theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    theme: 'light' //window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   }
 
-  componentDidMount () {
+  componentDidMount() {
     // 进入插件
     window.utools.onPluginEnter(({ code, type, payload }) => {
       this.setState({ code })
@@ -52,15 +52,15 @@ export default class App extends React.Component {
       this.setState({ code: '' })
     })
     // 主题切换事件
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-      this.setState({ theme: e.matches ? 'dark' : 'light' })
-    })
+    // window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    //   this.setState({ theme: e.matches ? 'dark' : 'light' })
+    // })
   }
 
-  render () {
+  render() {
     const { code, theme } = this.state
     console.log(code);
-    
+
     if (code === 'passwords') return <ThemeProvider theme={themeDic[theme]}><Passwords /></ThemeProvider>
     if (code === 'random') return <ThemeProvider theme={themeDic[theme]}><Random /></ThemeProvider>
     return false
