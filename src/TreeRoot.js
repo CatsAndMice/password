@@ -3,12 +3,12 @@ import React from 'react'
 import { DropTarget } from 'react-dnd'
 
 const nodeTarget = {
-  canDrop (props, monitor) {
+  canDrop(props, monitor) {
     const source = monitor.getItem()
     if (source.id.indexOf('-') === -1) return false
     return true
   },
-  drop (props, monitor, component) {
+  drop(props, monitor, component) {
     if (!component.props.isOverCurrent) return
     if (monitor.didDrop()) {
       return
@@ -23,11 +23,18 @@ const nodeTarget = {
   canDrop: monitor.canDrop()
 }))
 class TreeRoot extends React.Component {
-  render () {
+  render() {
     const { isOverCurrent, canDrop, connectDropTarget, children, onClick } = this.props
     return connectDropTarget(
-      <div onClick={onClick} className='tree-root' style={(isOverCurrent && canDrop) ? { opacity: 0.5 } : null}>
-        <div className='tree-root-child'>{children}</div>
+      <div onClick={onClick} className='tree-root' style={(isOverCurrent && canDrop) ?
+        {
+          opacity: 0.7,
+          background: 'rgba(255, 255, 255, 1)',
+          transition: 'all 0.3s ease'
+        } :
+        { transition: 'all 0.3s ease' }
+      }>
+        <div>{children}</div>
       </div>
     )
   }
