@@ -17,7 +17,7 @@ export default class ExportDialog extends React.Component {
     subChecked: false
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps.data !== this.props.data) {
       this.setState({ open: true, password: '', subChecked: false })
     }
@@ -80,32 +80,54 @@ export default class ExportDialog extends React.Component {
     window.services.exportFile(contentArray.join('\n'))
   }
 
-  render () {
+  render() {
     const { data } = this.props
     if (!data) return false
     const { open, password, subChecked } = this.state
     return (
       <Dialog open={open} onClose={this.handleClose}>
         <DialogTitle>明文帐号数据导出</DialogTitle>
-        <DialogContent className='export-dialog-content'>
-          <DialogContentText>
+        <DialogContent>
+          <DialogContentText sx={{
+            paddingBottom: '10px',
+            color: '#2c3e50'
+          }}>
             导出「{data.group.name}」帐号数据
           </DialogContentText>
           <TextField
+            error={password && password.length < 6}
             autoFocus
+            variant='outlined'
+            type='password'
+            fullWidth
+            label='开门密码'
             value={password}
             onChange={this.handlePasswordChange}
-            type='password'
             size='small'
-            variant='outlined'
-            hiddenLabel
-            placeholder='开门密码'
-            fullWidth
+            inputProps={{
+              maxLength: 6,
+              style: {
+                fontSize: '16px',
+                letterSpacing: '4px'
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+                backgroundColor: '#ffffff',
+                '& input': {
+                  padding: '8px 14px',
+                  height: '1.4em',
+                  lineHeight: '1.4em'
+                }
+              }
+            }}
+            helperText={password ? (password.length < 6 ? '请输入6位密码' : '') : ''}
           />
           <FormControlLabel onChange={this.handleSubCheckeckChange} checked={subChecked} control={<Checkbox />} label='包含子分组帐号数据' />
         </DialogContent>
         <DialogActions>
-          <Button disabled={!password} startIcon={<DescriptionIcon />} onClick={this.handleExport} color='primary'>
+          <Button disabled={!password || password.length < 6} startIcon={<DescriptionIcon />} onClick={this.handleExport} color='primary'>
             导出 TXT
           </Button>
         </DialogActions>

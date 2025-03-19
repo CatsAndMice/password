@@ -4,7 +4,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   .home-loading-spinner {
     width: 70px;
     text-align: center;
@@ -12,7 +11,7 @@
   .home-loading-spinner > div {
     width: 18px;
     height: 18px;
-    background-color: #2196F3;
+    background-color: #212121;
     border-radius: 100%;
     display: inline-block;
     animation: sk-bouncedelay 1s infinite ease-in-out both;
@@ -40,7 +39,6 @@
 .home {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 .home-body {
   width: 100%;
@@ -50,22 +48,18 @@
     &:first-child {
       width: 25%;
       height: 100%;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      border-right: 1px solid #eee;
       box-sizing: border-box;
       position: relative;
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(10px);
     }
     &:last-child {
       width: 75%; 
       height: 100%;
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(10px);
     }
   }
 }
 
-@tree-sort-target-color: rgba(232, 234, 246, 0.5);
+@tree-sort-target-color: #e8eaf6;
 .tree-normal {
   display: flex;
   flex-direction: column;
@@ -74,14 +68,12 @@
   .tree-body {
     flex: 1;
     height: 0;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: #ffffff;
     user-select: none;
     color: #2c3e50;
     font-size: 12px;
     overflow-x: hidden;
     overflow-y: auto;
-    border-radius: 8px;
-    margin: 4px;
   }
   .tree-footer {
     height: 36px;
@@ -95,9 +87,9 @@
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: #ffffff;
   .tree-root-child {
-    background-color: @tree-sort-target-color;
+    background-color: #e8eaf6;
   }
 }
 
@@ -114,17 +106,15 @@
     top: 0;
     left: 0;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: #ffffff;
     width: 100%;
     z-index: 2;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    border-radius: 6px;
-    margin: 0 2px;
   }
   .tree-node-selected {
-    background-color: rgba(33, 150, 243, 0.1);
+    background-color: #ebebeb;
   }
   .tree-node-edit-box {
     flex: 1;
@@ -135,22 +125,19 @@
       height: 100%;
       outline: none;
       box-sizing: border-box;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 0 8px;
+      border: 1px solid #eee;
     }
   }
   .tree-node-preview {
     position: absolute;
     padding: 3px 6px;
     top: 0;
-    background-color: #2196F3;
-    border-radius: 6px;
+    background-color: #212121;
+    border-radius: 2px;
     font-size: 12px;
     color: #ffffff;  
     z-index: 1;
     white-space: nowrap; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   .tree-node-title {
     display: flex;
@@ -159,15 +146,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #2c3e50;
-    padding: 0 8px;
   }
   .tree-node-badge {
     padding: 0 5px;
     & > span {
       font-size: 12px;
-      background-color: rgba(33, 150, 243, 0.2);
-      color: #2c3e50;
+      background-color: #d7ccc8;
+      color: #666;
       min-width: 18px;
       height: 18px;
       border-radius: 9px;
@@ -189,11 +174,11 @@
     content: '';
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
-    border-left: 6px solid #2c3e50;
+    border-left: 6px solid #515151;
   }
   .tree-node-icon-arrow-down::after {
     content: '';
-    border-bottom: 8px solid #2c3e50;
+    border-bottom: 8px solid #515151;
     border-left: 8px solid transparent;
   }
 }
@@ -206,7 +191,7 @@
     &:first-child {
       width: 40%;
       height: 100%;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      border-right: 1px solid #eee;
       box-sizing: border-box;
       position: relative;
     }
@@ -231,9 +216,6 @@
         height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
-        background-color: rgba(255, 255, 255, 0.7);
-        border-radius: 8px;
-        margin: 4px;
       }
     }
     .account-list-footer {
@@ -253,50 +235,41 @@
 .account-item {
   width: 100%;
   .account-item-body {
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: #ffffff;
     width: 100%;
     cursor: pointer;
-    padding: 8px 12px;
+    // height: 48px;
+    padding: 6px 12px;
     box-sizing: border-box;
     min-height: 50px;
     word-wrap: break-word; 
     word-break: break-all;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #eee;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-radius: 8px;
-    margin: 2px 4px;
-    transition: all 0.2s ease;
-    &:hover {
-      background-color: rgba(33, 150, 243, 0.05);
-    }
     .account-item-username {
-      color: rgba(44, 62, 80, 0.7);
+      color: rgba(0, 0, 0, 0.6);
       font-size: 12px;
     }
   }
   .account-item-sort {
-    height: 2px;
+    height: 1px;
     width: 100%;
-    background: linear-gradient(45deg, #2196F3 30%, #21CBF3 90%);
-    border-radius: 1px;
+    background-color: #3f51b5;
   }
   .account-item-selected {
-    background-color: rgba(33, 150, 243, 0.1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    // background-color: rgba(0, 0, 0, 0.8);
+    background-color: #ebebeb;
   }
 }
 
 .account-form {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  padding: 10px 16px;
   box-sizing: border-box;
-  overflow-y: auto;
-  background-color: rgba(255, 255, 255, 0.7);
-  border-radius: 12px;
-  margin: 8px;
+  overflow-y: hidden;
   & > div {
     padding-bottom: 26px;
   }
@@ -305,7 +278,7 @@
     width: 6px;
   }
   .account-form-prev-icon {
-    color: #2196F3;
+    color: #ababab;
   }
   .account-form-remark {
     margin-top: 8px;
@@ -314,9 +287,6 @@
 
 .random-password-popover {
   padding: 20px 30px;
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   .random-password-popover-footer {
     text-align: right;
   }
@@ -328,13 +298,10 @@
   width: 100%;
   .search-list {
     width: 55%;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #eee;
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 12px;
-    margin: 8px;
     table {
       width: 100%;
       border-collapse: collapse;
@@ -342,56 +309,37 @@
       position: relative;
       tr {
         cursor: pointer;
-        transition: all 0.2s ease;
-        &:hover {
-          background-color: rgba(33, 150, 243, 0.05);
-        }
       }
       td {
         padding: 8px 10px;
         word-break: break-all;
-        color: #2c3e50;
       }
       thead {
         th {
-          background-color: rgba(255, 255, 255, 0.9);
+          background-color: #ffffff;
           position: sticky;
           top: 0;
-          padding: 8px 10px;
+          padding: 5px 10px;
           font-size: 12px;
-          color: #2c3e50;
-          font-weight: 500;
+          color: #666;
+          font-weight: 300;
           text-align: left;
         }
       }
     }
     .search-selected {
-      background-color: rgba(33, 150, 243, 0.1);
+      background-color: #ebebeb;
     }
   }
   .search-form {
     width: 45%;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 12px;
-    margin: 8px;
   }  
 }
 
 .search-empty {
   width: 100%;
   text-align: center;
-  color: #2c3e50;
+  color: #999;
   font-weight: 300;
   padding-top: 20px;
 }
-
-// .export-dialog-content {
-//   // background-color: rgba(255, 255, 255, 0.95);
-//   // border-radius: 12px;
-//   // box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-//   // padding: 20px;
-//   & > p {
-//     padding-bottom: 10px;
-//     color: #2c3e50;
-//   }
-// }
