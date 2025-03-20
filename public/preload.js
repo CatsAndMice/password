@@ -49,7 +49,7 @@ window.services = {
   exportFile: (content, ext = '.txt') => {
     const fs = require('fs')
     const path = require('path')
-    const saveFile = path.join(window.utools.getPath('downloads'), 'uTools-密码管理器-' + Date.now() + ext)
+    const saveFile = path.join(window.utools.getPath('downloads'), '密码管家' + Date.now() + ext)
     fs.writeFileSync(saveFile, content, 'utf-8')
     window.utools.shellShowItemInFolder(saveFile)
   }

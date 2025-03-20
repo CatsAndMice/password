@@ -5,7 +5,7 @@
   "features": [
     {
       "code": "passwords",
-      "explain": "uTools 官方开源、安全、简洁的密码管理器",
+      "explain": "安全、简洁的密码管家",
       "cmds": [
         "Passwords",
         "密码管理"
