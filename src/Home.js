@@ -7,6 +7,7 @@ import AccountArea from './AccountArea'
 import Search from './Search'
 import SnackbarMessage from './SnackbarMessage'
 import ExportDialog from './ExportDialog'
+import ImportDialog from './ImportDialog'
 
 class Home extends React.Component {
   state = {
@@ -14,7 +15,8 @@ class Home extends React.Component {
     sortedGroup: [],
     searchKey: '',
     snackbarMessage: { key: 0, type: 'info', body: '' },
-    exportData: null
+    exportData: null,
+    importData: null
   }
 
   handleDetectLive = () => {
@@ -31,7 +33,7 @@ class Home extends React.Component {
     this.detectLiveTimeout = null
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const groups = window.utools.db.allDocs('group/')
     const groupDic = {}
     const groupIds = []
@@ -94,7 +96,7 @@ class Home extends React.Component {
     }, '标题/用户名搜索')
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     const { group2Accounts, sortedGroup } = this.state
     if (sortedGroup.length > 0) {
       for (const groupId of sortedGroup) {
@@ -263,8 +265,65 @@ class Home extends React.Component {
     this.setState({ exportData: { group: node } })
   }
 
-  render () {
-    const { searchKey, selectedGroupId, groupIds, groupTree, group2Accounts, sortedGroup, decryptAccountDic, snackbarMessage, exportData } = this.state
+  // 添加导入处理函数
+  handleImport = (node) => {
+    this.setState({ importData: { group: node } })
+  }
+
+  handleImportAccounts = (accounts) => {
+    const { group2Accounts, decryptAccountDic } = this.state
+    // console.log(group2Accounts, decryptAccountDic);
+
+    const groupId = accounts[0].groupId
+    let hasError = false
+    accounts.forEach((account, index) => {
+      if (groupId in group2Accounts) {
+        account.sort = group2Accounts[groupId][group2Accounts[groupId].length - 1].sort + index + 1
+      } else {
+        account.sort = index
+      }
+
+      const result = window.utools.db.put(account)
+      if (result.ok) {
+        account._rev = result.rev
+        if (groupId in group2Accounts) {
+          group2Accounts[groupId].push(account)
+        } else {
+          group2Accounts[groupId] = [account]
+        }
+        decryptAccountDic[account._id] = { account }
+        // 解密标题和用户名
+        if (account.title) {
+          try {
+            decryptAccountDic[account._id].title = window.services.decryptValue(this.props.keyIV, account.title)
+          } catch (e) {
+            decryptAccountDic[account._id].title = account.title
+          }
+        }
+        if (account.username) {
+          try {
+            decryptAccountDic[account._id].username = window.services.decryptValue(this.props.keyIV, account.username)
+          } catch (e) {
+            decryptAccountDic[account._id].username = account.username
+          }
+        }
+      } else {
+        hasError = true
+      }
+    })
+
+    if (!hasError) {
+      this.setState({
+        selectedGroupId: groupId,
+        group2Accounts: { ...group2Accounts },
+        decryptAccountDic: { ...decryptAccountDic }
+      })
+    }
+  }
+
+  // 在 render 中添加导入对话框组件
+  render() {
+    const { searchKey, selectedGroupId, groupIds, groupTree, group2Accounts, sortedGroup, decryptAccountDic, snackbarMessage, exportData, importData } = this.state
     if (!group2Accounts) {
       return (
         <div className='home-loading'>
@@ -298,6 +357,7 @@ class Home extends React.Component {
                       onDelete={this.handleGroupDelete}
                       onCreate={this.handleGroupCreate}
                       onExport={this.handleExport}
+                      onImport={this.handleImport}
                       onAppend={this.handleAccountGroupChange}
                       onMove={this.handleGroupMove}
                       onSelect={this.handleGroupSelect}
@@ -323,6 +383,7 @@ class Home extends React.Component {
         )}
         <SnackbarMessage message={snackbarMessage} />
         <ExportDialog data={exportData} showMessage={this.showMessage} group2Accounts={group2Accounts} />
+        <ImportDialog data={importData} showMessage={this.showMessage} onImport={this.handleImportAccounts} />
       </div>
     )
   }

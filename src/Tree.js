@@ -6,13 +6,17 @@ import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import IconButton from '@mui/material/IconButton'
-import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown'
 import './tree.less'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import ImportExportIcon from '@mui/icons-material/ImportExport'
+
 export default class Tree extends React.Component {
   state = {
     expandIds: [],
     inputKey: '',
-    selectedKey: ''
+    selectedKey: '',
+    anchorEl: null  // 添加菜单锚点状态
   }
 
   componentDidMount() {
@@ -321,8 +325,33 @@ export default class Tree extends React.Component {
     })
   }
 
+
+  handleImportExportClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget })
+  }
+
+  handleImportExportClose = () => {
+    this.setState({ anchorEl: null })
+  }
+
+  handleImport = () => {
+    const { inputKey, selectedKey } = this.state
+    if (inputKey) return
+    if (!selectedKey) return
+    this.setState({ anchorEl: null })
+    const node = this.getNode(this.state.selectedKey)
+    this.props.onImport(node)
+  }
+
+  // 修改导出处理函数
+  handleExport = () => {
+    this.setState({ anchorEl: null })
+    const node = this.getNode(this.state.selectedKey)
+    this.props.onExport(node)
+  }
+
   render() {
-    const { selectedKey, inputKey } = this.state
+    const { selectedKey, inputKey, anchorEl } = this.state
     const isEdit = inputKey ? false : !!selectedKey
     let isDelete = isEdit
     if (isDelete) {
@@ -348,10 +377,10 @@ export default class Tree extends React.Component {
         <div className='tree-footer'>
           <Tooltip title='新增分组' placement='top'>
             <div className='tree-footer-button-wrapper'>
-              <IconButton 
-                tabIndex={-1} 
-                disabled={Boolean(inputKey)} 
-                onClick={this.handleCreate} 
+              <IconButton
+                tabIndex={-1}
+                disabled={Boolean(inputKey)}
+                onClick={this.handleCreate}
                 size='small'
                 className={`tree-footer-button ${Boolean(inputKey) ? 'disabled' : ''}`}
               >
@@ -361,10 +390,10 @@ export default class Tree extends React.Component {
           </Tooltip>
           <Tooltip title='修改分组' placement='top'>
             <div className='tree-footer-button-wrapper'>
-              <IconButton 
-                tabIndex={-1} 
-                disabled={!isEdit} 
-                onClick={this.handleEdit} 
+              <IconButton
+                tabIndex={-1}
+                disabled={!isEdit}
+                onClick={this.handleEdit}
                 size='small'
                 className={`tree-footer-button ${!isEdit ? 'disabled' : ''}`}
               >
@@ -372,25 +401,35 @@ export default class Tree extends React.Component {
               </IconButton>
             </div>
           </Tooltip>
-          <Tooltip title='导出分组帐号数据' placement='top'>
+
+          <Tooltip title='导入导出' placement='top'>
             <div className='tree-footer-button-wrapper'>
-              <IconButton 
-                tabIndex={-1} 
-                disabled={!isEdit} 
-                onClick={this.handleExport} 
+              <IconButton
+                tabIndex={-1}
+                disabled={!isEdit}
+                onClick={this.handleImportExportClick}
                 size='small'
                 className={`tree-footer-button ${!isEdit ? 'disabled' : ''}`}
               >
-                <ArrowCircleDownIcon />
+                <ImportExportIcon />
               </IconButton>
             </div>
           </Tooltip>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={this.handleImportExportClose}
+          >
+            <MenuItem onClick={this.handleImport}>导入分组帐号数据</MenuItem>
+            <MenuItem onClick={this.handleExport}>导出分组帐号数据</MenuItem>
+          </Menu>
+
           <Tooltip title='删除分组' placement='top'>
             <div className='tree-footer-button-wrapper'>
-              <IconButton 
-                tabIndex={-1} 
-                disabled={!isDelete} 
-                onClick={this.handleDelete} 
+              <IconButton
+                tabIndex={-1}
+                disabled={!isDelete}
+                onClick={this.handleDelete}
                 size='small'
                 className={`tree-footer-button ${!isDelete ? 'disabled' : ''}`}
               >
