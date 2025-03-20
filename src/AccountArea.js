@@ -2,6 +2,7 @@ import React from 'react'
 import AccountItem from './AccountItem'
 import AccountRoot from './AccountRoot'
 import AccountForm from './AccountForm'
+import "./account.less"
 import Tooltip from '@mui/material/Tooltip'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
@@ -10,6 +11,8 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
 
 export default class AccountArea extends React.Component {
   isMacOs = window.utools.isMacOs()
@@ -46,7 +49,7 @@ export default class AccountArea extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     let selectedIndex = window.localStorage.getItem('accountContent.selectedIndex')
     if (selectedIndex) {
       selectedIndex = parseInt(selectedIndex, 10)
@@ -59,12 +62,12 @@ export default class AccountArea extends React.Component {
     window.addEventListener('keydown', this.keydownAction)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     window.localStorage.setItem('accountContent.selectedIndex', this.state.selectedIndex)
     window.removeEventListener('keydown', this.keydownAction)
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) { // eslint-disable-line
+  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line
     if (nextProps.data) {
       if (this.props.data === nextProps.data && (Date.now() - nextProps.data[nextProps.data.length - 1].createAt < 100)) {
         this.setState({ selectedIndex: nextProps.data.length - 1 })
@@ -116,7 +119,7 @@ export default class AccountArea extends React.Component {
     this.setState({ selectedIndex: data.indexOf(selectedNode) })
   }
 
-  render () {
+  render() {
     const { keyIV, data, onUpdate, decryptAccountDic } = this.props
     const { selectedIndex, showDeleteConfirm } = this.state
     if (data === null) return false
@@ -129,7 +132,7 @@ export default class AccountArea extends React.Component {
                 <AccountRoot onMove={this.handleMoveSort} index={data.length}>
                   {
                     data.map((a, i) => (
-                      <div key={i} onClick={() => this.handleSelect(i)}>
+                      <div key={i} onClick={() => this.handleSelect(i)} >
                         <AccountItem onMove={this.handleMoveSort} index={i} isSelected={i === selectedIndex} key={a._id} data={decryptAccountDic[a._id]} />
                       </div>))
                   }
@@ -151,11 +154,68 @@ export default class AccountArea extends React.Component {
                 </IconButton>
               </div>
             </Tooltip>
-            <Dialog open={showDeleteConfirm} onClose={this.handleCloseDeleteConfirm}>
-              <DialogTitle>确认删除此帐号?</DialogTitle>
-              <DialogActions>
-                <Button onClick={this.handleCloseDeleteConfirm}>取消</Button>
-                <Button onClick={this.handleDelete} color='primary' autoFocus>删除</Button>
+            <Dialog
+              open={showDeleteConfirm}
+              onClose={this.handleCloseDeleteConfirm}
+              PaperProps={{
+                sx: {
+                  borderRadius: '12px',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
+                  minWidth: '320px',
+                  backgroundColor: '#ffffff'
+                }
+              }}
+            >
+              <DialogTitle sx={{
+                fontSize: '16px',
+                color: '#2c3e50',
+                padding: '16px 24px',
+                fontWeight: 500,
+                // borderBottom: '1px solid rgba(0, 0, 0, 0.05)'
+              }}>
+                确认删除此帐号?
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText sx={{
+                  color: '#2c3e50',
+                  fontSize: '14px',
+                }}>
+                  删除后将无法恢复，请确认是否继续？
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions sx={{
+                padding: '12px 24px',
+                // borderTop: '1px solid rgba(0, 0, 0, 0.05)'
+              }}>
+                <Button
+                  onClick={this.handleCloseDeleteConfirm}
+                  sx={{
+                    borderRadius: '8px',
+                    textTransform: 'none',
+                    minWidth: '76px',
+                    color: '#2c3e50'
+                  }}
+                >
+                  取消
+                </Button>
+                <Button
+                  onClick={this.handleDelete}
+                  color='error'
+                  variant='contained'
+                  autoFocus
+                  sx={{
+                    borderRadius: '8px',
+                    textTransform: 'none',
+                    minWidth: '76px',
+                    boxShadow: 'none',
+                    '&:hover': {
+                      boxShadow: 'none',
+                      backgroundColor: '#d32f2f'
+                    }
+                  }}
+                >
+                  删除
+                </Button>
               </DialogActions>
             </Dialog>
           </div>

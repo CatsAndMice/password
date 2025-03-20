@@ -1,0 +1,209 @@
+.account-area {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  box-sizing: border-box;
+
+  &>div {
+    &:first-child {
+      width: 40%;
+      height: 100%;
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    &:last-child {
+      position: relative;
+      height: 100%;
+      flex: 1;
+    }
+  }
+}
+
+.account-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+
+  .account-list-body {
+    flex: 1;
+    height: 0;
+    padding: 4px 6px;
+    // &>div {
+    //   user-select: none;
+    //   width: 100%;
+    //   height: 100%;
+    //   overflow-x: hidden;
+    //   overflow-y: auto;
+    //   background-color: rgba(255, 255, 255, 1);
+    //   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    // }
+  }
+
+  .account-list-footer {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 0 0 8px 8px;
+    padding: 0 8px;
+
+    &>div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: rgba(33, 150, 243, 0.08);
+      }
+
+      .MuiIconButton-root {
+        color: #2196F3;
+        transition: all 0.2s ease;
+
+        &:hover {
+          color: #1976D2;
+          transform: scale(1.1);
+        }
+
+        &.Mui-disabled {
+          color: rgba(0, 0, 0, 0.26);
+
+          &:hover {
+            transform: none;
+          }
+        }
+      }
+
+      &:last-child {
+        .MuiIconButton-root {
+          color: #f44336;
+
+          &:hover {
+            color: #d32f2f;
+          }
+
+          &.Mui-disabled {
+            color: rgba(0, 0, 0, 0.26);
+          }
+        }
+      }
+    }
+  }
+}
+
+.account-root {
+  width: 100%;
+  height: 100%;
+}
+
+.account-item {
+  width: 100%;
+  padding: 4px 0;
+  margin-bottom: 4px;
+
+  .account-item-body {
+    background-color: rgba(255, 255, 255, 1);
+    cursor: pointer;
+    padding: 4px 8px;
+    box-sizing: border-box;
+    min-height: 56px;
+    word-wrap: break-word;
+    word-break: break-all;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c3e50;
+    letter-spacing: 0.2px;
+    line-height: 1.5;
+
+    &:hover {
+      background-color: rgba(33, 150, 243, 0.06);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.06);
+    }
+
+    .account-item-username {
+      color: rgba(44, 62, 80, 0.75);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .account-item-sort {
+    height: 3px;
+    width: 100%;
+    background: linear-gradient(45deg, #2196F3 0%, #64B5F6 100%);
+    border-radius: 1.5px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .account-item-selected {
+    background-color: rgba(33, 150, 243, 0.15);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+
+    &:hover {
+      background-color: rgba(33, 150, 243, 0.1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.12);
+    }
+  }
+
+  &:hover .account-item-sort {
+    opacity: 1;
+  }
+}
+
+.account-form {
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  &>div {
+    padding-bottom: 26px;
+  }
+
+  .account-form-icon-divider {
+    display: inline-block;
+    width: 6px;
+  }
+
+  .account-form-prev-icon {
+    color: #2196F3;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #1976D2;
+    }
+  }
+
+  .account-form-remark {
+    margin-top: 8px;
+  }
+}

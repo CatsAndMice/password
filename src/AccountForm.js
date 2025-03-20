@@ -16,7 +16,42 @@ import LockIcon from '@mui/icons-material/Lock'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
 import SendIcon from '@mui/icons-material/Send'
 import RandomPassword from './RandomPassword'
-
+// 基础样式配置
+const baseTextFieldStyle = {
+  '& .MuiInput-underline:before': {
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+    borderBottomColor: '#2196F3',
+  },
+  '& .MuiInputLabel-root': {
+    color: 'rgba(44, 62, 80, 0.7)',
+    fontSize: '14px',
+    fontWeight: 500,
+  },
+  '& .MuiInputBase-input': {
+    fontSize: '15px',
+    color: '#2c3e50',
+    fontWeight: 500,
+    letterSpacing: '0.2px',
+  },
+  '& .account-form-prev-icon': {
+    fontSize: '20px',
+    color: 'rgba(44, 62, 80, 0.7)',
+  },
+  '& .MuiIconButton-root': {
+    padding: '4px',
+    '& .MuiSvgIcon-root': {
+      fontSize: '18px',
+    },
+  },
+  '& .account-form-icon-divider': {
+    margin: '0 4px',
+    width: '1px',
+    height: '20px',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  }
+}
 export default class AccountForm extends React.Component {
   isMacOs = window.utools.isMacOs()
 
@@ -42,27 +77,27 @@ export default class AccountForm extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const stateValue = {}
     const data = this.props.data
-    ;['title', 'username', 'password', 'remark', 'link'].forEach(f => {
-      if (data[f]) {
-        try {
-          stateValue[f + 'Value'] = window.services.decryptValue(this.props.keyIV, data[f])
-        } catch (e) {
-          stateValue[f + 'Value'] = data[f]
+      ;['title', 'username', 'password', 'remark', 'link'].forEach(f => {
+        if (data[f]) {
+          try {
+            stateValue[f + 'Value'] = window.services.decryptValue(this.props.keyIV, data[f])
+          } catch (e) {
+            stateValue[f + 'Value'] = data[f]
+          }
         }
-      }
-    })
+      })
     this.setState(stateValue)
     window.addEventListener('keydown', this.keydownAction, true)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     window.removeEventListener('keydown', this.keydownAction, true)
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) { // eslint-disable-line
+  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line
     const stateValue = {};
     ['title', 'username', 'password', 'remark', 'link'].forEach(f => {
       if (nextProps.data[f]) {
@@ -138,7 +173,10 @@ export default class AccountForm extends React.Component {
     this.setState({ randomPasswordEl: null })
   }
 
-  render () {
+
+
+  // 在 render 方法中使用
+  render() {
     const { titleValue, usernameValue, passwordValue, linkValue, remarkValue, passwordEye, randomPasswordEl } = this.state
     return (
       <div className='account-form'>
@@ -157,6 +195,7 @@ export default class AccountForm extends React.Component {
                 </InputAdornment>
               )
             }}
+            sx={baseTextFieldStyle}
           />
         </div>
         <div>
@@ -182,6 +221,7 @@ export default class AccountForm extends React.Component {
                 </InputAdornment>
               )
             }}
+            sx={baseTextFieldStyle}
           />
         </div>
         <div>
@@ -220,6 +260,7 @@ export default class AccountForm extends React.Component {
                 </InputAdornment>
               )
             }}
+            sx={baseTextFieldStyle}
           />
           <Popover
             open={Boolean(randomPasswordEl)}
@@ -252,25 +293,26 @@ export default class AccountForm extends React.Component {
             InputProps={{
               startAdornment: (
                 <InputAdornment position='start'>
-                  <LinkIcon className='account-form-prev-icon' />
+                  <LinkIcon className='account-form-prev-icon' fontSize="small" />
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position='end'>
                   <Tooltip title='浏览器中打开' placement='top'>
                     <IconButton tabIndex={-1} onClick={this.handleOpenLink} size='small'>
-                      <OpenInBrowserIcon />
+                      <OpenInBrowserIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
                   <span className='account-form-icon-divider' />
                   <Tooltip title='复制链接' placement='top-end'>
                     <IconButton tabIndex={-1} onClick={this.handleCopy('linkValue')} size='small'>
-                      <ContentCopyIcon />
+                      <ContentCopyIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
                 </InputAdornment>
               )
             }}
+            sx={baseTextFieldStyle}
           />
         </div>
         <div>
@@ -278,12 +320,43 @@ export default class AccountForm extends React.Component {
             fullWidth
             label='说明'
             multiline
-            rows={9}
+            minRows={5}
+            maxRows={15}
             value={remarkValue}
             onChange={this.handleInputChang('remark')}
-            InputLabelProps={{ shrink: true }}
+            InputLabelProps={{
+              shrink: true,
+              sx: {
+                color: 'rgba(44, 62, 80, 0.7)',
+                fontSize: '14px',
+                fontWeight: 500,
+              }
+            }}
             variant='outlined'
             className='account-form-remark'
+            sx={{
+              ...baseTextFieldStyle,
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                borderRadius: '8px',
+                '& fieldset': {
+                  borderColor: 'rgba(0, 0, 0, 0.1)',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#2196F3',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#2196F3',
+                  borderWidth: '1px',
+                },
+              },
+              '& .MuiInputBase-input': {
+                fontSize: '14px',
+                color: '#2c3e50',
+                lineHeight: '1.6',
+                letterSpacing: '0.2px',
+              }
+            }}
           />
         </div>
       </div>

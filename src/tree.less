@@ -110,8 +110,13 @@
     }
 
     .tree-node-selected {
-        background-color: rgba(33, 150, 243, 0.1);
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        background-color: rgba(33, 150, 243, 0.15);
+        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+
+        &:hover {
+            background-color: rgba(33, 150, 243, 0.1);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.12);
+        }
     }
 
     .tree-node-edit-box {
@@ -202,23 +207,29 @@
 
     .tree-node-icon-arrow-right::after {
         content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
         width: 6px;
         height: 6px;
         border: 1.5px solid #2c3e50;
         border-left: 0;
         border-bottom: 0;
-        transform: rotate(45deg);
+        transform: translate(-25%, -50%) rotate(45deg);
         transition: all 0.2s ease;
     }
 
     .tree-node-icon-arrow-down::after {
         content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
         width: 6px;
         height: 6px;
         border: 1.5px solid #2c3e50;
         border-left: 0;
         border-top: 0;
-        transform: rotate(45deg);
+        transform: translate(-50%, -75%) rotate(45deg);
         transition: all 0.2s ease;
     }
 }

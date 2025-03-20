@@ -1,6 +1,6 @@
 import React from 'react'
 import AccountForm from './AccountForm'
-
+import './search.less'
 export default class Search extends React.Component {
   state = {
     list: [],
@@ -30,18 +30,18 @@ export default class Search extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.groupDic = {}
     this.generateGroupDic(this.props.groupTree, this.groupDic)
     this.search(this.props.searchKey)
     window.addEventListener('keydown', this.keydownAction)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     window.removeEventListener('keydown', this.keydownAction)
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) { // eslint-disable-line
+  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line
     if (this.props.searchKey !== nextProps.searchKey) {
       this.search(nextProps.searchKey)
     }
@@ -74,7 +74,7 @@ export default class Search extends React.Component {
     return groupName
   }
 
-  search (key) {
+  search(key) {
     key = key.toLowerCase()
     const searchResult = []
     for (const id in this.props.decryptAccountDic) {
@@ -109,25 +109,34 @@ export default class Search extends React.Component {
     this.setState({ selectedIndex: index })
   }
 
-  render () {
-    if (this.state.list.length === 0) return <div className='search-empty'>未检索到数据</div>
+  render() {
+    if (this.state.list.length === 0) return <div className='search-empty'>暂无搜索结果</div>
     const { keyIV, onAccountUpdate, decryptAccountDic } = this.props
     const { list, selectedIndex } = this.state
     return (
       <div className='search-body'>
         <div className='search-list'>
-          <table>
+          <table className='search-table'>
             <thead>
-              <tr><th>分组</th><th>标题</th><th>用户名</th></tr>
+              <tr>
+                <th className='group-column'>分组</th>
+                <th className='title-column'>标题</th>
+                <th className='username-column'>用户名</th>
+              </tr>
             </thead>
             <tbody>
               {
                 list.map((a, i) => (
-                  <tr onClick={() => this.select(i)} className={selectedIndex === i ? 'search-selected' : null} key={a.account._id}>
-                    <td span={8}>{this.groupName(a.account.groupId)}</td>
-                    <td id={a.account._id + '_title'} span={8}>{a.title}</td>
-                    <td id={a.account._id + '_username'} span={8}>{a.username}</td>
-                  </tr>))
+                  <tr 
+                    onClick={() => this.select(i)} 
+                    className={`search-table-row ${selectedIndex === i ? 'search-selected' : ''}`} 
+                    key={a.account._id}
+                  >
+                    <td className='group-column'>{this.groupName(a.account.groupId)}</td>
+                    <td className='title-column' id={a.account._id + '_title'}>{a.title}</td>
+                    <td className='username-column' id={a.account._id + '_username'}>{a.username}</td>
+                  </tr>
+                ))
               }
             </tbody>
           </table>
