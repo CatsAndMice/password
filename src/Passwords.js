@@ -30,8 +30,8 @@ export default class Passwords extends React.Component {
       const keyiv = window.services.verifyPassword(passText)
       const newAccount = {
         _id: 'account/' + Date.now(),
-        title: window.services.encryptValue(keyiv, '默认标题'),
-        username: window.services.encryptValue(keyiv, '默认用户名'),
+        title: window.services.encryptValue(keyiv, '密码管家'),
+        username: window.services.encryptValue(keyiv, '程序员凌览'),
         groupId: newGroup.id,
         createAt: Date.now(),
         sort: 0
