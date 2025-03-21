@@ -12,9 +12,14 @@ window.services = {
   setBcryptPass: (password) => {
     if (!password) return false
     const bcryptPass = bcrypt.hashSync(password, 10)
+    // 使用对称加密存储一份可恢复的密码
+    const keyiv = getKeyIv('recovery_key')
+    const recoveryPass = crypto.createCipheriv('aes-256-cbc', keyiv.key, keyiv.iv)
+      .update(password, 'utf8', 'hex') + cipher.final('hex')
     const result = window.utools.db.put({
       _id: 'bcryptpass',
-      value: bcryptPass
+      value: bcryptPass,
+      recovery: recoveryPass
     })
     if (result.error) return false
     return true
