@@ -3,15 +3,18 @@ import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import InputBase from '@mui/material/InputBase'
+import EditIcon from '@mui/icons-material/Edit'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Reset from './Reset'
-
+import Recover from './Recover'
 export default class Door extends React.Component {
   state = {
     fail: false,
     passwordValue: '',
     resetPassword: false,
     isCapsLock: false,
-    isComposition: false
+    isComposition: false,
+    recoverPassword: false,  // 新增找回密码状态
   }
 
   handleEnter = () => {
@@ -55,9 +58,20 @@ export default class Door extends React.Component {
     this.setState({ resetPassword: false })
   }
 
+
+  // 添加找回密码处理函数
+  handleRecoverClick = () => {
+    this.setState({ recoverPassword: true })
+  }
+
+  handleRecoverOut = () => {
+    this.setState({ recoverPassword: false })
+  }
+
   render() {
-    const { fail, resetPassword, passwordValue, isCapsLock, isComposition } = this.state
+    const { fail, resetPassword,recoverPassword, passwordValue, isCapsLock, isComposition } = this.state
     if (resetPassword) return <Reset onOut={this.handleResetOut} />
+    if (recoverPassword) return <Recover  onOut={this.handleRecoverOut} />  
     return (
       <div className={'door-body' + (fail ? ' door-fail' : '')} style={{
         height: '100vh',
@@ -149,20 +163,51 @@ export default class Door extends React.Component {
               {isComposition && <div>请切换到英文输入法</div>}
             </div>
           </div>
-          <Button
-            onClick={this.handleResetClick}
-            variant="text"
-            size="small"
-            style={{
-              fontSize: '14px',
-              color: '#7f8c8d',
-              textTransform: 'none',
-              padding: '8px 16px',
-              marginTop: '10px'
-            }}
-          >
-            修改密码
-          </Button>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '24px',
+            width: '100%'
+          }}>
+            <Button
+              onClick={this.handleResetClick}
+              variant="text"
+              size="small"
+              style={{
+                fontSize: '14px',
+                color: '#7f8c8d',
+                textTransform: 'none',
+                padding: '10px 20px',
+                borderRadius: '8px',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  backgroundColor: 'rgba(127, 140, 141, 0.08)'
+                }
+              }}
+              startIcon={<EditIcon style={{ fontSize: 18 }} />}
+            >
+              修改密码
+            </Button>
+            <Button
+              onClick={this.handleRecoverClick}
+              variant="text"
+              size="small"
+              style={{
+                fontSize: '14px',
+                color: '#7f8c8d',
+                textTransform: 'none',
+                padding: '10px 20px',
+                borderRadius: '8px',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  backgroundColor: 'rgba(127, 140, 141, 0.08)'
+                }
+              }}
+              startIcon={<HelpOutlineIcon style={{ fontSize: 18 }} />}
+            >
+              找回密码
+            </Button>
+          </div>
         </div>
       </div>
     )
