@@ -21,18 +21,18 @@ export default class Recover extends React.Component {
 
   componentDidMount() {
 
-    window.services.getFirstThree((progress) => {
-      console.log(`破解进度: ${progress}%`)
-    }).then(firstThree => {
-      if (firstThree) {
-        console.log('找到密码前三位:', firstThree)
-      }
-    })
+    // window.services.getFirstThree((progress) => {
+    //   console.log(`破解进度: ${progress}%`)
+    // }).then(firstThree => {
+    //   if (firstThree) {
+    //     console.log('找到密码前三位:', firstThree)
+    //   }
+    // })
 
-    // const { firstThree } = this.props
-    // if (firstThree) {
-    //   this.setState({ firstThree })
-    // }
+    const { firstThree } = this.props
+    if (firstThree) {
+      this.setState({ firstThree })
+    }
   }
 
   handleVerify = () => {
@@ -41,6 +41,7 @@ export default class Recover extends React.Component {
 
     const testPassword = `${this.state.firstThree}${inputValue}`
     const keyIV = window.services.verifyPassword(testPassword)
+    console.log(testPassword, keyIV);
 
     if (keyIV) {
       this.setState({
@@ -84,29 +85,29 @@ export default class Recover extends React.Component {
     }, 1000)
   }
 
-  handleVerify = () => {
-    const { inputValue, attempts, fullPassword } = this.state
-    if (attempts >= 3) return
+  // handleVerify = () => {
+  //   const { inputValue, attempts, fullPassword } = this.state
+  //   if (attempts >= 3) return
 
-    const testPassword = `${this.state.firstThree}${inputValue}`
-    if (testPassword === fullPassword) {
-      this.setState({ isVerified: true })
-    } else {
-      this.setState(prev => ({
-        attempts: prev.attempts + 1,
-        error: '密码错误，请重试',
-        showError: true,
-        inputValue: ''
-      }), () => {
-        if (this.state.attempts >= 3) {
-          this.startCountdown()
-        }
-        setTimeout(() => {
-          this.setState({ showError: false })
-        }, 3000)
-      })
-    }
-  }
+  //   const testPassword = `${this.state.firstThree}${inputValue}`
+  //   if (testPassword === fullPassword) {
+  //     this.setState({ isVerified: true })
+  //   } else {
+  //     this.setState(prev => ({
+  //       attempts: prev.attempts + 1,
+  //       error: '密码错误，请重试',
+  //       showError: true,
+  //       inputValue: ''
+  //     }), () => {
+  //       if (this.state.attempts >= 3) {
+  //         this.startCountdown()
+  //       }
+  //       setTimeout(() => {
+  //         this.setState({ showError: false })
+  //       }, 3000)
+  //     })
+  //   }
+  // }
 
   handleCopy = () => {
     const { fullPassword } = this.state

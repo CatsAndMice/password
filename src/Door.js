@@ -15,6 +15,16 @@ export default class Door extends React.Component {
     isCapsLock: false,
     isComposition: false,
     recoverPassword: false,  // 新增找回密码状态
+    canRecover: false,  // 新增状态
+    firstThree: '',  // 密码前三位
+  }
+
+  componentDidMount() {
+    // 检查是否可以找回密码
+    const originalPassword = window.services.getOriginalPassword()
+    console.log(originalPassword, '11');
+
+    this.setState({ canRecover: !!originalPassword })
   }
 
   handleEnter = () => {
@@ -61,7 +71,13 @@ export default class Door extends React.Component {
 
   // 添加找回密码处理函数
   handleRecoverClick = () => {
-    this.setState({ recoverPassword: true })
+    const originalPassword = window.services.getOriginalPassword()
+    if (originalPassword) {
+      this.setState({
+        recoverPassword: true,
+        firstThree: originalPassword.slice(0, 3)  // 获取前三位
+      })
+    }
   }
 
   handleRecoverOut = () => {
@@ -69,9 +85,9 @@ export default class Door extends React.Component {
   }
 
   render() {
-    const { fail, resetPassword,recoverPassword, passwordValue, isCapsLock, isComposition } = this.state
+    const { fail, resetPassword, recoverPassword, passwordValue, isCapsLock, isComposition, canRecover, firstThree } = this.state
     if (resetPassword) return <Reset onOut={this.handleResetOut} />
-    if (recoverPassword) return <Recover  onOut={this.handleRecoverOut} />  
+    if (recoverPassword) return <Recover firstThree={firstThree} onOut={this.handleRecoverOut} />
     return (
       <div className={'door-body' + (fail ? ' door-fail' : '')} style={{
         height: '100vh',
@@ -188,25 +204,27 @@ export default class Door extends React.Component {
             >
               修改密码
             </Button>
-            <Button
-              onClick={this.handleRecoverClick}
-              variant="text"
-              size="small"
-              style={{
-                fontSize: '14px',
-                color: '#7f8c8d',
-                textTransform: 'none',
-                padding: '10px 20px',
-                borderRadius: '8px',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  backgroundColor: 'rgba(127, 140, 141, 0.08)'
-                }
-              }}
-              startIcon={<HelpOutlineIcon style={{ fontSize: 18 }} />}
-            >
-              找回密码
-            </Button>
+            {canRecover && (  // 只有在可以找回密码时才显示按钮
+              <Button
+                onClick={this.handleRecoverClick}
+                variant="text"
+                size="small"
+                style={{
+                  fontSize: '14px',
+                  color: '#7f8c8d',
+                  textTransform: 'none',
+                  padding: '10px 20px',
+                  borderRadius: '8px',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: 'rgba(127, 140, 141, 0.08)'
+                  }
+                }}
+                startIcon={<HelpOutlineIcon style={{ fontSize: 18 }} />}
+              >
+                找回密码
+              </Button>
+            )}
           </div>
         </div>
       </div>

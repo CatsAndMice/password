@@ -12,10 +12,10 @@ window.services = {
   setBcryptPass: (password) => {
     if (!password) return false
     const bcryptPass = bcrypt.hashSync(password, 10)
-    // 使用对称加密存储一份可恢复的密码
+    // 只使用对称加密存储前三位密码
     const keyiv = getKeyIv('recovery_key')
-    const recoveryPass = crypto.createCipheriv('aes-256-cbc', keyiv.key, keyiv.iv)
-      .update(password, 'utf8', 'hex') + cipher.final('hex')
+    const cipher = crypto.createCipheriv('aes-256-cbc', keyiv.key, keyiv.iv)
+    const recoveryPass = cipher.update(password.slice(0, 3), 'utf8', 'hex') + cipher.final('hex')
     const result = window.utools.db.put({
       _id: 'bcryptpass',
       value: bcryptPass,
@@ -24,11 +24,17 @@ window.services = {
     if (result.error) return false
     return true
   },
+
   resetBcryptPass: (password) => {
     if (!password) return false
     const passDoc = window.utools.db.get('bcryptpass')
     if (!passDoc) return false
     passDoc.value = bcrypt.hashSync(password, 10)
+    // 只备份密码前三位
+    const keyiv = getKeyIv('recovery_key')
+    const cipher = crypto.createCipheriv('aes-256-cbc', keyiv.key, keyiv.iv)
+    const recoveryPass = cipher.update(password.slice(0, 3), 'utf8', 'hex') + cipher.final('hex')
+    passDoc.recovery = recoveryPass
     const result = window.utools.db.put(passDoc)
     if (result.error) return false
     return true
@@ -98,5 +104,19 @@ window.services = {
 
       processBatch()
     })
+  },
+  getOriginalPassword: () => {
+    const passDoc = window.utools.db.get('bcryptpass')
+    if (!passDoc || !passDoc.recovery) return null
+
+    try {
+      const keyiv = getKeyIv('recovery_key')
+      const decipher = crypto.createDecipheriv('aes-256-cbc', keyiv.key, keyiv.iv)
+      const originalPassword = decipher.update(passDoc.recovery, 'hex', 'utf8') + decipher.final('utf8')
+      return originalPassword
+    } catch (err) {
+      console.error('解密失败:', err)
+      return null
+    }
   }
 }
