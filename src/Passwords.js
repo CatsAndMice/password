@@ -3,15 +3,56 @@ import Door from './Door'
 import Setting from './Setting'
 import Home from './Home'
 
+const LOGIN_INFO = 'LOGIN_INFO'
 export default class Passwords extends React.Component {
   state = {
     hadKey: Boolean(window.utools.db.get('bcryptpass')),
     keyIV: ''
   }
 
-  handleVerify = (passText, errorCallback) => {
+
+  componentDidMount() {
+    const loginInfo = window.localStorage.getItem(LOGIN_INFO)
+    if (loginInfo) {
+      try {
+        const { expireTime, encryptedPass } = JSON.parse(loginInfo)
+        // 检查是否过期
+        if (expireTime > Date.now()) {
+          const keyIV = window.services.verifyPassword(
+            window.services.getOriginalPasswordPlus(encryptedPass)
+          )
+          if (keyIV) {
+            this.setState({ keyIV })
+          }
+        }
+      } catch (error) {
+        window.localStorage.removeItem(LOGIN_INFO)
+      }
+    }
+  }
+
+  handleVerify = ({ passText = '', rememberLogin = false }, errorCallback) => {
     const keyIV = window.services.verifyPassword(passText)
-    keyIV ? this.setState({ keyIV }) : errorCallback()
+    // console.log(keyIV);
+
+    if (!keyIV) {
+      errorCallback()
+      return
+    }
+    // window.utools.db.get('bcryptpass')
+    console.log(window.utools.db.get('bcryptpass'), keyIV);
+
+    // 处理7天内免登录
+    if (rememberLogin) {
+      const expireTime = Date.now() + 7 * 24 * 60 * 60 * 1000 // 7天后过期
+      const loginInfo = {
+        encryptedPass: window.services.getRecoveryPass(passText), // 直接存储密码，依赖 localStorage 的安全性
+        expireTime
+      }
+      // 存储加密后的登录信息
+      window.localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo))
+      this.setState({ keyIV })
+    }
   }
 
   handleOut = () => {
