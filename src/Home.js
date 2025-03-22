@@ -272,7 +272,6 @@ class Home extends React.Component {
 
   handleImportAccounts = (accounts) => {
     const { group2Accounts, decryptAccountDic } = this.state
-    // console.log(group2Accounts, decryptAccountDic);
 
     const groupId = accounts[0].groupId
     let hasError = false

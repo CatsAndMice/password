@@ -22,8 +22,6 @@ export default class Door extends React.Component {
   componentDidMount() {
     // 检查是否可以找回密码
     const originalPassword = window.services.getOriginalPassword()
-    console.log(originalPassword, '11');
-
     this.setState({ canRecover: !!originalPassword })
   }
 

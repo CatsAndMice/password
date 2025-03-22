@@ -20,15 +20,6 @@ export default class Recover extends React.Component {
   }
 
   componentDidMount() {
-
-    // window.services.getFirstThree((progress) => {
-    //   console.log(`破解进度: ${progress}%`)
-    // }).then(firstThree => {
-    //   if (firstThree) {
-    //     console.log('找到密码前三位:', firstThree)
-    //   }
-    // })
-
     const { firstThree } = this.props
     if (firstThree) {
       this.setState({ firstThree })
@@ -41,8 +32,6 @@ export default class Recover extends React.Component {
 
     const testPassword = `${this.state.firstThree}${inputValue}`
     const keyIV = window.services.verifyPassword(testPassword)
-    console.log(testPassword, keyIV);
-
     if (keyIV) {
       this.setState({
         isVerified: true,
@@ -84,30 +73,6 @@ export default class Recover extends React.Component {
       })
     }, 1000)
   }
-
-  // handleVerify = () => {
-  //   const { inputValue, attempts, fullPassword } = this.state
-  //   if (attempts >= 3) return
-
-  //   const testPassword = `${this.state.firstThree}${inputValue}`
-  //   if (testPassword === fullPassword) {
-  //     this.setState({ isVerified: true })
-  //   } else {
-  //     this.setState(prev => ({
-  //       attempts: prev.attempts + 1,
-  //       error: '密码错误，请重试',
-  //       showError: true,
-  //       inputValue: ''
-  //     }), () => {
-  //       if (this.state.attempts >= 3) {
-  //         this.startCountdown()
-  //       }
-  //       setTimeout(() => {
-  //         this.setState({ showError: false })
-  //       }, 3000)
-  //     })
-  //   }
-  // }
 
   handleCopy = () => {
     const { fullPassword } = this.state
@@ -190,23 +155,45 @@ export default class Recover extends React.Component {
           {!isVerified ? (
             <>
               <div style={{
-                fontSize: '15px',
+                fontSize: '16px',
                 color: '#34495e',
-                lineHeight: '1.6',
-                marginBottom: '24px',
-                textAlign: 'center'
+                lineHeight: '1.8',
+                marginBottom: '28px',
+                textAlign: 'center',
+                padding: '20px',
+                background: 'rgba(52, 152, 219, 0.05)',
+                borderRadius: '12px',
+                border: '1px solid rgba(52, 152, 219, 0.1)'
               }}>
-                您的密码前三位是：<span style={{ fontWeight: 'bold', color: '#2c3e50' }}>{this.state.firstThree}</span>
-                <br />
-                请输入后三位密码进行验证：
+                <div style={{ marginBottom: '12px' }}>
+                  您的密码前三位是：
+                  <span style={{ 
+                    fontWeight: '600',
+                    color: '#2c3e50',
+                    background: '#fff',
+                    padding: '4px 12px',
+                    borderRadius: '6px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                    letterSpacing: '2px'
+                  }}>
+                    {this.state.firstThree}
+                  </span>
+                </div>
+                <div style={{ 
+                  fontSize: '14px',
+                  color: '#7f8c8d',
+                  marginTop: '8px'
+                }}>
+                  请输入后三位密码进行验证
+                </div>
               </div>
-
               <div style={{
                 position: 'relative',
                 marginBottom: '24px'
               }}>
                 <InputBase
                   value={inputValue}
+                  autoFocus
                   onChange={(e) => this.setState({ inputValue: e.target.value })}
                   onKeyDown={this.handleKeyDown}
                   disabled={isDisabled}
@@ -231,7 +218,6 @@ export default class Recover extends React.Component {
                     top: '100%',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    marginTop: '8px',
                     color: '#e74c3c',
                     fontSize: '14px'
                   }}>

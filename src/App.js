@@ -59,8 +59,6 @@ export default class App extends React.Component {
 
   render() {
     const { code, theme } = this.state
-    console.log(code);
-
     if (code === 'passwords') return <ThemeProvider theme={themeDic[theme]}><Passwords /></ThemeProvider>
     if (code === 'random') return <ThemeProvider theme={themeDic[theme]}><Random /></ThemeProvider>
     return false
