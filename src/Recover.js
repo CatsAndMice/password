@@ -167,7 +167,7 @@ export default class Recover extends React.Component {
               }}>
                 <div style={{ marginBottom: '12px' }}>
                   您的密码前三位是：
-                  <span style={{ 
+                  <span style={{
                     fontWeight: '600',
                     color: '#2c3e50',
                     background: '#fff',
@@ -179,7 +179,7 @@ export default class Recover extends React.Component {
                     {this.state.firstThree}
                   </span>
                 </div>
-                <div style={{ 
+                <div style={{
                   fontSize: '14px',
                   color: '#7f8c8d',
                   marginTop: '8px'
@@ -242,7 +242,7 @@ export default class Recover extends React.Component {
                 variant="contained"
                 fullWidth
                 onClick={this.handleVerify}
-                disabled={isDisabled || !inputValue}
+                disabled={isDisabled || !inputValue || inputValue.length < 3}
                 style={{
                   textTransform: 'none',
                   background: isDisabled ? '#ccc' : '#3498db',
