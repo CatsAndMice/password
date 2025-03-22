@@ -8,14 +8,18 @@ const getKeyIv = (passphrase) => {
   return { key: hash2, iv: hash3.substr(16) }
 }
 
+const getRecoveryPass = (password) => {
+  // 只使用对称加密存储前三位密码
+  const keyiv = getKeyIv('recovery_key')
+  const cipher = crypto.createCipheriv('aes-256-cbc', keyiv.key, keyiv.iv)
+  return cipher.update(password.slice(0, 3), 'utf8', 'hex') + cipher.final('hex')
+}
+
 window.services = {
   setBcryptPass: (password) => {
     if (!password) return false
     const bcryptPass = bcrypt.hashSync(password, 10)
-    // 只使用对称加密存储前三位密码
-    const keyiv = getKeyIv('recovery_key')
-    const cipher = crypto.createCipheriv('aes-256-cbc', keyiv.key, keyiv.iv)
-    const recoveryPass = cipher.update(password.slice(0, 3), 'utf8', 'hex') + cipher.final('hex')
+    const recoveryPass = getRecoveryPass(password)
     const result = window.utools.db.put({
       _id: 'bcryptpass',
       value: bcryptPass,
@@ -30,10 +34,7 @@ window.services = {
     const passDoc = window.utools.db.get('bcryptpass')
     if (!passDoc) return false
     passDoc.value = bcrypt.hashSync(password, 10)
-    // 只备份密码前三位
-    const keyiv = getKeyIv('recovery_key')
-    const cipher = crypto.createCipheriv('aes-256-cbc', keyiv.key, keyiv.iv)
-    const recoveryPass = cipher.update(password.slice(0, 3), 'utf8', 'hex') + cipher.final('hex')
+    const recoveryPass = getRecoveryPass(password)
     passDoc.recovery = recoveryPass
     const result = window.utools.db.put(passDoc)
     if (result.error) return false
@@ -42,7 +43,13 @@ window.services = {
   verifyPassword: (password) => {
     const passDoc = window.utools.db.get('bcryptpass')
     if (!passDoc) return false
+
     if (bcrypt.compareSync(password, passDoc.value)) {
+      if (!passDoc.recovery) {
+        const recoveryPass = getRecoveryPass(password)
+        passDoc.recovery = recoveryPass
+        window.utools.db.put(passDoc)
+      }
       return getKeyIv(password)
     }
     return false
@@ -63,47 +70,6 @@ window.services = {
     const saveFile = path.join(window.utools.getPath('downloads'), '密码管家' + Date.now() + ext)
     fs.writeFileSync(saveFile, content, 'utf-8')
     window.utools.shellShowItemInFolder(saveFile)
-  },
-  getFirstThree: (onProgress) => {
-    const passDoc = window.utools.db.get('bcryptpass')
-    if (!passDoc) return null
-
-    return new Promise((resolve) => {
-      let currentBatch = 0
-      const batchSize = 100  // 减小批量大小
-
-      const processBatch = () => {
-        const firstThree = Math.floor(currentBatch / 1000).toString().padStart(3, '0')
-        const startJ = (currentBatch % 1000) * batchSize
-        const endJ = Math.min(startJ + batchSize, 1000)
-
-        for (let j = startJ; j < endJ; j++) {
-          const lastThree = j.toString().padStart(3, '0')
-          const testPass = `${firstThree}${lastThree}`
-          if (bcrypt.compareSync(testPass, passDoc.value)) {
-            resolve(firstThree)
-            return true
-          }
-        }
-
-        // 计算并回调进度
-        const progress = (currentBatch * batchSize / 1000000) * 100
-        if (onProgress) {
-          onProgress(progress.toFixed(1))
-        }
-
-        currentBatch++
-        if (currentBatch < 1000) {
-          // 增加延迟时间，让出更多主线程时间
-          setTimeout(processBatch, 10)
-        } else {
-          resolve(null)
-        }
-        return false
-      }
-
-      processBatch()
-    })
   },
   getOriginalPassword: () => {
     const passDoc = window.utools.db.get('bcryptpass')

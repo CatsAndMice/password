@@ -11,8 +11,6 @@ export default class Passwords extends React.Component {
 
   handleVerify = (passText, errorCallback) => {
     const keyIV = window.services.verifyPassword(passText)
-    console.log(keyIV);
-    
     keyIV ? this.setState({ keyIV }) : errorCallback()
   }
 
