@@ -2,6 +2,10 @@ import React from 'react'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import CircularProgress from '@mui/material/CircularProgress'
+import IconButton from '@mui/material/IconButton'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+
 
 export default class Reset extends React.Component {
   state = {
@@ -10,16 +14,19 @@ export default class Reset extends React.Component {
     password: '',
     confirmPassword: '',
     confirmPasswordVerifyFail: false,
-    doing: false
+    doing: false,
+    showOldPassword: false,
+    showPassword: false,
+    showConfirmPassword: false
   }
-  
+
   handleOldPasswordChange = (e) => {
-    const oldPassword = e.target.value
+    const oldPassword = e.target.value.replace(/[\u4e00-\u9fa5\s]/g, '')
     this.setState({ oldPassword, oldPasswordVerifyFail: false })
   }
 
   handlePasswordChange = (e) => {
-    const password = e.target.value
+    const password = e.target.value.replace(/[\u4e00-\u9fa5\s]/g, '')
     const { confirmPassword } = this.state
     this.setState({
       password,
@@ -28,13 +35,13 @@ export default class Reset extends React.Component {
   }
 
   handleConfirmPasswordChange = (e) => {
-      const confirmPassword = e.target.value
-      const { password } = this.state
-      this.setState({ 
-        confirmPassword,
-        confirmPasswordVerifyFail: password !== confirmPassword
-      })
-    }
+    const confirmPassword = e.target.value.replace(/[\u4e00-\u9fa5\s]/g, '')
+    const { password } = this.state
+    this.setState({
+      confirmPassword,
+      confirmPasswordVerifyFail: password !== confirmPassword
+    })
+  }
 
   handleReset = () => {
     const { oldPassword, password, confirmPassword } = this.state
@@ -110,11 +117,22 @@ export default class Reset extends React.Component {
             error={oldPasswordVerifyFail}
             variant='outlined'
             autoFocus
-            type='password'
+            type={this.state.showOldPassword ? 'text' : 'password'}
             fullWidth
             label='旧的开门密码'
             value={oldPassword}
             onChange={this.handleOldPasswordChange}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() => this.setState(state => ({ showOldPassword: !state.showOldPassword }))}
+                  edge="end"
+                  size="large"
+                >
+                  {this.state.showOldPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              )
+            }}
             inputProps={{
               maxLength: 6,
               style: {
@@ -139,11 +157,22 @@ export default class Reset extends React.Component {
           <TextField
             error={password && password.length < 6}
             variant='outlined'
-            type='password'
+            type={this.state.showPassword ? 'text' : 'password'}
             fullWidth
             label='新的开门密码'
             value={password}
             onChange={this.handlePasswordChange}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() => this.setState(state => ({ showPassword: !state.showPassword }))}
+                  edge="end"
+                  size="large"
+                >
+                  {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              )
+            }}
             inputProps={{
               maxLength: 6,
               style: {
@@ -168,15 +197,26 @@ export default class Reset extends React.Component {
           <TextField
             error={confirmPasswordVerifyFail}
             variant='outlined'
-            type='password'
+            type={this.state.showConfirmPassword ? 'text' : 'password'}
             fullWidth
             label='确认开门密码'
             value={confirmPassword}
             onChange={this.handleConfirmPasswordChange}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() => this.setState(state => ({ showConfirmPassword: !state.showConfirmPassword }))}
+                  edge="end"
+                  size="large"
+                >
+                  {this.state.showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              )
+            }}
             inputProps={{
               maxLength: 6,
               style: {
-               fontSize: '18px',
+                fontSize: '18px',
                 letterSpacing: '4px'
               }
             }}
