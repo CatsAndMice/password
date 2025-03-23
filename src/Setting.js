@@ -3,20 +3,27 @@ import React from 'react'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 
+// 首先在文件顶部添加图标导入
+import IconButton from '@mui/material/IconButton'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+
 export default class Setting extends React.Component {
   state = {
     password: '',
     confirmPassword: '',
-    confirmPasswordVerifyFail: false
+    confirmPasswordVerifyFail: false,
+    showPassword: false,
+    showConfirmPassword: false
   }
 
   handlePasswordChange = (e) => {
-    const password = e.target.value
+    const password = e.target.value.replace(/[\u4e00-\u9fa5\s]/g, '')
     this.setState({ password })
   }
 
   handleConfirmPasswordChange = (e) => {
-    const confirmPassword = e.target.value
+    const confirmPassword = e.target.value.replace(/[\u4e00-\u9fa5\s]/g, '')
     const { password } = this.state
     this.setState({
       confirmPassword,
@@ -42,9 +49,9 @@ export default class Setting extends React.Component {
         alignItems: 'center',
         background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
       }}>
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
           gap: '25px',
           padding: '40px',
           background: 'rgba(255, 255, 255, 0.9)',
@@ -53,26 +60,37 @@ export default class Setting extends React.Component {
           backdropFilter: 'blur(10px)',
           width: '360px'
         }}>
-          <h2 style={{ 
-            margin: 0, 
+          <h2 style={{
+            margin: 0,
             color: '#2c3e50',
             fontSize: '24px',
             fontWeight: '500',
             textAlign: 'center'
           }}>请设置开门密码</h2>
-          
+
           <TextField
             error={password && password.length < 6}
             variant='outlined'
             autoFocus
-            type='password'
+            type={this.state.showPassword ? 'text' : 'password'}
             fullWidth
             label='开门密码'
             value={password}
             onChange={this.handlePasswordChange}
-            inputProps={{ 
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() => this.setState(state => ({ showPassword: !state.showPassword }))}
+                  edge="end"
+                  size="large"
+                >
+                  {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              )
+            }}
+            inputProps={{
               maxLength: 6,
-              style: { 
+              style: {
                 fontSize: '18px',
                 letterSpacing: '4px'
               }
@@ -90,18 +108,29 @@ export default class Setting extends React.Component {
             }}
             helperText={password ? (password.length < 6 ? '请输入6位密码' : '密码可用') : ''}
           />
-          
+
           <TextField
             error={confirmPasswordVerifyFail}
             variant='outlined'
-            type='password'
+            type={this.state.showConfirmPassword ? 'text' : 'password'}
             fullWidth
             label='确认开门密码'
             value={confirmPassword}
             onChange={this.handleConfirmPasswordChange}
-            inputProps={{ 
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() => this.setState(state => ({ showConfirmPassword: !state.showConfirmPassword }))}
+                  edge="end"
+                  size="large"
+                >
+                  {this.state.showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              )
+            }}
+            inputProps={{
               maxLength: 6,
-              style: { 
+              style: {
                 fontSize: '18px',
                 letterSpacing: '4px'
               }
@@ -119,7 +148,7 @@ export default class Setting extends React.Component {
             }}
             helperText={confirmPasswordVerifyFail ? '密码不一致' : ''}
           />
-          
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <Button
               onClick={this.handleOkClick}

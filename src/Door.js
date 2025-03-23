@@ -5,6 +5,11 @@ import Button from '@mui/material/Button'
 import InputBase from '@mui/material/InputBase'
 import EditIcon from '@mui/icons-material/Edit'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import Reset from './Reset'
 import Recover from './Recover'
 export default class Door extends React.Component {
@@ -17,6 +22,8 @@ export default class Door extends React.Component {
     recoverPassword: false,  // 新增找回密码状态
     canRecover: false,  // 新增状态
     firstThree: '',  // 密码前三位
+    menuAnchorEl: null,
+    rememberLogin: false,
   }
 
   componentDidMount() {
@@ -27,7 +34,10 @@ export default class Door extends React.Component {
 
   handleEnter = () => {
     if (this.state.fail) return
-    this.props.onVerify(this.state.passwordValue, () => {
+    this.props.onVerify({
+      passText: this.state.passwordValue,
+      rememberLogin: this.state.rememberLogin
+    }, () => {
       this.setState({ fail: true })
       setTimeout(() => {
         this.setState({ fail: false })
@@ -82,6 +92,18 @@ export default class Door extends React.Component {
     this.setState({ recoverPassword: false })
   }
 
+
+  handleMenuOpen = (event) => {
+    this.setState({ menuAnchorEl: event.currentTarget })
+  }
+
+  handleMenuClose = () => {
+    this.setState({ menuAnchorEl: null })
+  }
+
+  handleRememberChange = (event) => {
+    this.setState({ rememberLogin: event.target.checked })
+  }
   render() {
     const { fail, resetPassword, recoverPassword, passwordValue, isCapsLock, isComposition, canRecover, firstThree } = this.state
     if (resetPassword) return <Reset onOut={this.handleResetOut} />
@@ -99,7 +121,7 @@ export default class Door extends React.Component {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '25px',
+          // gap: '25px',
           padding: '40px',
           borderRadius: '16px',
           boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
@@ -107,6 +129,7 @@ export default class Door extends React.Component {
         }}>
           <h2 style={{
             margin: 0,
+            marginBottom: '25px',
             color: '#2c3e50',
             fontSize: '24px',
             fontWeight: '500'
@@ -168,7 +191,7 @@ export default class Door extends React.Component {
               top: '100%',
               left: '50%',
               transform: 'translateX(-50%)',
-              marginTop: '10px',
+              marginTop: '8px',
               fontSize: '13px',
               color: '#e74c3c',
               fontWeight: '500'
@@ -179,50 +202,152 @@ export default class Door extends React.Component {
           </div>
           <div style={{
             display: 'flex',
-            justifyContent: 'center',
-            gap: '24px',
-            width: '100%'
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: isCapsLock || isComposition ? '32px' : '16px',
+            padding: '0 4px 0 8px',
+            width: '320px'
           }}>
-            <Button
-              onClick={this.handleResetClick}
-              variant="text"
-              size="small"
-              style={{
-                fontSize: '14px',
-                color: '#7f8c8d',
-                textTransform: 'none',
-                padding: '10px 20px',
-                borderRadius: '8px',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  backgroundColor: 'rgba(127, 140, 141, 0.08)'
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.rememberLogin}
+                  onChange={this.handleRememberChange}
+                  size="small"
+                  sx={{
+                    padding: '4px',
+                    color: '#95a5a6',
+                    '&.Mui-checked': {
+                      color: '#3498db',
+                    },
+                    '&:hover': {
+                      backgroundColor: 'rgba(52, 152, 219, 0.04)',
+                    }
+                  }}
+                />
+              }
+              sx={{
+                marginLeft: '-4px',
+                '& .MuiFormControlLabel-label': {
+                  marginLeft: '4px'
                 }
               }}
-              startIcon={<EditIcon style={{ fontSize: 18 }} />}
-            >
-              修改密码
-            </Button>
-            {canRecover && (  // 只有在可以找回密码时才显示按钮
-              <Button
-                onClick={this.handleRecoverClick}
-                variant="text"
-                size="small"
-                style={{
-                  fontSize: '14px',
+              label={
+                <span style={{
+                  fontSize: '13px',
                   color: '#7f8c8d',
-                  textTransform: 'none',
-                  padding: '10px 20px',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  msUserSelect: 'none',
+                  opacity: 1
+                }}>
+                  1天内免登录
+                </span>
+              }
+            />
+
+            <Button
+              onClick={this.handleMenuOpen}
+              variant="text"
+              size="small"
+              sx={{
+                minWidth: 'auto',
+                fontSize: '13px',
+                color: '#7f8c8d !important',
+                fontWeight: '400',
+                textTransform: 'none',
+                borderRadius: '16px',
+                transition: 'all 0.2s ease',
+              }}
+              endIcon={<KeyboardArrowDownIcon sx={{
+                fontSize: 18,
+                transition: 'transform 0.3s ease',
+                transform: Boolean(this.state.menuAnchorEl) ? 'rotate(180deg)' : 'rotate(0deg)'
+              }} />}
+            >
+              <span style={{
+                fontSize: '13px',
+                color: '#7f8c8d',
+              }}>
+                密码选项
+              </span>
+            </Button>
+            <Menu
+              anchorEl={this.state.menuAnchorEl}
+              open={Boolean(this.state.menuAnchorEl)}
+              onClose={this.handleMenuClose}
+              PaperProps={{
+                elevation: 3,
+                sx: {
+                  mt: 1.5,
+                  overflow: 'visible',
+                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.15))',
+                  borderRadius: '12px',
+                  minWidth: 180,
+                  '&:before': {
+                    content: '""',
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: 'background.paper',
+                    transform: 'translateY(-50%) rotate(45deg)',
+                    zIndex: 0,
+                  },
+                }
+              }}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+              <MenuItem
+                onClick={() => {
+                  this.handleMenuClose()
+                  this.handleResetClick()
+                }}
+                sx={{
+                  fontSize: '14px',
+                  py: 1.5,
+                  px: 2.5,
                   borderRadius: '8px',
-                  transition: 'all 0.3s ease',
+                  mx: 1,
+                  my: 0.5,
+                  gap: 1.5,
+                  color: '#2c3e50',
+                  transition: 'all 0.2s ease',
                   '&:hover': {
-                    backgroundColor: 'rgba(127, 140, 141, 0.08)'
+                    backgroundColor: 'rgba(52, 152, 219, 0.08)',
                   }
                 }}
-                startIcon={<HelpOutlineIcon style={{ fontSize: 18 }} />}
               >
-                找回密码
-              </Button>
-            )}
+                <EditIcon sx={{ fontSize: 18, color: '#3498db' }} /> 修改密码
+              </MenuItem>
+              {canRecover && (
+                <MenuItem
+                  onClick={() => {
+                    this.handleMenuClose()
+                    this.handleRecoverClick()
+                  }}
+                  sx={{
+                    fontSize: '14px',
+                    py: 1.5,
+                    px: 2.5,
+                    borderRadius: '8px',
+                    mx: 1,
+                    my: 0.5,
+                    gap: 1.5,
+                    color: '#2c3e50',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      backgroundColor: 'rgba(230, 126, 34, 0.08)',
+                    }
+                  }}
+                >
+                  <HelpOutlineIcon sx={{ fontSize: 18, color: '#e67e22' }} /> 找回密码
+                </MenuItem>
+              )}
+            </Menu>
           </div>
         </div>
       </div>
