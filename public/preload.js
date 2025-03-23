@@ -1,6 +1,5 @@
 const crypto = require('crypto')
 const bcrypt = require('./bcrypt/bcrypt.js')
-
 const getKeyIv = (passphrase) => {
   const hash1 = crypto.createHash('md5').update(passphrase).digest('hex')
   const hash2 = crypto.createHash('md5').update(hash1 + passphrase).digest('hex')
@@ -8,13 +7,14 @@ const getKeyIv = (passphrase) => {
   return { key: hash2, iv: hash3.substr(16) }
 }
 
+// 加密原始密码，返回加密密码
 const getRecoveryPass = (password) => {
-  // 只使用对称加密存储前三位密码
   const keyiv = getKeyIv('recovery_key')
   const cipher = crypto.createCipheriv('aes-256-cbc', keyiv.key, keyiv.iv)
   return cipher.update(password, 'utf8', 'hex') + cipher.final('hex')
 }
 
+// 解密加密密码，返回原始密码
 const getOriginalPasswordPlus = (recovery) => {
   const keyiv = getKeyIv('recovery_key')
   const decipher = crypto.createDecipheriv('aes-256-cbc', keyiv.key, keyiv.iv)
@@ -80,11 +80,12 @@ window.services = {
     fs.writeFileSync(saveFile, content, 'utf-8')
     window.utools.shellShowItemInFolder(saveFile)
   },
+  // 获取原始密码
   getOriginalPassword: () => {
     const passDoc = window.utools.db.get('bcryptpass')
     if (!passDoc || !passDoc.recovery) return null
     try {
-      getOriginalPasswordPlus(passDoc.recovery)
+      return getOriginalPasswordPlus(passDoc.recovery)
     } catch (err) {
       console.error('解密失败:', err)
       return null

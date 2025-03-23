@@ -241,7 +241,7 @@ export default class Door extends React.Component {
                   msUserSelect: 'none',
                   opacity: 1
                 }}>
-                  7天内免登录
+                  1天内免登录
                 </span>
               }
             />
