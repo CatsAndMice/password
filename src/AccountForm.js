@@ -127,16 +127,21 @@ export default class AccountForm extends React.Component {
       const doc = this.props.data
       if (value) {
         getFavicon(value).then(favicon => {
-          if (favicon) {
+          if (favicon && this.props.decryptAccountDic[doc._id]) {
             doc.favicon = favicon
+            // 确保对象存在
+            if (!this.props.decryptAccountDic[doc._id].account) {
+              this.props.decryptAccountDic[doc._id].account = {}
+            }
             this.props.decryptAccountDic[doc._id].account.favicon = favicon
             this.props.onUpdate(doc)
           }
         }).catch(() => {
-          // 链接无效或获取失败时，清除 favicon
-          if (doc.favicon || this.props.decryptAccountDic[doc._id].account.favicon) {
+          if (doc.favicon || (this.props.decryptAccountDic[doc._id]?.account?.favicon)) {
             delete doc.favicon
-            delete this.props.decryptAccountDic[doc._id].account.favicon
+            if (this.props.decryptAccountDic[doc._id]?.account) {
+              delete this.props.decryptAccountDic[doc._id].account.favicon
+            }
             this.props.onUpdate(doc)
           }
         })
