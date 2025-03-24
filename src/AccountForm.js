@@ -17,6 +17,8 @@ import ShuffleIcon from '@mui/icons-material/Shuffle'
 import SendIcon from '@mui/icons-material/Send'
 import SvgIcon from '@mui/material/SvgIcon';
 import RandomPassword from './RandomPassword'
+import { getFavicon } from "./utils/getFavicon"
+
 // 基础样式配置
 const baseTextFieldStyle = {
   '& .MuiInput-underline:before': {
@@ -114,11 +116,35 @@ export default class AccountForm extends React.Component {
     this.setState(stateValue)
   }
 
-  handleInputChang = field => e => {
+  handleInputChang = field => async (e) => {
     const value = e.target.value
     if (field === 'title' || field === 'username') {
       this.props.decryptAccountDic[this.props.data._id][field] = value
       document.getElementById(this.props.data._id + '_' + field).innerText = value
+    }
+    // 保存网站logo
+    if (field === 'link') {
+      const doc = this.props.data
+      if (value) {
+        getFavicon(value).then(favicon => {
+          if (favicon) {
+            doc.favicon = favicon
+            this.props.decryptAccountDic[doc._id].account.favicon = favicon
+            this.props.onUpdate(doc)
+          }
+        }).catch(() => {
+          // 链接无效或获取失败时，清除 favicon
+          if (doc.favicon || this.props.decryptAccountDic[doc._id].account.favicon) {
+            delete doc.favicon
+            delete this.props.decryptAccountDic[doc._id].account.favicon
+            this.props.onUpdate(doc)
+          }
+        })
+      } else {
+        delete doc.favicon
+        delete this.props.decryptAccountDic[doc._id].account.favicon
+        this.props.onUpdate(doc)
+      }
     }
     const stateValue = {}
     stateValue[field + 'Value'] = value

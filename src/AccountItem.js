@@ -1,19 +1,21 @@
 import React from 'react'
 import { DragSource, DropTarget } from 'react-dnd'
+import Avatar from '@mui/material/Avatar'
+import LinkIcon from '@mui/icons-material/Link'
 
 const boxSource = {
-  beginDrag (props, monitor, component) {
+  beginDrag(props, monitor, component) {
     return { account: props.data.account, index: props.index }
   }
 }
 
 const boxTarget = {
-  canDrop (props, monitor) {
+  canDrop(props, monitor) {
     const source = monitor.getItem()
     if (props.index - source.index === 1 || props.index === source.index) return false
     return true
   },
-  drop (props, monitor, component) {
+  drop(props, monitor, component) {
     if (monitor.didDrop()) {
       return
     }
@@ -36,14 +38,58 @@ const boxTarget = {
   isDragging: monitor.isDragging()
 }))
 class AccountItem extends React.Component {
-  render () {
+  state = {
+    faviconLoaded: false
+  }
+  render() {
     const { isDragging, isOver, canDrop, connectDropTarget, connectDragSource, data, isSelected } = this.props
     return connectDropTarget(connectDragSource(
       <div style={{ opacity: isDragging ? 0 : 1 }} className='account-item'>
         {(isOver && canDrop) && <div className='account-item-sort' />}
-        <div className={'account-item-body' + (isSelected ? ' account-item-selected' : '')}>
-          <div id={data.account._id + '_title'}>{data.title}</div>
-          <div className='account-item-username' id={data.account._id + '_username'}>{data.username}</div>
+        <div className={'account-item-body' + (isSelected ? ' account-item-selected' : '')}
+          style={{ padding: '8px 12px' }}>
+          <div style={{
+            display: 'flex',
+            gap: '12px',
+            alignItems: 'center'
+          }}>
+            {!this.state.faviconError && data.account.favicon && (
+              <Avatar
+                src={data.account.favicon}
+                variant="square"
+                sx={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: '4px',
+                  marginTop: '2px',
+                  display: this.state.faviconLoaded ? 'flex' : 'none'
+                }}
+                onError={() => this.setState({ faviconLoaded: false })}
+                onLoad={() => this.setState({ faviconLoaded: true })}
+              >
+                <LinkIcon sx={{ fontSize: 18, color: 'rgba(44, 62, 80, 0.5)' }} />
+              </Avatar>
+            )}
+            <div style={{ flex: 1 }}>
+              <div id={data.account._id + '_title'}
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#2c3e50',
+                  marginBottom: '4px'
+                }}>
+                {data.title}
+              </div>
+              <div className='account-item-username'
+                id={data.account._id + '_username'}
+                style={{
+                  fontSize: '13px',
+                  color: 'rgba(44, 62, 80, 0.7)',
+                }}>
+                {data.username}
+              </div>
+            </div>
+          </div>
         </div>
       </div>))
   }
