@@ -86,6 +86,7 @@ export default class Passwords extends React.Component {
         _id: 'account/' + Date.now(),
         title: window.services.encryptValue(keyiv, '密码管家'),
         username: window.services.encryptValue(keyiv, '程序员凌览'),
+        link: window.services.encryptValue(keyiv, 'https://u.tools/plugins/detail/%E5%AF%86%E7%A0%81%E7%AE%A1%E5%AE%B6/?c=eylamc1n2u'),
         groupId: newGroup.id,
         createAt: Date.now(),
         sort: 0
