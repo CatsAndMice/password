@@ -23,6 +23,11 @@ const getOriginalPasswordPlus = (recovery) => {
 }
 
 window.services = {
+  generateId: (prefix = '') => {
+    const timestamp = Date.now()
+    const random = crypto.randomBytes(4).toString('hex')
+    return `${prefix}${timestamp}_${random}`
+  },
   getRecoveryPass,
   getOriginalPasswordPlus,
   setBcryptPass: (password) => {

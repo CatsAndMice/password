@@ -22,7 +22,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-
+import { getFavicon } from './utils/getFavicon'
 export default class ImportDialog extends React.Component {
     state = {
         open: false,
@@ -48,7 +48,7 @@ export default class ImportDialog extends React.Component {
         this.setState({ content: e.target.value })
     }
 
-    handleImport = () => {
+    handleImport = async () => {
         const { data } = this.props
         if (!data) return
         const keyIV = window.services.verifyPassword(this.state.password)
@@ -65,15 +65,32 @@ export default class ImportDialog extends React.Component {
                 return this.props.showMessage('未找到有效的帐号数据', 'error')
             }
 
-            const accounts = parsedAccounts.map(account => ({
-                _id: 'account/' + Date.now() + Math.random().toString(36).substr(2),
-                groupId: data.group._id,
-                createAt: Date.now(),
-                title: account.title ? window.services.encryptValue(keyIV, account.title) : '',
-                username: account.username ? window.services.encryptValue(keyIV, account.username) : '',
-                password: account.password ? window.services.encryptValue(keyIV, account.password) : '',
-                link: account.link ? window.services.encryptValue(keyIV, account.link) : '',
-                remark: account.remark ? window.services.encryptValue(keyIV, account.remark) : ''
+            // 处理账号数据并获取 favicon
+            const accounts = await Promise.all(parsedAccounts.map(async account => {
+                const baseAccount = {
+                    _id: window.services.generateId('account/'),
+                    groupId: data.group._id,
+                    createAt: Date.now(),
+                    title: account.title ? window.services.encryptValue(keyIV, account.title) : '',
+                    username: account.username ? window.services.encryptValue(keyIV, account.username) : '',
+                    password: account.password ? window.services.encryptValue(keyIV, account.password) : '',
+                    link: account.link ? window.services.encryptValue(keyIV, account.link) : '',
+                    remark: account.remark ? window.services.encryptValue(keyIV, account.remark) : ''
+                }
+
+                // 如果有链接，尝试获取 favicon
+                if (account.link) {
+                    try {
+                        const favicon = await getFavicon(account.link)
+                        if (favicon) {
+                            baseAccount.favicon = favicon
+                        }
+                    } catch (error) {
+                        console.error('获取favicon失败:', error)
+                    }
+                }
+
+                return baseAccount
             }))
 
             this.setState({ open: false })
@@ -103,122 +120,6 @@ export default class ImportDialog extends React.Component {
         }
         reader.readAsText(file)
     }
-
-    // 修改输入框部分的代码
-    //   render() {
-    //     const { data } = this.props
-    //     if (!data) return false
-    //     const { open, password, content } = this.state
-    //     return (
-    //       <Dialog open={open} onClose={this.handleClose} maxWidth="sm" fullWidth>
-    //         <DialogTitle>导入帐号数据到分组</DialogTitle>
-    //         <DialogContent>
-    //           <DialogContentText sx={{
-    //             paddingBottom: '10px',
-    //             color: '#2c3e50'
-    //           }}>
-    //             导入数据到「{data.group.name}」分组
-    //           </DialogContentText>
-    //           <TextField
-    //             error={Boolean(password) && password.length < 6}
-    //             autoFocus
-    //             variant='outlined'
-    //             type='password'
-    //             fullWidth
-    //             label='开门密码'
-    //             value={password}
-    //             onChange={this.handlePasswordChange}
-    //             size='small'
-    //             inputProps={{
-    //               maxLength: 6,
-    //               style: {
-    //                 fontSize: '16px',
-    //                 letterSpacing: '4px'
-    //               }
-    //             }}
-    //             sx={{
-    //               marginBottom: '16px',
-    //               '& .MuiOutlinedInput-root': {
-    //                 borderRadius: '8px',
-    //                 backgroundColor: '#ffffff',
-    //                 '& input': {
-    //                   padding: '8px 14px',
-    //                   height: '1.4em',
-    //                   lineHeight: '1.4em'
-    //                 }
-    //               }
-    //             }}
-    //             helperText={password && password.length < 6 ? '请输入6位密码' : ''}
-    //           />
-    //           <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-    //             <Stack spacing={2} direction="row" sx={{ width: '100%' }}>
-    //               <TextField
-    //                 multiline
-    //                 rows={8}
-    //                 fullWidth
-    //                 label='帐号数据'
-    //                 value={content}
-    //                 onChange={this.handleContentChange}
-    //                 variant='outlined'
-    //                 sx={{
-    //                   '& .MuiOutlinedInput-root': {
-    //                     borderRadius: '8px',
-    //                     backgroundColor: '#ffffff'
-    //                   }
-    //                 }}
-    //                 placeholder="请输入要导入的帐号数据，格式如下：
-    //               【标题】
-    //               用户名：xxx
-    //               密码：xxx
-    //               链接：xxx
-    //               说明：xxx"
-    //                 InputProps={{
-    //                   endAdornment: (
-    //                     <InputAdornment position="end" sx={{ alignSelf: 'flex-start', mt: 1, mr: 1 }}>
-    //                       <input
-    //                         type="file"
-    //                         accept=".txt"
-    //                         style={{ display: 'none' }}
-    //                         onChange={this.handleFileUpload}
-    //                         id="file-upload"
-    //                       />
-    //                       <label htmlFor="file-upload">
-    //                         <Tooltip title="上传txt文件" placement="top">
-    //                           <IconButton
-    //                             component="span"
-    //                             size="small"
-    //                             sx={{
-    //                               border: '1px solid rgba(0, 0, 0, 0.23)',
-    //                               borderRadius: '4px',
-    //                               '&:hover': {
-    //                                 backgroundColor: 'rgba(0, 0, 0, 0.04)'
-    //                               }
-    //                             }}
-    //                           >
-    //                             <AttachFileIcon fontSize="small" />
-    //                           </IconButton>
-    //                         </Tooltip>
-    //                       </label>
-    //                     </InputAdornment>
-    //                   )
-    //                 }}
-    //               />
-    //             </Stack>
-    //           </div>
-    //         </DialogContent>
-    //         <DialogActions>
-    //           <Button 
-    //             disabled={!password || password.length < 6 || !content.trim()} 
-    //             startIcon={<UploadFileIcon />} 
-    //             onClick={this.handleImport} 
-    //             color='primary'
-    //           >
-    //             导入数据
-    //           </Button>
-    //         </DialogActions>
-    //       </Dialog>
-    //     )
-    //   }
 
     // 解析数据的方法
     parseContent = (content) => {
