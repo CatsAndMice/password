@@ -1,8 +1,23 @@
 
+// 添加超时控制的 fetch
+const fetchWithTimeout = async (url, timeout = 3000) => {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeout)
+    
+    try {
+        const response = await fetch(url, { signal: controller.signal })
+        clearTimeout(timeoutId)
+        return response
+    } catch (e) {
+        clearTimeout(timeoutId)
+        throw e
+    }
+}
+
 // 从HTML中提取favicon链接
 const extractFaviconFromHtml = async (url) => {
     try {
-        const response = await fetch(url)
+        const response = await fetchWithTimeout(url, 3000) // 使用 5 秒超时
         const html = await response.text()
         const parser = new DOMParser()
         const doc = parser.parseFromString(html, 'text/html')
