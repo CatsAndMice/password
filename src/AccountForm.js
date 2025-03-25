@@ -17,7 +17,7 @@ import SendIcon from '@mui/icons-material/Send'
 import SvgIcon from '@mui/material/SvgIcon';
 import RandomPassword from './RandomPassword'
 import SnackbarMessage from './SnackbarMessage'
-import { getFavicon } from "./utils/getFavicon"
+import { updateFavicon } from "./utils/updateFavicon"
 
 // 基础样式配置
 const baseTextFieldStyle = {
@@ -97,8 +97,18 @@ export default class AccountForm extends React.Component {
     window.addEventListener('keydown', this.keydownAction, true)
   }
 
+  constructor(props) {
+    super(props)
+    this.faviconTimer = null
+    this.faviconRequestId = 0  // 添加请求ID计数器
+  }
+
   componentWillUnmount() {
     window.removeEventListener('keydown', this.keydownAction, true)
+    // 清理定时器
+    if (this.faviconTimer) {
+      clearTimeout(this.faviconTimer)
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line
@@ -123,34 +133,22 @@ export default class AccountForm extends React.Component {
       this.props.decryptAccountDic[this.props.data._id][field] = value
       document.getElementById(this.props.data._id + '_' + field).innerText = value
     }
-    // 保存网站logo
     if (field === 'link') {
-      const doc = this.props.data
-      if (value) {
-        getFavicon(value).then(favicon => {
-          if (favicon && this.props.decryptAccountDic[doc._id]) {
-            doc.favicon = favicon
-            // 确保对象存在
-            if (!this.props.decryptAccountDic[doc._id].account) {
-              this.props.decryptAccountDic[doc._id].account = {}
-            }
-            this.props.decryptAccountDic[doc._id].account.favicon = favicon
-            this.props.onUpdate(doc)
-          }
-        }).catch(() => {
-          if (doc.favicon || (this.props.decryptAccountDic[doc._id]?.account?.favicon)) {
-            delete doc.favicon
-            if (this.props.decryptAccountDic[doc._id]?.account) {
-              delete this.props.decryptAccountDic[doc._id].account.favicon
-            }
-            this.props.onUpdate(doc)
-          }
-        })
-      } else {
-        delete doc.favicon
-        delete this.props.decryptAccountDic[doc._id].account.favicon
-        this.props.onUpdate(doc)
+      if (this.faviconTimer) {
+        clearTimeout(this.faviconTimer)
       }
+
+      const currentRequestId = ++this.faviconRequestId
+      this.faviconTimer = setTimeout(() => {
+        if (currentRequestId === this.faviconRequestId) {
+          updateFavicon(
+            value,
+            this.props.data,
+            this.props.decryptAccountDic,
+            this.props.onUpdate
+          )
+        }
+      }, 1000)
     }
     const stateValue = {}
     stateValue[field + 'Value'] = value
@@ -214,7 +212,7 @@ export default class AccountForm extends React.Component {
       }))
       // 延迟 1 秒后再跳转
       setTimeout(() => {
-        
+
         window.utools.hideMainWindow(false)
         window.utools.shellOpenExternal(this.state.linkValue)
       }, 1000)
