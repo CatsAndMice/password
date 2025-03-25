@@ -70,25 +70,35 @@ class AccountItem extends React.Component {
                 <LinkIcon sx={{ fontSize: 18, color: 'rgba(44, 62, 80, 0.5)' }} />
               </Avatar>
             )}
-            <div style={{ flex: 1 }}>
-              <div id={data.account._id + '_title'}
-                style={{
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  color: '#2c3e50',
-                  marginBottom: '4px'
-                }}>
-                {data.title}
+            <div style={{ 
+                flex: 1,
+                minWidth: 0, // 关键是这行，让flex item可以收缩到比内容更小
+                overflow: 'hidden' // 确保子元素不会溢出
+              }}>
+                <div id={data.account._id + '_title'}
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    color: '#2c3e50',
+                    marginBottom: '4px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}>
+                  {data.title}
+                </div>
+                <div className='account-item-username'
+                  id={data.account._id + '_username'}
+                  style={{
+                    fontSize: '13px',
+                    color: 'rgba(44, 62, 80, 0.7)',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}>
+                  {data.username}
+                </div>
               </div>
-              <div className='account-item-username'
-                id={data.account._id + '_username'}
-                style={{
-                  fontSize: '13px',
-                  color: 'rgba(44, 62, 80, 0.7)',
-                }}>
-                {data.username}
-              </div>
-            </div>
           </div>
         </div>
       </div>))

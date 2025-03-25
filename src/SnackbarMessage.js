@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 
@@ -21,7 +22,8 @@ export default class SnackbarMessage extends React.Component {
   render () {
     const { open } = this.state
     const { key, type, body } = this.props.message
-    return (
+    
+    return ReactDOM.createPortal(
       <Snackbar
         key={key}
         open={open}
@@ -29,8 +31,19 @@ export default class SnackbarMessage extends React.Component {
         autoHideDuration={3000}
         onClose={this.handleClose}
       >
-        <Alert onClose={this.handleClose} variant='filled' severity={type}>{body}</Alert>
-      </Snackbar>
+        <Alert 
+          onClose={this.handleClose} 
+          variant='filled' 
+          severity={type}
+          sx={{ 
+            minWidth: '250px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+          }}
+        >
+          {body}
+        </Alert>
+      </Snackbar>,
+      document.body
     )
   }
 }

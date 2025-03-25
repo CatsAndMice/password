@@ -16,6 +16,7 @@ import ShuffleIcon from '@mui/icons-material/Shuffle'
 import SendIcon from '@mui/icons-material/Send'
 import SvgIcon from '@mui/material/SvgIcon';
 import RandomPassword from './RandomPassword'
+import SnackbarMessage from './SnackbarMessage'
 import { getFavicon } from "./utils/getFavicon"
 
 // 基础样式配置
@@ -64,7 +65,8 @@ export default class AccountForm extends React.Component {
     remarkValue: '',
     linkValue: '',
     passwordEye: false,
-    randomPasswordEl: null
+    randomPasswordEl: null,
+    message: { key: 0, type: 'info', body: '' }  // 添加消息状态
   }
 
   keydownAction = (e) => {
@@ -194,8 +196,32 @@ export default class AccountForm extends React.Component {
 
   handleOpenLink = () => {
     if (!this.state.linkValue) return
-    window.utools.hideMainWindow(false)
-    window.utools.shellOpenExternal(this.state.linkValue)
+
+    // 如果存在用户名或密码，将它们组合复制到剪贴板
+    if (this.state.usernameValue || this.state.passwordValue) {
+      const copyText = [
+        this.state.usernameValue && `用户名：${this.state.usernameValue}`,
+        this.state.passwordValue && `密码：${this.state.passwordValue}`
+      ].filter(Boolean).join('\n')
+      window.utools.copyText(copyText)
+      // this.props.showMessage && this.props.showMessage('已复制登录信息到剪贴板', 'info')
+      this.setState(prevState => ({
+        message: {
+          key: prevState.message.key + 1,
+          type: 'info',
+          body: '已复制登录信息到剪贴板'
+        }
+      }))
+      // 延迟 1 秒后再跳转
+      setTimeout(() => {
+        
+        window.utools.hideMainWindow(false)
+        window.utools.shellOpenExternal(this.state.linkValue)
+      }, 1000)
+    } else {
+      window.utools.hideMainWindow(false)
+      window.utools.shellOpenExternal(this.state.linkValue)
+    }
   }
 
   handleOkRandomPassword = () => {
@@ -208,9 +234,10 @@ export default class AccountForm extends React.Component {
 
   // 在 render 方法中使用
   render() {
-    const { titleValue, usernameValue, passwordValue, linkValue, remarkValue, passwordEye, randomPasswordEl } = this.state
+    const { titleValue, usernameValue, passwordValue, linkValue, remarkValue, passwordEye, randomPasswordEl, message } = this.state
     return (
       <div className='account-form'>
+        <SnackbarMessage message={message} />
         <div>
           <TextField
             fullWidth
