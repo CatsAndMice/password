@@ -224,57 +224,57 @@ html, body {
 }
 
 // 暗黑模式
-@media (prefers-color-scheme: dark) {
-  @darkDoorBgColor: #303133;
-  body {
-    background-color: @darkDoorBgColor;
-    color: #fff;
-  }
-  ::-webkit-scrollbar-track-piece {
-    background-color: @darkDoorBgColor; 
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: #666;
-    border-color: @darkDoorBgColor;
-  }
-  @keyframes darkfailbg
-  {
-    0% {
-      background: @darkDoorBgColor;
-    }
-    50% { 
-      background: #eb928c;
-    }
-    100% {
-      background: @darkDoorBgColor;
-    }
-  }
-  .door-body {
-    background-color: @darkDoorBgColor;
-    .door-input {
-      background-color: rgba(255, 255, 255, 0.3);
-      // border-color: transparent;
-      input {
-        color: #fff;
-        &::-webkit-input-placeholder{
-          color: #ccc;
-        }
-      }
-    }
-  }
-  .setting-body {
-    background-color: @darkDoorBgColor;
-  }
-  .door-fail {
-    animation: darkfailbg 1s;
-  }
-  .reset-doing {
-    background-color: @darkDoorBgColor;
-    .reset-doing-text {
-      color: #bbb;
-    }
-  }
-  .random-body {
-    color: #fff;
-  }
-}
+// @media (prefers-color-scheme: dark) {
+//   @darkDoorBgColor: #303133;
+//   body {
+//     background-color: @darkDoorBgColor;
+//     color: #fff;
+//   }
+//   ::-webkit-scrollbar-track-piece {
+//     background-color: @darkDoorBgColor; 
+//   }
+//   ::-webkit-scrollbar-thumb {
+//     background-color: #666;
+//     border-color: @darkDoorBgColor;
+//   }
+//   @keyframes darkfailbg
+//   {
+//     0% {
+//       background: @darkDoorBgColor;
+//     }
+//     50% { 
+//       background: #eb928c;
+//     }
+//     100% {
+//       background: @darkDoorBgColor;
+//     }
+//   }
+//   .door-body {
+//     background-color: @darkDoorBgColor;
+//     .door-input {
+//       background-color: rgba(255, 255, 255, 0.3);
+//       // border-color: transparent;
+//       input {
+//         color: #fff;
+//         &::-webkit-input-placeholder{
+//           color: #ccc;
+//         }
+//       }
+//     }
+//   }
+//   .setting-body {
+//     background-color: @darkDoorBgColor;
+//   }
+//   .door-fail {
+//     animation: darkfailbg 1s;
+//   }
+//   .reset-doing {
+//     background-color: @darkDoorBgColor;
+//     .reset-doing-text {
+//       color: #bbb;
+//     }
+//   }
+//   .random-body {
+//     color: #fff;
+//   }
+// }
