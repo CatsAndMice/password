@@ -17,7 +17,7 @@ const fetchWithTimeout = async (url, timeout = 3000) => {
 // 从HTML中提取favicon链接
 const extractFaviconFromHtml = async (url) => {
     try {
-        const response = await fetchWithTimeout(url, 3000) // 使用 5 秒超时
+        const response = await fetchWithTimeout(url, 3000) // 使用 3 秒超时
         const html = await response.text()
         const parser = new DOMParser()
         const doc = parser.parseFromString(html, 'text/html')
@@ -58,11 +58,10 @@ export const getFavicon = async (url) => {
         
         // 首先尝试从HTML中获取
         const faviconFromHtml = await extractFaviconFromHtml(url)
-        if (faviconFromHtml) {
-            console.log(faviconFromHtml);
-            
+        if (faviconFromHtml) { 
             return faviconFromHtml
         }
+      
         
         // 如果HTML中没有找到，使用默认位置
         const sources = getFaviconSources(urlObj)

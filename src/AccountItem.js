@@ -41,6 +41,8 @@ class AccountItem extends React.Component {
   state = {
     faviconLoaded: false
   }
+
+
   render() {
     const { isDragging, isOver, canDrop, connectDropTarget, connectDragSource, data, isSelected } = this.props
     return connectDropTarget(connectDragSource(
@@ -57,6 +59,7 @@ class AccountItem extends React.Component {
               <Avatar
                 src={data.account.favicon}
                 variant="square"
+                key={data.account.favicon}
                 sx={{
                   width: 24,
                   height: 24,

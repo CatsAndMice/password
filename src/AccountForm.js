@@ -133,26 +133,39 @@ export default class AccountForm extends React.Component {
       this.props.decryptAccountDic[this.props.data._id][field] = value
       document.getElementById(this.props.data._id + '_' + field).innerText = value
     }
+
+    const stateValue = {}
+    stateValue[field + 'Value'] = value
+    this.setState(stateValue)
+
     if (field === 'link') {
       if (this.faviconTimer) {
         clearTimeout(this.faviconTimer)
       }
 
       const currentRequestId = ++this.faviconRequestId
+      // 克隆数据，防止数据污染
+      const data = JSON.parse(JSON.stringify(this.props.data))
       this.faviconTimer = setTimeout(() => {
         if (currentRequestId === this.faviconRequestId) {
+          if (value) {
+            data[field] = window.services.encryptValue(this.props.keyIV, value)
+          } else {
+            delete data[field]
+          }
+          // this.props.onUpdate(doc)
           updateFavicon(
             value,
-            this.props.data,
+            data,
             this.props.decryptAccountDic,
-            this.props.onUpdate
+            this.props.onUpdate,
+            currentRequestId,  // 传递请求ID
+            () => this.faviconRequestId === currentRequestId  // 传递验证函数
           )
         }
       }, 1000)
     }
-    const stateValue = {}
-    stateValue[field + 'Value'] = value
-    this.setState(stateValue)
+
     if (this.inputDelayTimer) {
       clearTimeout(this.inputDelayTimer)
     }
