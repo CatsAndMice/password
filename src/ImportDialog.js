@@ -79,16 +79,16 @@ export default class ImportDialog extends React.Component {
                 }
 
                 // 如果有链接，尝试获取 favicon
-                if (account.link) {
-                    try {
-                        const favicon = await getFavicon(account.link)
-                        if (favicon) {
-                            baseAccount.favicon = favicon
-                        }
-                    } catch (error) {
-                        console.error('获取favicon失败:', error)
-                    }
-                }
+                // if (account.link) {
+                //     try {
+                //         const favicon = await getFavicon(account.link)
+                //         if (favicon) {
+                //             baseAccount.favicon = favicon
+                //         }
+                //     } catch (error) {
+                //         console.error('获取favicon失败:', error)
+                //     }
+                // }
 
                 return baseAccount
             }))

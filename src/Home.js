@@ -173,6 +173,24 @@ class Home extends React.Component {
   handleAccountCreate = () => {
     const { selectedGroupId, group2Accounts, decryptAccountDic } = this.state
     if (!selectedGroupId) return
+
+    if (selectedGroupId in group2Accounts) {
+      // 在一次循环中同时查找空白账号和其索引
+      let emptyAccountIndex = -1
+      const accounts = group2Accounts[selectedGroupId]
+      for (let i = 0; i < accounts.length; i++) {
+        const decryptedAcc = decryptAccountDic[accounts[i]._id]
+        if (!decryptedAcc.title && !decryptedAcc.username) {
+          emptyAccountIndex = i
+          break
+        }
+      }
+      if (emptyAccountIndex !== -1) {
+        return emptyAccountIndex
+      }
+    }
+
+
     const dateNow = Date.now()
     const newAccount = {
       _id: 'account/' + dateNow,

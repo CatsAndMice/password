@@ -14,6 +14,7 @@ import Button from '@mui/material/Button'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 
+const ACCOUNT_ITEM_HEIGHT = 65 //每个帐号的高度
 export default class AccountArea extends React.Component {
   isMacOs = window.utools.isMacOs()
 
@@ -83,12 +84,21 @@ export default class AccountArea extends React.Component {
   }
 
   handleCreate = () => {
-    this.props.onCreate()
+    const index = this.props.onCreate()
+    const isNumber = typeof index === 'number'
+    if (isNumber) {
+      this.setState({ selectedIndex: index })
+    }
+
     setTimeout(() => {
-      // 滚动列表到底部
       const listBody = document.querySelector('.account-list-body')
       if (listBody) {
-        listBody.scrollTop = listBody.scrollHeight
+        // 根据是否有索引值决定滚动位置
+        if (isNumber) {
+          listBody.scrollTop = ACCOUNT_ITEM_HEIGHT * index
+        } else {
+          listBody.scrollTop = listBody.scrollHeight
+        }
       }
       const titleInput = document.querySelector('#accountFormTitle')
       if (titleInput) titleInput.focus()
