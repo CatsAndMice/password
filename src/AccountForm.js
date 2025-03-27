@@ -18,6 +18,8 @@ import SvgIcon from '@mui/material/SvgIcon';
 import RandomPassword from './RandomPassword'
 import SnackbarMessage from './SnackbarMessage'
 import { updateFavicon } from "./utils/updateFavicon"
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined'
 
 // 基础样式配置
 const baseTextFieldStyle = {
@@ -53,7 +55,24 @@ const baseTextFieldStyle = {
     width: '1px',
     height: '20px',
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
-  }
+  },
+  '& .Mui-disabled': {
+    '& .MuiInputBase-input': {
+      color: 'rgba(44, 62, 80, 0.75)', // 调深文字颜色
+      WebkitTextFillColor: 'rgba(44, 62, 80, 0.75)', // 同步调整 Safari 的文字颜色
+      cursor: 'default',
+    },
+    '& .account-form-prev-icon': {
+      color: 'rgba(44, 62, 80, 0.65)', // 调深图标颜色
+    },
+    '& .MuiInput-underline:before': {
+      borderBottomStyle: 'dotted',
+      borderBottomColor: 'rgba(0, 0, 0, 0.15)', // 略微加深底线颜色
+    },
+    '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+      borderBottomColor: 'rgba(0, 0, 0, 0.15)',
+    }
+  },
 }
 export default class AccountForm extends React.Component {
   isMacOs = window.utools.isMacOs()
@@ -66,7 +85,8 @@ export default class AccountForm extends React.Component {
     linkValue: '',
     passwordEye: false,
     randomPasswordEl: null,
-    message: { key: 0, type: 'info', body: '' }  // 添加消息状态
+    message: { key: 0, type: 'info', body: '' }, // 添加消息状态
+    isLocked: true
   }
 
   keydownAction = (e) => {
@@ -81,20 +101,36 @@ export default class AccountForm extends React.Component {
     }
   }
 
-  componentDidMount() {
+  // 添加新的方法处理数据解密和状态更新
+  decryptAndUpdateState = (data, keyIV) => {
     const stateValue = {}
-    const data = this.props.data
-      ;['title', 'username', 'password', 'remark', 'link'].forEach(f => {
-        if (data[f]) {
-          try {
-            stateValue[f + 'Value'] = window.services.decryptValue(this.props.keyIV, data[f])
-          } catch (e) {
-            stateValue[f + 'Value'] = data[f]
-          }
+    let hasAnyValue = false
+    const items = ['title', 'username', 'password', 'remark', 'link']
+    items.forEach(f => {
+      if (data[f]) {
+        hasAnyValue = true
+        try {
+          stateValue[f + 'Value'] = window.services.decryptValue(keyIV, data[f])
+        } catch (e) {
+          stateValue[f + 'Value'] = data[f]
         }
-      })
+      } else {
+        stateValue[f + 'Value'] = ''
+      }
+    })
+    stateValue.isLocked = hasAnyValue
+    return { stateValue }
+  }
+
+  componentDidMount() {
+    const { stateValue } = this.decryptAndUpdateState(this.props.data, this.props.keyIV)
     this.setState(stateValue)
     window.addEventListener('keydown', this.keydownAction, true)
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line
+    const { stateValue } = this.decryptAndUpdateState(nextProps.data, nextProps.keyIV)
+    this.setState(stateValue)
   }
 
   constructor(props) {
@@ -109,22 +145,6 @@ export default class AccountForm extends React.Component {
     if (this.faviconTimer) {
       clearTimeout(this.faviconTimer)
     }
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line
-    const stateValue = {};
-    ['title', 'username', 'password', 'remark', 'link'].forEach(f => {
-      if (nextProps.data[f]) {
-        try {
-          stateValue[f + 'Value'] = window.services.decryptValue(nextProps.keyIV, nextProps.data[f])
-        } catch (e) {
-          stateValue[f + 'Value'] = nextProps.data[f]
-        }
-      } else {
-        stateValue[f + 'Value'] = ''
-      }
-    })
-    this.setState(stateValue)
   }
 
   handleInputChang = field => async (e) => {
@@ -241,13 +261,41 @@ export default class AccountForm extends React.Component {
     this.setState({ randomPasswordEl: null })
   }
 
-
+  toggleLock = () => {
+    this.setState(prevState => ({ isLocked: !prevState.isLocked }))
+  }
 
   // 在 render 方法中使用
   render() {
-    const { titleValue, usernameValue, passwordValue, linkValue, remarkValue, passwordEye, randomPasswordEl, message } = this.state
+    const { titleValue, usernameValue, passwordValue, linkValue, remarkValue, passwordEye, randomPasswordEl, message, isLocked } = this.state
     return (
       <div className='account-form'>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          padding: 0,
+          position: 'relative'
+        }}>
+          {/* <Tooltip title={isLocked ? '点击解锁编辑' : '点击锁定'}> */}
+          <Button
+            onClick={this.toggleLock}
+            size='small'
+            startIcon={isLocked ? <LockOutlinedIcon /> : <LockOpenOutlinedIcon />}
+            sx={{
+              '&:hover': {
+                backgroundColor: isLocked ? 'rgba(0, 0, 0, 0.08)' : 'rgba(33, 150, 243, 0.12)',
+              },
+              transition: 'all 0.2s',
+              borderRadius: '6px',
+              color: isLocked ? 'rgba(0, 0, 0, 0.6)' : '#2196F3',
+              textTransform: 'none',
+              minWidth: 'auto'
+            }}
+          >
+            {isLocked ? '已锁定' : '已解锁'}
+          </Button>
+          {/* </Tooltip> */}
+        </div>
         <SnackbarMessage message={message} />
         <div>
           <TextField
@@ -256,6 +304,7 @@ export default class AccountForm extends React.Component {
             id='accountFormTitle'
             onChange={this.handleInputChang('title')}
             value={titleValue}
+            disabled={isLocked}
             variant='standard'
             InputProps={{
               startAdornment: (
@@ -264,7 +313,11 @@ export default class AccountForm extends React.Component {
                 </InputAdornment>
               )
             }}
-            sx={baseTextFieldStyle}
+            sx={{
+              ...baseTextFieldStyle,
+              opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
+              transition: 'opacity 0.2s', // 添加过渡效果
+            }}
           />
         </div>
         <div>
@@ -273,6 +326,7 @@ export default class AccountForm extends React.Component {
             label='用户名'
             onChange={this.handleInputChang('username')}
             value={usernameValue}
+            disabled={isLocked}
             variant='standard'
             InputProps={{
               startAdornment: (
@@ -290,7 +344,11 @@ export default class AccountForm extends React.Component {
                 </InputAdornment>
               )
             }}
-            sx={baseTextFieldStyle}
+            sx={{
+              ...baseTextFieldStyle,
+              opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
+              transition: 'opacity 0.2s', // 添加过渡效果
+            }}
           />
         </div>
         <div>
@@ -300,6 +358,7 @@ export default class AccountForm extends React.Component {
             label='密码'
             onChange={this.handleInputChang('password')}
             value={passwordValue}
+            disabled={isLocked}
             variant='standard'
             InputProps={{
               startAdornment: (
@@ -315,10 +374,22 @@ export default class AccountForm extends React.Component {
                     </IconButton>
                   </Tooltip>
                   <span className='account-form-icon-divider' />
-                  <Tooltip title='生成随机密码' placement='top'>
-                    <IconButton tabIndex={-1} onClick={this.handleShowRandomPassword} size='small'>
-                      <ShuffleIcon />
-                    </IconButton>
+                  <Tooltip title={isLocked ? '解锁后可生成随机密码' : '生成随机密码'} placement='top'>
+                    <span>
+                      <IconButton
+                        tabIndex={-1}
+                        onClick={this.handleShowRandomPassword}
+                        size='small'
+                        disabled={isLocked}
+                        sx={{
+                          '&.Mui-disabled': {
+                            color: 'rgba(0, 0, 0, 0.26)'
+                          }
+                        }}
+                      >
+                        <ShuffleIcon />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                   <span className='account-form-icon-divider' />
                   <Tooltip title={'复制密码，快捷键 ' + (this.isMacOs ? 'Command' : 'Ctrl') + '+P'} placement='top-end'>
@@ -329,7 +400,11 @@ export default class AccountForm extends React.Component {
                 </InputAdornment>
               )
             }}
-            sx={baseTextFieldStyle}
+            sx={{
+              ...baseTextFieldStyle,
+              opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
+              transition: 'opacity 0.2s', // 添加过渡效果
+            }}
           />
           <Popover
             open={Boolean(randomPasswordEl)}
@@ -358,6 +433,12 @@ export default class AccountForm extends React.Component {
             label='链接'
             onChange={this.handleInputChang('link')}
             value={linkValue}
+            disabled={isLocked}
+            sx={{
+              ...baseTextFieldStyle,
+              opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
+              transition: 'opacity 0.2s', // 添加过渡效果
+            }}
             variant='standard'
             InputProps={{
               startAdornment: (
@@ -384,7 +465,6 @@ export default class AccountForm extends React.Component {
                 </InputAdornment>
               )
             }}
-            sx={baseTextFieldStyle}
           />
         </div>
         <div>
@@ -395,6 +475,7 @@ export default class AccountForm extends React.Component {
             minRows={5}
             maxRows={15}
             value={remarkValue}
+            disabled={isLocked}
             onChange={this.handleInputChang('remark')}
             InputLabelProps={{
               shrink: true,
@@ -427,7 +508,9 @@ export default class AccountForm extends React.Component {
                 color: '#2c3e50',
                 lineHeight: '1.6',
                 letterSpacing: '0.2px',
-              }
+              },
+              opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
+              transition: 'opacity 0.2s', // 添加过渡效果
             }}
           />
         </div>
