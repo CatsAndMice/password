@@ -85,6 +85,11 @@ export default class AccountArea extends React.Component {
   handleCreate = () => {
     this.props.onCreate()
     setTimeout(() => {
+      // 滚动列表到底部
+      const listBody = document.querySelector('.account-list-body')
+      if (listBody) {
+        listBody.scrollTop = listBody.scrollHeight
+      }
       const titleInput = document.querySelector('#accountFormTitle')
       if (titleInput) titleInput.focus()
     }, 50)
