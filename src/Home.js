@@ -8,7 +8,7 @@ import Search from './Search'
 import SnackbarMessage from './SnackbarMessage'
 import ExportDialog from './ExportDialog'
 import ImportDialog from './ImportDialog'
-
+import D1API from './api/index'
 class Home extends React.Component {
   state = {
     selectedGroupId: '',
@@ -34,6 +34,11 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
+    // 添加登录成功埋点
+    D1API.trackEvent({
+      message: '登录成功'
+    })
+
     const groups = window.utools.db.allDocs('group/')
     const groupDic = {}
     const groupIds = []
@@ -94,6 +99,7 @@ class Home extends React.Component {
     window.utools.setSubInput(({ text }) => {
       this.setState({ searchKey: text })
     }, '标题/用户名搜索')
+
   }
 
   componentWillUnmount() {
