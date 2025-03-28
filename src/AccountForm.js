@@ -20,6 +20,7 @@ import SnackbarMessage from './SnackbarMessage'
 import { updateFavicon } from "./utils/updateFavicon"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined'
+import D1API from './api/index'
 
 // 基础样式配置
 const baseTextFieldStyle = {
@@ -243,9 +244,10 @@ export default class AccountForm extends React.Component {
           body: '已复制登录信息到剪贴板'
         }
       }))
+      
+      D1API.trackEvent({ message: `跳转链接：${this.state.linkValue}` })
       // 延迟 1 秒后再跳转
       setTimeout(() => {
-
         window.utools.hideMainWindow(false)
         window.utools.shellOpenExternal(this.state.linkValue)
       }, 1000)

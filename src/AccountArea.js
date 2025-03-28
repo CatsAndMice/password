@@ -13,6 +13,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
+import D1API from './api/index'
 
 const ACCOUNT_ITEM_HEIGHT = 65 //每个帐号的高度
 export default class AccountArea extends React.Component {
@@ -102,6 +103,9 @@ export default class AccountArea extends React.Component {
       }
       const titleInput = document.querySelector('#accountFormTitle')
       if (titleInput) titleInput.focus()
+      D1API.trackEvent({
+        message: '新增帐号'
+      })
     }, 50)
   }
 
