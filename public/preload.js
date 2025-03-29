@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 const bcrypt = require('./bcrypt/bcrypt.js')
-const { autoBackup } = require('./backup.js')
+// const { autoBackup } = require('./backup.js')
 const getKeyIv = (passphrase) => {
   const hash1 = crypto.createHash('md5').update(passphrase).digest('hex')
   const hash2 = crypto.createHash('md5').update(hash1 + passphrase).digest('hex')
@@ -88,7 +88,7 @@ window.services = {
   },
 
   // 自动备份数据
-  autoBackup,
+  // autoBackup,
   // 获取原始密码
   getOriginalPassword: () => {
     const passDoc = window.utools.db.get('bcryptpass')
