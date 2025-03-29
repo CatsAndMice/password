@@ -99,7 +99,7 @@ class Home extends React.Component {
     window.utools.setSubInput(({ text }) => {
       this.setState({ searchKey: text })
     }, '标题/用户名搜索')
-
+    // window.services.autoBackup()
   }
 
   componentWillUnmount() {
