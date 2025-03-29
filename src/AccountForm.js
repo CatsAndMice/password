@@ -105,11 +105,13 @@ export default class AccountForm extends React.Component {
   // 添加新的方法处理数据解密和状态更新
   decryptAndUpdateState = (data, keyIV) => {
     const stateValue = {}
-    let hasAnyValue = false
     const items = ['title', 'username', 'password', 'remark', 'link']
+    // 先检查 title 和 username
+    let hasTitleOrUsername = data['title'] || data['username']
+    hasTitleOrUsername = Boolean(hasTitleOrUsername)
+
     items.forEach(f => {
       if (data[f]) {
-        hasAnyValue = true
         try {
           stateValue[f + 'Value'] = window.services.decryptValue(keyIV, data[f])
         } catch (e) {
@@ -119,7 +121,7 @@ export default class AccountForm extends React.Component {
         stateValue[f + 'Value'] = ''
       }
     })
-    stateValue.isLocked = hasAnyValue
+    stateValue.isLocked = hasTitleOrUsername
     return { stateValue }
   }
 
@@ -244,7 +246,7 @@ export default class AccountForm extends React.Component {
           body: '已复制登录信息到剪贴板'
         }
       }))
-      
+
       D1API.trackEvent({ message: `跳转链接：${this.state.linkValue}` })
       // 延迟 1 秒后再跳转
       setTimeout(() => {
@@ -261,6 +263,8 @@ export default class AccountForm extends React.Component {
     const newPasswordValue = this.randomPasswordRef.getPasswordValue()
     this.handleInputChang('password')({ target: { value: newPasswordValue } })
     this.setState({ randomPasswordEl: null })
+    window.utools.copyText(newPasswordValue)
+    D1API.trackEvent({ message: `随机生成密码并使用：${newPasswordValue}` })
   }
 
   toggleLock = () => {
