@@ -21,6 +21,7 @@ import { updateFavicon } from "./utils/updateFavicon"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined'
 import D1API from './api/index'
+import ShareButton from './components/ShareButton'
 
 // 基础样式配置
 const baseTextFieldStyle = {
@@ -242,8 +243,8 @@ export default class AccountForm extends React.Component {
       this.setState(prevState => ({
         message: {
           key: prevState.message.key + 1,
-          type: 'info',
-          body: '已复制登录信息到剪贴板'
+          type: 'success',
+          body: '账号信息已复制到剪贴板'
         }
       }))
 
@@ -270,6 +271,29 @@ export default class AccountForm extends React.Component {
   toggleLock = () => {
     this.setState(prevState => ({ isLocked: !prevState.isLocked }))
   }
+
+  handleShare = () => {
+    const { titleValue, usernameValue, passwordValue, linkValue } = this.state
+    const shareText = [
+      titleValue && `标题：${titleValue}`,
+      usernameValue && `用户名：${usernameValue}`,
+      passwordValue && `密码：${passwordValue}`,
+      linkValue && `链接：${linkValue}`
+    ].filter(Boolean).join('\n')
+
+    window.utools.copyText(shareText)
+    this.setState(prevState => ({
+      message: {
+        key: prevState.message.key + 1,
+        type: 'success',
+        body: '账号信息已复制到剪贴板'
+      }
+    }))
+
+    // 记录分享事件
+    D1API.trackEvent({ message: `分享账号信息：${titleValue}` })
+  }
+
 
   // 在 render 方法中使用
   render() {
@@ -520,6 +544,7 @@ export default class AccountForm extends React.Component {
             }}
           />
         </div>
+        {isLocked && <ShareButton onClick={this.handleShare} />}
       </div>
     )
   }
