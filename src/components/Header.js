@@ -16,7 +16,7 @@ const Header = ({ onFavoriteClick, showFavorites }) => (
       backdropFilter: 'blur(8px)'
     }}
   >
-    <Toolbar variant="dense" sx={{ minHeight: '48px', padding: '0 16px !important' }}>
+    <Toolbar variant="dense" sx={{ height: '50px', padding: '0 16px !important' }}>
       <Typography
         variant="h6"
         sx={{
