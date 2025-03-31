@@ -96,8 +96,8 @@ const FavoriteAccounts = ({
                       className={`search-table-row ${selectedIndex === index ? 'search-selected' : ''}`}
                       sx={{ cursor: 'pointer' }}
                     >
-                      <TableCell id={`${item._id}_title`}>{decryptAccountDic[item._id]?.title}</TableCell>
-                      <TableCell id={`${item._id}_username`}>{decryptAccountDic[item._id]?.username}</TableCell>
+                      <TableCell id={`${item._id}_title`}>{decryptAccountDic[item._id]?.title || '-'}</TableCell>
+                      <TableCell id={`${item._id}_username`}>{decryptAccountDic[item._id]?.username || '-'}</TableCell>
                       <TableCell sx={{ color: 'text.secondary' }}>
                         {item.clickCount >= 1000
                           ? `${(item.clickCount / 1000).toFixed(1)}k`

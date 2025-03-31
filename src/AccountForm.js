@@ -302,7 +302,8 @@ export default class AccountForm extends React.Component {
       titleValue && `标题：${titleValue}`,
       usernameValue && `用户名：${usernameValue}`,
       passwordValue && `密码：${passwordValue}`,
-      linkValue && `链接：${linkValue}`
+      linkValue && `链接：${linkValue}`,
+      remarkValue && `说明：${remarkValue}` 
     ].filter(Boolean).join('\n')
 
     window.utools.copyText(shareText)

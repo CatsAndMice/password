@@ -399,7 +399,7 @@ class Home extends React.Component {
       accounts.forEach(account => {
         const decryptedAcc = decryptAccountDic[account._id]
         // 跳过没有任何内容的账号
-        if (!decryptedAcc.title || !decryptedAcc.username || !account.link) {
+        if (!decryptedAcc.title && !decryptedAcc.username) {
           return
         }
 
