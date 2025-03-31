@@ -297,13 +297,13 @@ export default class AccountForm extends React.Component {
   }
 
   handleShare = () => {
-    const { titleValue, usernameValue, passwordValue, linkValue } = this.state
+    const { titleValue, usernameValue, passwordValue, linkValue,remarkValue } = this.state
     const shareText = [
       titleValue && `标题：${titleValue}`,
       usernameValue && `用户名：${usernameValue}`,
       passwordValue && `密码：${passwordValue}`,
       linkValue && `链接：${linkValue}`,
-      remarkValue && `说明：${remarkValue}` 
+      remarkValue.trim() && `说明：${remarkValue.trim()}` 
     ].filter(Boolean).join('\n')
 
     window.utools.copyText(shareText)

@@ -27,11 +27,14 @@ const Header = ({ onFavoriteClick, showFavorites }) => (
           letterSpacing: '0.5px',
           userSelect: 'none',
           '& span': {
-            background: 'linear-gradient(45deg, rgba(0, 0, 0, 0.87), rgba(0, 0, 0, 0.6))',
+            background: 'linear-gradient(45deg, #2196F3, #00BCD4)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            textShadow: '0 1px 1px rgba(0,0,0,0.03)'
+            textShadow: '0 2px 4px rgba(33, 150, 243, 0.2)',
+            fontFamily: '-apple-system, "PingFang SC", "Microsoft YaHei"',
+            fontWeight: 700,
+            letterSpacing: '1px', 
           }
         }}
       >
