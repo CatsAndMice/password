@@ -39,16 +39,15 @@ module.exports = {
       {
         test: /\.(less|css)$/,
         use: [
-          {
-            loader: 'style-loader'
-          },
+          'style-loader',
           {
             loader: 'css-loader',
-            options: { url: false }
+            options: {
+              importLoaders: 1
+            }
           },
-          {
-            loader: 'less-loader'
-          }
+          'postcss-loader',
+          'less-loader'
         ]
       }
     ]

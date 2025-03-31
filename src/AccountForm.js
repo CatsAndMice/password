@@ -155,7 +155,11 @@ export default class AccountForm extends React.Component {
     const value = e.target.value
     if (field === 'title' || field === 'username') {
       this.props.decryptAccountDic[this.props.data._id][field] = value
-      document.getElementById(this.props.data._id + '_' + field).innerText = value
+      // 添加元素存在性检查
+      const element = document.getElementById(this.props.data._id + '_' + field)
+      if (element) {
+        element.innerText = value
+      }
     }
 
     const stateValue = {}
@@ -232,6 +236,13 @@ export default class AccountForm extends React.Component {
   handleOpenLink = () => {
     if (!this.state.linkValue) return
 
+    // 增加点击计数
+    const updatedAccount = {
+      ...this.props.data,
+      clickCount: (this.props.data.clickCount || 0) + 1
+    }
+    this.props.onUpdate(updatedAccount)
+
     // 如果存在用户名或密码，将它们组合复制到剪贴板
     if (this.state.usernameValue || this.state.passwordValue) {
       const copyText = [
@@ -298,8 +309,10 @@ export default class AccountForm extends React.Component {
   // 在 render 方法中使用
   render() {
     const { titleValue, usernameValue, passwordValue, linkValue, remarkValue, passwordEye, randomPasswordEl, message, isLocked } = this.state
+    const { isSearchMode } = this.props // 从 props 中获取是否为搜索模式
+
     return (
-      <div className='account-form'>
+      <div className={`account-form ${isSearchMode ? 'search-mode' : ''}`}>
         <div style={{
           display: 'flex',
           justifyContent: 'flex-end',

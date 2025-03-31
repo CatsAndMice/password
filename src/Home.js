@@ -9,6 +9,9 @@ import SnackbarMessage from './SnackbarMessage'
 import ExportDialog from './ExportDialog'
 import ImportDialog from './ImportDialog'
 import D1API from './api/index'
+import Header from './components/Header'
+import FavoriteAccounts from './components/FavoriteAccounts'
+
 class Home extends React.Component {
   state = {
     selectedGroupId: '',
@@ -16,7 +19,8 @@ class Home extends React.Component {
     searchKey: '',
     snackbarMessage: { key: 0, type: 'info', body: '' },
     exportData: null,
-    importData: null
+    importData: null,
+    showFavorites: false
   }
 
   handleDetectLive = () => {
@@ -344,9 +348,13 @@ class Home extends React.Component {
     }
   }
 
+  handleFavoriteClick = () => {
+    this.setState(prevState => ({ showFavorites: !prevState.showFavorites }))
+  }
+
   // 在 render 中添加导入对话框组件
   render() {
-    const { searchKey, selectedGroupId, groupIds, groupTree, group2Accounts, sortedGroup, decryptAccountDic, snackbarMessage, exportData, importData } = this.state
+    const { searchKey, selectedGroupId, groupIds, groupTree, group2Accounts, sortedGroup, decryptAccountDic, snackbarMessage, exportData, importData, showFavorites } = this.state
     if (!group2Accounts) {
       return (
         <div className='home-loading'>
@@ -360,6 +368,12 @@ class Home extends React.Component {
     }
     return (
       <div className='home'>
+        {!searchKey && (
+          <Header
+            onFavoriteClick={this.handleFavoriteClick}
+            showFavorites={this.state.showFavorites}
+          />
+        )}
         {searchKey ? (
           <Search
             keyIV={this.props.keyIV}
@@ -368,6 +382,13 @@ class Home extends React.Component {
             group2Accounts={group2Accounts}
             decryptAccountDic={decryptAccountDic}
             searchKey={this.state.searchKey}
+          />
+        ) : showFavorites ? (
+          <FavoriteAccounts
+            keyIV={this.props.keyIV}
+            decryptAccountDic={decryptAccountDic}
+            data={this.getFavoriteAccounts()}
+            onUpdate={this.handleAccountUpdate}
           />
         ) : (
           <DndProvider backend={HTML5Backend}>
@@ -409,6 +430,37 @@ class Home extends React.Component {
         <ImportDialog data={importData} showMessage={this.showMessage} onImport={this.handleImportAccounts} />
       </div>
     )
+  }
+
+
+  getFavoriteAccounts = () => {
+    const { group2Accounts, decryptAccountDic } = this.state
+    const allAccounts = []
+
+    // 收集所有账号
+    Object.values(group2Accounts).forEach(accounts => {
+      accounts.forEach(account => {
+        const decryptedAcc = decryptAccountDic[account._id]
+        // 跳过没有任何内容的账号
+        if (!decryptedAcc.title || !decryptedAcc.username || !account.link) {
+          return
+        }
+
+        // 确保 clickCount 存在，如果不存在则默认为 0
+        const clickCount = account.clickCount || 0
+        allAccounts.push({
+          ...account,
+          clickCount
+        })
+      })
+    })
+
+    // 按点击次数降序排序并获取前20个
+    const favorites = allAccounts
+      .sort((a, b) => (b.clickCount || 0) - (a.clickCount || 0))
+      .slice(0, 20)
+
+    return favorites.length > 0 ? favorites : null
   }
 }
 

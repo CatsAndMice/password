@@ -1,7 +1,7 @@
 .account-area {
   display: flex;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 48px);
   background: #fff;
   box-sizing: border-box;
 
@@ -187,11 +187,20 @@
 
 .account-form {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 48px); // 非搜索状态下减去头部高度
   padding: 16px;
   box-sizing: border-box;
   overflow-y: auto;
   background-color: rgba(255, 255, 255, 1);
+
+  &::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
+  }
+
+  &.search-mode {
+    height: 100%; // 搜索状态下使用全高
+  }
 
   &>div {
     padding-bottom: 26px;

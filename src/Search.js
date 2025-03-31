@@ -127,9 +127,9 @@ export default class Search extends React.Component {
             <tbody>
               {
                 list.map((a, i) => (
-                  <tr 
-                    onClick={() => this.select(i)} 
-                    className={`search-table-row ${selectedIndex === i ? 'search-selected' : ''}`} 
+                  <tr
+                    onClick={() => this.select(i)}
+                    className={`search-table-row ${selectedIndex === i ? 'search-selected' : ''}`}
                     key={a.account._id}
                   >
                     <td className='group-column'>{this.groupName(a.account.groupId)}</td>
@@ -143,7 +143,7 @@ export default class Search extends React.Component {
         </div>
         <div className='search-form'>
           {
-            <AccountForm keyIV={keyIV} onUpdate={onAccountUpdate} decryptAccountDic={decryptAccountDic} data={list[selectedIndex].account} />
+            <AccountForm keyIV={keyIV} isSearchMode={true} onUpdate={onAccountUpdate} decryptAccountDic={decryptAccountDic} data={list[selectedIndex].account} />
           }
         </div>
       </div>)
