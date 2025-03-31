@@ -209,9 +209,20 @@ export default class AccountForm extends React.Component {
     }, 300)
   }
 
+  updateClickCount = () => {
+    const updatedAccount = {
+      ...this.props.data,
+      clickCount: (this.props.data.clickCount || 0) + 1
+    }
+    this.props.data.clickCount = updatedAccount.clickCount
+    this.props.onUpdate(updatedAccount)
+  }
+
   handleCopy = (target) => () => {
     const targetValue = this.state[target]
     window.utools.copyText(targetValue)
+    // 增加点击计数
+    this.updateClickCount()
   }
 
   handlePasswordVisible = () => {
@@ -237,11 +248,7 @@ export default class AccountForm extends React.Component {
     if (!this.state.linkValue) return
 
     // 增加点击计数
-    const updatedAccount = {
-      ...this.props.data,
-      clickCount: (this.props.data.clickCount || 0) + 1
-    }
-    this.props.onUpdate(updatedAccount)
+    this.updateClickCount()
 
     // 如果存在用户名或密码，将它们组合复制到剪贴板
     if (this.state.usernameValue || this.state.passwordValue) {

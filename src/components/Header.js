@@ -50,10 +50,9 @@ const Header = ({ onFavoriteClick, showFavorites }) => (
           color: showFavorites ? '#2196F3' : 'rgba(0, 0, 0, 0.6)',
           textTransform: 'none',
           minWidth: 'auto',
-          // backgroundColor: showFavorites ? 'rgba(33, 150, 243, 0.08)' : 'transparent'
         }}
       >
-       常用账号
+        常用账号
       </Button>
     </Toolbar>
   </AppBar>

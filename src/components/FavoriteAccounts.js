@@ -38,20 +38,16 @@ const FavoriteAccounts = ({
                   top: '0 !important'
                 },
                 '&::-webkit-scrollbar': {
-                  width: '8px',
-                  height: '8px'
-                },
-                '&::-webkit-scrollbar-track': {
-                  background: 'transparent'
+                  width: '6px'
                 },
                 '&::-webkit-scrollbar-thumb': {
-                  background: '#bfbfbf',
-                  borderRadius: '4px',
+                  background: 'rgba(0, 0, 0, 0.2)',
+                  borderRadius: '3px',
                   '&:hover': {
-                    background: '#999999'
+                    background: 'rgba(0, 0, 0, 0.3)'
                   }
                 },
-                '&::-webkit-scrollbar-corner': {
+                '&::-webkit-scrollbar-track': {
                   background: 'transparent'
                 }
               }}
@@ -96,7 +92,9 @@ const FavoriteAccounts = ({
                       <TableCell id={`${item._id}_title`}>{decryptAccountDic[item._id]?.title}</TableCell>
                       <TableCell id={`${item._id}_username`}>{decryptAccountDic[item._id]?.username}</TableCell>
                       <TableCell sx={{ color: 'text.secondary' }}>
-                        {item.clickCount || 0}
+                        {item.clickCount >= 1000
+                          ? `${(item.clickCount / 1000).toFixed(1)}k`
+                          : item.clickCount || 0}
                       </TableCell>
                     </TableRow>
                   ))}
