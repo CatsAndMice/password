@@ -141,7 +141,7 @@ export default class Door extends React.Component {
             borderRadius: '12px',
             padding: '15px 20px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-            width: '280px',
+            width: '320px',
             position: 'relative',
             border: '1px solid #e1e1e1',
             transition: 'all 0.3s ease'

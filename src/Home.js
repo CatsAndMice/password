@@ -46,7 +46,10 @@ class Home extends React.Component {
     window.addEventListener('blur', this.handleDetectLive)
     window.addEventListener('focus', this.handleClearDetectLiveTimeout)
     window.utools.setSubInput(({ text }) => {
-      this.setState({ searchKey: text })
+      this.setState({
+        searchKey: text,
+        showFavorites: false
+      })
     }, '标题/用户名搜索')
     // window.services.autoBackup()
   }
@@ -178,9 +181,9 @@ class Home extends React.Component {
     if (result.ok) {
       account._rev = result.rev
       // 如果在常用账号页面，更新后重新初始化数据
-      if (this.state.showFavorites) { 
-        const { groupTree, groupIds, group2Accounts, decryptAccountDic } = initializeData(this.props.keyIV)
-        this.setState({ groupTree, groupIds, group2Accounts, decryptAccountDic })
+      if (this.state.showFavorites) {
+        const { group2Accounts, decryptAccountDic } = initializeData(this.props.keyIV)
+        this.setState({ group2Accounts, decryptAccountDic })
       }
     } else {
       if (result.error && result.name === 'conflict') { // 修改冲突
@@ -191,8 +194,8 @@ class Home extends React.Component {
           account._rev = result.retry
           // 如果在常用账号页面，更新后重新初始化数据
           if (this.state.showFavorites) {
-            const { groupTree, groupIds, group2Accounts, decryptAccountDic } = initializeData(this.props.keyIV)
-            this.setState({ groupTree, groupIds, group2Accounts, decryptAccountDic })
+            const { group2Accounts, decryptAccountDic } = initializeData(this.props.keyIV)
+            this.setState({ group2Accounts, decryptAccountDic })
           }
         } else {
           this.alertDbError()
@@ -255,7 +258,6 @@ class Home extends React.Component {
 
   handleImportAccounts = (accounts) => {
     const { group2Accounts, decryptAccountDic } = this.state
-
     const groupId = accounts[0].groupId
     let hasError = false
     accounts.forEach((account, index) => {

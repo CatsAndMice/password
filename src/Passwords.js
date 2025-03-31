@@ -72,6 +72,7 @@ export default class Passwords extends React.Component {
       }
       return
     }
+    // 关闭容器，回到utools主界面
     clearKeyIV()
   }
 

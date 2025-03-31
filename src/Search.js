@@ -143,7 +143,7 @@ export default class Search extends React.Component {
         </div>
         <div className='search-form'>
           {
-            <AccountForm keyIV={keyIV} isSearchMode={true} onUpdate={onAccountUpdate} decryptAccountDic={decryptAccountDic} data={list[selectedIndex].account} />
+            <AccountForm keyIV={keyIV} mode={'SEARCH'} onUpdate={onAccountUpdate} decryptAccountDic={decryptAccountDic} data={list[selectedIndex].account} />
           }
         </div>
       </div>)

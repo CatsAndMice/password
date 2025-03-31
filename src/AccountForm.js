@@ -127,6 +127,7 @@ export default class AccountForm extends React.Component {
   }
 
   componentDidMount() {
+    console.log(111);
     const { stateValue } = this.decryptAndUpdateState(this.props.data, this.props.keyIV)
     this.setState(stateValue)
     window.addEventListener('keydown', this.keydownAction, true)
@@ -134,6 +135,11 @@ export default class AccountForm extends React.Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line
     const { stateValue } = this.decryptAndUpdateState(nextProps.data, nextProps.keyIV)
+    const { mode } = this.props
+    //当mode为FAVORITE时，更新数据不默认锁定
+    if (mode === 'FAVORITE') {
+      stateValue.isLocked = this.state.isLocked
+    }
     this.setState(stateValue)
   }
 
@@ -316,10 +322,10 @@ export default class AccountForm extends React.Component {
   // 在 render 方法中使用
   render() {
     const { titleValue, usernameValue, passwordValue, linkValue, remarkValue, passwordEye, randomPasswordEl, message, isLocked } = this.state
-    const { isSearchMode } = this.props // 从 props 中获取是否为搜索模式
+    const { mode } = this.props // 从 props 中获取是否为搜索模式
 
     return (
-      <div className={`account-form ${isSearchMode ? 'search-mode' : ''}`}>
+      <div className={`account-form ${mode === 'SEARCH' ? 'search-mode' : ''}`}>
         <div style={{
           display: 'flex',
           justifyContent: 'flex-end',

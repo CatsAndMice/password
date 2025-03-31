@@ -18,10 +18,17 @@ const FavoriteAccounts = ({
   onUpdate
 }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0)
-
+  // 添加一个 ref 来保存 AccountForm 的引用
+  const accountFormRef = React.useRef()
   const handleSelect = (index) => {
     if (index === selectedIndex) return
     setSelectedIndex(index)
+    // 当选择一个新的账号时，调用 AccountForm 的 setState 方法锁定表单
+    if (accountFormRef) {
+      setTimeout(() => {
+        accountFormRef.current?.setState({ isLocked: true })
+      }, 0)
+    }
   }
 
   return (
@@ -33,7 +40,7 @@ const FavoriteAccounts = ({
               component={Paper}
               elevation={0}
               sx={{
-                height: 'calc(100vh - 48px)',
+                height: 'calc(100vh - 50px)',
                 '& .MuiTableCell-stickyHeader': {
                   top: '0 !important'
                 },
@@ -121,9 +128,13 @@ const FavoriteAccounts = ({
               </Box>
             </TableContainer>
           </div>
-          <div className="search-form">
+          <div className="search-form" style={{
+            height: 'calc(100vh - 50px)',
+          }}>
             <AccountForm
+              ref={accountFormRef}
               keyIV={keyIV}
+              mode={'FAVORITE'}
               data={data[selectedIndex]}
               onUpdate={onUpdate}
               decryptAccountDic={decryptAccountDic}
