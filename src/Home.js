@@ -11,6 +11,7 @@ import ImportDialog from './ImportDialog'
 import D1API from './api/index'
 import Header from './components/Header'
 import FavoriteAccounts from './components/FavoriteAccounts'
+import { initializeData } from './utils/initializeData'
 
 class Home extends React.Component {
   state = {
@@ -39,64 +40,8 @@ class Home extends React.Component {
 
   componentDidMount() {
     // 添加登录成功埋点
-    D1API.trackEvent({
-      message: '登录成功'
-    })
-
-    const groups = window.utools.db.allDocs('group/')
-    const groupDic = {}
-    const groupIds = []
-    const groupTree = []
-    const group2Accounts = {}
-    const decryptAccountDic = {}
-    if (groups.length > 0) {
-      groups.sort((a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN', { sensitivity: 'accent' })).forEach(g => { groupDic[g._id] = g })
-      groups.forEach(g => {
-        if (g.parentId && (g.parentId in groupDic)) {
-          if (groupDic[g.parentId].childs) {
-            groupDic[g.parentId].childs.push(g)
-          } else {
-            groupDic[g.parentId].childs = [g]
-          }
-        } else {
-          groupTree.push(g)
-        }
-        groupIds.push(g._id)
-      })
-      // 获取解密 KEYIV
-      const keyiv = this.props.keyIV
-      // 获取所有帐号
-      const accounts = window.utools.db.allDocs('account/')
-      if (accounts.length > 0) {
-        for (const account of accounts) {
-          if (account.groupId in group2Accounts) {
-            group2Accounts[account.groupId].push(account)
-          } else {
-            group2Accounts[account.groupId] = [account]
-          }
-          decryptAccountDic[account._id] = { account }
-          if (account.title) {
-            try {
-              decryptAccountDic[account._id].title = window.services.decryptValue(keyiv, account.title)
-            } catch (e) {
-              decryptAccountDic[account._id].title = account.title
-            }
-          }
-          if (account.username) {
-            try {
-              decryptAccountDic[account._id].username = window.services.decryptValue(keyiv, account.username)
-            } catch (e) {
-              decryptAccountDic[account._id].username = account.username
-            }
-          }
-        }
-        for (const groupId in group2Accounts) {
-          if (group2Accounts[groupId].length > 1) {
-            group2Accounts[groupId] = group2Accounts[groupId].sort((a, b) => a.sort - b.sort)
-          }
-        }
-      }
-    }
+    D1API.trackEvent({ message: '登录成功' })
+    const { groupTree, groupIds, group2Accounts, decryptAccountDic } = initializeData(this.props.keyIV)
     this.setState({ groupTree, groupIds, group2Accounts, decryptAccountDic })
     window.addEventListener('blur', this.handleDetectLive)
     window.addEventListener('focus', this.handleClearDetectLiveTimeout)
@@ -232,6 +177,11 @@ class Home extends React.Component {
     const result = window.utools.db.put(account)
     if (result.ok) {
       account._rev = result.rev
+      // 如果在常用账号页面，更新后重新初始化数据
+      if (this.state.showFavorites) { 
+        const { groupTree, groupIds, group2Accounts, decryptAccountDic } = initializeData(this.props.keyIV)
+        this.setState({ groupTree, groupIds, group2Accounts, decryptAccountDic })
+      }
     } else {
       if (result.error && result.name === 'conflict') { // 修改冲突
         const newdoc = window.utools.db.get(account._id)
@@ -239,6 +189,11 @@ class Home extends React.Component {
         const retry = window.utools.db.put(account)
         if (retry.ok) {
           account._rev = result.retry
+          // 如果在常用账号页面，更新后重新初始化数据
+          if (this.state.showFavorites) {
+            const { groupTree, groupIds, group2Accounts, decryptAccountDic } = initializeData(this.props.keyIV)
+            this.setState({ groupTree, groupIds, group2Accounts, decryptAccountDic })
+          }
         } else {
           this.alertDbError()
         }

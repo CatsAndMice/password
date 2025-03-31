@@ -48,6 +48,7 @@ const D1API = {
 
     // 写入埋点数据
     async trackEvent(eventData) {
+        if (window.utools.isDev()) return
         try {
             const { message } = eventData
             const user_id = await this.getUserId()
@@ -56,29 +57,13 @@ const D1API = {
             await this.query(
                 `INSERT INTO events (user_id, message) VALUES (?, ?)`,
                 [user_id, JSON.stringify(message)]
-            ).catch(() => {})  // 忽略查询错误
-            
+            ).catch(() => { })  // 忽略查询错误
+
         } catch (error) {
             console.error('埋点记录失败:', error)
             // 静默失败，不影响主程序
         }
     },
-
-    // 批量写入埋点数据
-    // async batchTrackEvents(events) {
-    //     const user_id = await this.getUserId()
-    //     if (!user_id) return null
-
-    //     const statements = events.map(event => ({
-    //         sql: `INSERT INTO events (user_id, message) VALUES (?, ?)`,
-    //         params: [
-    //             user_id,
-    //             JSON.stringify(event.message)
-    //         ]
-    //     }))
-
-    //     return this.batchQuery(statements)
-    // }
 }
 
 export default D1API
