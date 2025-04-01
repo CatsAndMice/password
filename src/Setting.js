@@ -7,6 +7,8 @@ import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
+// 导入备份恢复组件
+import BackupRestore from './components/BackupRestore'
 
 export default class Setting extends React.Component {
   state = {
@@ -171,6 +173,17 @@ export default class Setting extends React.Component {
             >
               确认
             </Button>
+            {/* 使用备份恢复组件 */}
+            <BackupRestore
+              buttonStyle={{
+                borderRadius: '12px',
+                padding: '8px',
+                marginTop: '8px',
+                fontSize: '14px',
+                textTransform: 'none'
+              }}
+            />
+
             <div style={{
               color: '#666',
               fontSize: '13px',

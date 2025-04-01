@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 const bcrypt = require('./bcrypt/bcrypt.js')
-// const { autoBackup } = require('./backup.js')
+const { autoBackup, restoreBackup, getBackupFiles, getBackupDir, setBackupDir, resetBackupDir } = require('./backup.js')
 const getKeyIv = (passphrase) => {
   const hash1 = crypto.createHash('md5').update(passphrase).digest('hex')
   const hash2 = crypto.createHash('md5').update(hash1 + passphrase).digest('hex')
@@ -24,6 +24,15 @@ const getOriginalPasswordPlus = (recovery) => {
 }
 
 window.services = {
+  // 备份恢复相关
+  autoBackup,
+  restoreBackup,
+  getBackupFiles,
+  getBackupDir,
+  setBackupDir,
+  resetBackupDir,
+
+
   generateId: (prefix = '') => {
     const timestamp = Date.now()
     const random = crypto.randomBytes(4).toString('hex')

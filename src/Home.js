@@ -51,8 +51,10 @@ class Home extends React.Component {
         showFavorites: false
       })
     }, '标题/用户名搜索')
-    // window.services.autoBackup()
+    window.services.autoBackup()
   }
+
+          
 
   componentWillUnmount() {
     const { group2Accounts, sortedGroup } = this.state

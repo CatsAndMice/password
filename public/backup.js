@@ -1,11 +1,55 @@
 const fs = require('fs')
 const path = require('path')
 
+// 获取备份目录
+const getBackupDir = () => {
+  // 尝试从配置中获取自定义备份路径
+  const config = window.utools.db.get('backup_config') || {}
+  if (config.customBackupDir && fs.existsSync(config.customBackupDir)) {
+    return config.customBackupDir
+  }
+  // 默认备份路径
+  return path.join(window.utools.getPath('userData'), 'backups')
+}
+
+// 设置自定义备份目录
+const setBackupDir = (dirPath) => {
+  if (!dirPath || !fs.existsSync(dirPath)) {
+    throw new Error('无效的目录路径')
+  }
+
+  // 测试目录是否可写
+  try {
+    const testFile = path.join(dirPath, '.test_write')
+    fs.writeFileSync(testFile, 'test')
+    fs.unlinkSync(testFile)
+  } catch (error) {
+    throw new Error('目录没有写入权限')
+  }
+
+  // 保存配置
+  const config = window.utools.db.get('backup_config') || { _id: 'backup_config' }
+  config.customBackupDir = dirPath
+  window.utools.db.put(config)
+
+  return dirPath
+}
+
+// 重置为默认备份目录
+const resetBackupDir = () => {
+  const config = window.utools.db.get('backup_config')
+  if (config) {
+    delete config.customBackupDir
+    window.utools.db.put(config)
+  }
+  return getBackupDir()
+}
+
 const autoBackup = () => {
   return new Promise((resolve) => {
     setTimeout(async () => {
       try {
-        const backupDir = path.join(window.utools.getPath('userData'), 'backups')
+        const backupDir = getBackupDir()
         if (!fs.existsSync(backupDir)) {
           fs.mkdirSync(backupDir, { recursive: true })
         }
@@ -83,6 +127,7 @@ const restoreBackup = (backupFilePath) => {
     try {
       // 读取备份文件
       const backupData = JSON.parse(fs.readFileSync(backupFilePath, 'utf8'))
+      console.log(backupData, 'backupData');
 
       // 验证备份文件格式
       if (!backupData._backup_info || backupData._backup_info.type !== 'upassword_backup') {
@@ -96,31 +141,47 @@ const restoreBackup = (backupFilePath) => {
       if (bcryptpass) {
         const existingPass = window.utools.db.get('bcryptpass')
         if (existingPass) {
-          window.utools.db.remove(existingPass)
+          window.utools.db.remove('bcryptpass')
         }
-        window.utools.db.put(bcryptpass)
+        // 去除_rev字段，避免版本冲突
+        delete bcryptpass._rev
+        console.log(window.utools.db.put(bcryptpass), bcryptpass);
       }
+
+      // return
 
       // 删除并恢复分组数据
       const existingGroups = window.utools.db.allDocs('group/')
-      window.utools.db.bulkDocs([
-        ...existingGroups.map(doc => ({ ...doc, _deleted: true })),
-        ...groups
-      ])
+      for (const doc of existingGroups) {
+        window.utools.db.remove(doc)
+      }
+      // 去除所有分组的_rev字段
+      groups.forEach(group => delete group._rev)
+      const groupResults = window.utools.db.bulkDocs(groups)
+      const successGroups = groupResults.filter(ret => ret.ok).length
 
       // 删除并恢复账号数据
       const existingAccounts = window.utools.db.allDocs('account/')
-      window.utools.db.bulkDocs([
-        ...existingAccounts.map(doc => ({ ...doc, _deleted: true })),
-        ...accounts
-      ])
+      for (const doc of existingAccounts) {
+        window.utools.db.remove(doc)
+      }
+      // 去除所有账号的_rev字段
+      accounts.forEach(account => delete account._rev)
+      const accountResults = window.utools.db.bulkDocs(accounts)
+      const successAccounts = accountResults.filter(ret => ret.ok).length
+      console.log(accountResults, groupResults);
+
+      // 如果有创建失败的数据，抛出错误
+      if (successGroups !== groups.length || successAccounts !== accounts.length) {
+        throw new Error(`数据恢复不完整，成功恢复 ${successGroups}个分组，${successAccounts}个账号`)
+      }
 
       resolve({
         success: true,
         message: '备份恢复成功',
         stats: {
-          groupCount: groups.length,
-          accountCount: accounts.length
+          groupCount: successGroups,
+          accountCount: successAccounts
         }
       })
     } catch (error) {
@@ -134,7 +195,7 @@ const restoreBackup = (backupFilePath) => {
 
 // 获取可用的备份文件列表
 const getBackupFiles = () => {
-  const backupDir = path.join(window.utools.getPath('userData'), 'backups')
+  const backupDir = getBackupDir()
   if (!fs.existsSync(backupDir)) {
     return []
   }
@@ -153,5 +214,8 @@ const getBackupFiles = () => {
 module.exports = {
   autoBackup,
   restoreBackup,
-  getBackupFiles
+  getBackupFiles,
+  getBackupDir,
+  setBackupDir,
+  resetBackupDir
 }
