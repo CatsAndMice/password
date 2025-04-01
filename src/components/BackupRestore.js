@@ -21,7 +21,7 @@ import Divider from '@mui/material/Divider'
 import Alert from '@mui/material/Alert'
 import CloseIcon from '@mui/icons-material/Close'
 
-const BackupRestore = ({ buttonStyle }) => {
+const BackupRestore = ({ buttonStyle, onRestore }) => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [backupFiles, setBackupFiles] = useState([])
   const [restoring, setRestoring] = useState(false)
@@ -52,6 +52,7 @@ const BackupRestore = ({ buttonStyle }) => {
     setRestoreResult(null)
     setShowDirSettings(false)
     setDirError('')
+    onRestore()
   }
 
   const handleRestoreBackup = async (backupPath) => {

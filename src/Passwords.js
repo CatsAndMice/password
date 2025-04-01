@@ -97,9 +97,17 @@ export default class Passwords extends React.Component {
     this.setState({ hadKey: true, keyIV: '' })
   }
 
+    // 添加恢复成功的处理函数
+    handleRestoreSuccess = () => {
+      // 重新检查是否有密码设置
+      this.setState({
+        hadKey: Boolean(window.utools.db.get('bcryptpass'))
+      })
+    }
+
   render() {
     const { hadKey, keyIV } = this.state
-    if (!hadKey) return <Setting onSet={this.handleSetBcryptPass} />
+    if (!hadKey) return <Setting onSet={this.handleSetBcryptPass} onRestore={this.handleRestoreSuccess}/>
     if (!keyIV) return <Door onVerify={this.handleVerify} />
     return <Home keyIV={keyIV} onOut={this.handleOut} />
   }

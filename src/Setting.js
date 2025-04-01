@@ -175,6 +175,7 @@ export default class Setting extends React.Component {
             </Button>
             {/* 使用备份恢复组件 */}
             <BackupRestore
+              onRestore={this.props.onRestore}
               buttonStyle={{
                 borderRadius: '12px',
                 padding: '12px',
