@@ -30,7 +30,6 @@ const BackupRestore = ({ buttonStyle }) => {
   const [showDirSettings, setShowDirSettings] = useState(false)
   const [newBackupDir, setNewBackupDir] = useState('')
   const [dirError, setDirError] = useState('')
-
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [selectedBackupPath, setSelectedBackupPath] = useState(null)
 
@@ -368,8 +367,6 @@ const BackupRestore = ({ buttonStyle }) => {
           </Button>
         </DialogActions>
       </Dialog>
-
-
     </>
   )
 }

@@ -177,10 +177,11 @@ export default class Setting extends React.Component {
             <BackupRestore
               buttonStyle={{
                 borderRadius: '12px',
-                padding: '8px',
+                padding: '12px',
                 marginTop: '8px',
                 fontSize: '14px',
-                textTransform: 'none'
+                textTransform: 'none',
+                height: '45px',
               }}
             />
 
