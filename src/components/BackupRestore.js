@@ -252,7 +252,6 @@ const BackupRestore = ({ buttonStyle, onRestore }) => {
 
       <Dialog
         open={dialogOpen}
-        // onClose={handleCloseDialog}
         maxWidth="sm"
         fullWidth
         disableEscapeKeyDown
