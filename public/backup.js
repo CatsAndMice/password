@@ -137,19 +137,6 @@ const restoreBackup = (backupFilePath) => {
       // 开始恢复数据
       const { groups, accounts, bcryptpass } = backupData.data
 
-      // 恢复密码设置
-      if (bcryptpass) {
-        const existingPass = window.utools.db.get('bcryptpass')
-        if (existingPass) {
-          window.utools.db.remove('bcryptpass')
-        }
-        // 去除_rev字段，避免版本冲突
-        delete bcryptpass._rev
-        console.log(window.utools.db.put(bcryptpass), bcryptpass);
-      }
-
-      // return
-
       // 删除并恢复分组数据
       const existingGroups = window.utools.db.allDocs('group/')
       for (const doc of existingGroups) {
@@ -170,6 +157,19 @@ const restoreBackup = (backupFilePath) => {
       const accountResults = window.utools.db.bulkDocs(accounts)
       const successAccounts = accountResults.filter(ret => ret.ok).length
       console.log(accountResults, groupResults);
+
+
+      // 恢复密码设置
+      if (bcryptpass) {
+        const existingPass = window.utools.db.get('bcryptpass')
+        if (existingPass) {
+          window.utools.db.remove('bcryptpass')
+        }
+        // 去除_rev字段，避免版本冲突
+        delete bcryptpass._rev
+        console.log(window.utools.db.put(bcryptpass), bcryptpass);
+      }
+
 
       // 如果有创建失败的数据，抛出错误
       if (successGroups !== groups.length || successAccounts !== accounts.length) {
