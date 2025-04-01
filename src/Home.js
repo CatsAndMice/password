@@ -12,6 +12,13 @@ import D1API from './api/index'
 import Header from './components/Header'
 import FavoriteAccounts from './components/FavoriteAccounts'
 import { initializeData } from './utils/initializeData'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import IconButton from '@mui/material/IconButton'
+import CloseIcon from '@mui/icons-material/Close'
+import BackupSettings from './components/BackupSettings'
+
 
 class Home extends React.Component {
   state = {
@@ -21,7 +28,8 @@ class Home extends React.Component {
     snackbarMessage: { key: 0, type: 'info', body: '' },
     exportData: null,
     importData: null,
-    showFavorites: false
+    showFavorites: false,
+    showBackupSettings: false
   }
 
   handleDetectLive = () => {
@@ -48,13 +56,14 @@ class Home extends React.Component {
     window.utools.setSubInput(({ text }) => {
       this.setState({
         searchKey: text,
-        showFavorites: false
+        showFavorites: false,
+        showBackupSettings: false
       })
     }, '标题/用户名搜索')
     window.services.autoBackup()
   }
 
-          
+
 
   componentWillUnmount() {
     const { group2Accounts, sortedGroup } = this.state
@@ -311,9 +320,19 @@ class Home extends React.Component {
     this.setState(prevState => ({ showFavorites: !prevState.showFavorites }))
   }
 
+  // 添加备份设置处理函数
+  handleBackupSettingsClick = () => {
+    this.setState({ showBackupSettings: !this.state.showBackupSettings })
+  }
+
+  // 处理备份设置关闭
+  handleBackupSettingsClose = () => {
+    this.setState({ showBackupSettings: false })
+  }
+
   // 在 render 中添加导入对话框组件
   render() {
-    const { searchKey, selectedGroupId, groupIds, groupTree, group2Accounts, sortedGroup, decryptAccountDic, snackbarMessage, exportData, importData, showFavorites } = this.state
+    const { searchKey, selectedGroupId, groupIds, groupTree, group2Accounts, sortedGroup, decryptAccountDic, snackbarMessage, exportData, importData, showFavorites, showBackupSettings } = this.state
     if (!group2Accounts) {
       return (
         <div className='home-loading'>
@@ -331,8 +350,48 @@ class Home extends React.Component {
           <Header
             onFavoriteClick={this.handleFavoriteClick}
             showFavorites={this.state.showFavorites}
+            onBackupClick={this.handleBackupSettingsClick}
           />
         )}
+
+        {/* 添加备份设置对话框 */}
+        {showBackupSettings && (
+          <Dialog
+            open={showBackupSettings}
+            onClose={(event, reason) => {
+              if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
+                this.handleBackupSettingsClose()
+              }
+            }}
+            maxWidth="sm"
+            fullWidth
+          >
+            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                备份设置
+              </div>
+              <IconButton
+                onClick={this.handleBackupSettingsClose}
+                size="small"
+                sx={{
+                  color: 'rgba(0, 0, 0, 0.54)',
+                  '&:hover': {
+                    color: 'rgba(0, 0, 0, 0.87)',
+                  }
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent>
+              <BackupSettings
+                onClose={this.handleBackupSettingsClose}
+                showMessage={this.showMessage}
+              />
+            </DialogContent>
+          </Dialog>
+        )}
+
         {searchKey ? (
           <Search
             keyIV={this.props.keyIV}

@@ -5,8 +5,9 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline'
 import StarIcon from '@mui/icons-material/Star'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import BackupIcon from '@mui/icons-material/Backup'
 
-const Header = ({ onFavoriteClick, showFavorites }) => (
+const Header = ({ onFavoriteClick, showFavorites,onBackupClick }) => (
   <AppBar
     position="static"
     elevation={0}
@@ -34,12 +35,31 @@ const Header = ({ onFavoriteClick, showFavorites }) => (
             textShadow: '0 2px 4px rgba(33, 150, 243, 0.2)',
             fontFamily: '-apple-system, "PingFang SC", "Microsoft YaHei"',
             fontWeight: 700,
-            letterSpacing: '1px', 
+            letterSpacing: '1px',
           }
         }}
       >
         <span>我的密码库</span>
       </Typography>
+      {/* 添加备份按钮 */}
+      <Button
+        startIcon={<BackupIcon />}
+        onClick={onBackupClick}
+        size="small"
+        sx={{
+          marginRight: '8px',
+          '&:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.08)',
+          },
+          transition: 'all 0.2s',
+          borderRadius: '6px',
+          color: 'rgba(0, 0, 0, 0.6)',
+          textTransform: 'none',
+          minWidth: 'auto',
+        }}
+      >
+        备份设置
+      </Button>
       <Button
         startIcon={showFavorites ? <StarIcon /> : <StarOutlineIcon />}
         onClick={onFavoriteClick}
