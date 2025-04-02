@@ -129,8 +129,6 @@ const restoreBackup = (backupFilePath) => {
     try {
       // 读取备份文件
       const backupData = JSON.parse(fs.readFileSync(backupFilePath, 'utf8'))
-      console.log(backupData, 'backupData');
-
       // 验证备份文件格式
       if (!backupData._backup_info || backupData._backup_info.type !== 'upassword_backup') {
         throw new Error('无效的备份文件格式')
