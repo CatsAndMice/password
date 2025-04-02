@@ -45,7 +45,7 @@ const resetBackupDir = () => {
   return getBackupDir()
 }
 
-const autoBackup = () => {
+const autoBackup = (isManual = false) => {
   return new Promise((resolve) => {
     setTimeout(async () => {
       try {
@@ -63,9 +63,11 @@ const autoBackup = () => {
 
         if (todayFile) {
           const stats = await fs.promises.stat(path.join(backupDir, todayFile))
+          // 根据是否为手动备份设置不同的时间限制
+          const timeLimit = isManual ? (60 / 3600) : 1 // 手动备份为60秒，自动备份为1小时
           const hoursSinceLastBackup = (Date.now() - stats.mtimeMs) / (1000 * 60 * 60)
-          if (hoursSinceLastBackup < 1) {
-            console.log('今天已经备份过，无需再次备份')
+          if (hoursSinceLastBackup < timeLimit) {
+            console.log(isManual ? '60秒内已备份过，无需再次备份' : '今天已经备份过，无需再次备份')
             resolve(true)
             return
           }
@@ -79,27 +81,27 @@ const autoBackup = () => {
         const writeStream = fs.createWriteStream(backupFile)
 
         // 写入头部和其他小数据
-        writeStream.write('{\n  "_backup_info": ' +
+        writeStream.write('{"_backup_info": ' +
           JSON.stringify({
             type: 'upassword_backup',
             version: '1.0',
             createTime: Date.now(),
             platform: process.platform
-          }, null, 2) + ',\n')
+          }) + ',')
 
-        writeStream.write('  "data": {\n')
-        writeStream.write('    "groups": ' +
-          JSON.stringify(window.utools.db.allDocs('group/'), null, 2) + ',\n')
+        writeStream.write('"data": {')
+        writeStream.write('"groups": ' +
+          JSON.stringify(window.utools.db.allDocs('group/')) + ',')
 
         // 分批写入 accounts 数据
-        writeStream.write('    "accounts": ')
+        writeStream.write('"accounts": ')
         const accounts = window.utools.db.allDocs('account/')
-        writeStream.write(JSON.stringify(accounts, null, 2) + ',\n')
+        writeStream.write(JSON.stringify(accounts) + ',')
 
         // 写入剩余数据和结束标记
-        writeStream.write('    "bcryptpass": ' +
-          JSON.stringify(window.utools.db.get('bcryptpass'), null, 2) + '\n')
-        writeStream.write('  }\n}')
+        writeStream.write('"bcryptpass": ' +
+          JSON.stringify(window.utools.db.get('bcryptpass')) + '}}')
+
 
         // 等待写入完成
         await new Promise(resolve => writeStream.end(resolve))
@@ -156,8 +158,6 @@ const restoreBackup = (backupFilePath) => {
       accounts.forEach(account => delete account._rev)
       const accountResults = window.utools.db.bulkDocs(accounts)
       const successAccounts = accountResults.filter(ret => ret.ok).length
-      console.log(accountResults, groupResults);
-
 
       // 恢复密码设置
       if (bcryptpass) {
@@ -169,7 +169,6 @@ const restoreBackup = (backupFilePath) => {
         delete bcryptpass._rev
         console.log(window.utools.db.put(bcryptpass), bcryptpass);
       }
-
 
       // 如果有创建失败的数据，抛出错误
       if (successGroups !== groups.length || successAccounts !== accounts.length) {

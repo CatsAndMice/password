@@ -74,7 +74,7 @@ const BackupSettings = ({ onClose, showMessage }) => {
     const handleManualBackup = async () => {
         setBackupInProgress(true)
         try {
-            const result = await window.services.autoBackup()
+            const result = await window.services.autoBackup(true)
             if (result) {
                 showMessage('手动备份成功', 'success')
                 refreshBackupFiles()

@@ -58,7 +58,7 @@ const Header = ({ onFavoriteClick, showFavorites,onBackupClick }) => (
           minWidth: 'auto',
         }}
       >
-        备份设置
+        备份
       </Button>
       <Button
         startIcon={showFavorites ? <StarIcon /> : <StarOutlineIcon />}
