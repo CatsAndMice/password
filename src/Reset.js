@@ -86,13 +86,12 @@ export default class Reset extends React.Component {
       )
     }
     return (
-      <div className='setting-body' style={{
+      <div className='setting-body page-background' style={{
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
       }}>
         <div style={{
           display: 'flex',
@@ -101,7 +100,7 @@ export default class Reset extends React.Component {
           padding: '40px',
           background: 'rgba(255, 255, 255, 0.9)',
           borderRadius: '16px',
-          boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
+          boxShadow: '0 0 10px rgba(0,0,0,0.1), 0 0 20px rgba(0,0,0,0.05)',
           backdropFilter: 'blur(10px)',
           width: '360px'
         }}>

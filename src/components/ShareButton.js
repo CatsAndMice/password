@@ -4,8 +4,8 @@ import Tooltip from '@mui/material/Tooltip'
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined'
 
 const ShareButton = ({ onClick }) => (
-  <Tooltip 
-    title="分享账号信息" 
+  <Tooltip
+    title="分享账号信息"
     placement="left"
     sx={{
       '& .MuiTooltip-tooltip': {
@@ -27,7 +27,7 @@ const ShareButton = ({ onClick }) => (
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         backdropFilter: 'blur(8px)',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+        boxShadow: '0 0 10px rgba(0,0,0,0.1), 0 0 20px rgba(0,0,0,0.05)',
         '&:hover': {
           backgroundColor: 'rgba(255, 255, 255, 0.95)',
           boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
@@ -39,7 +39,7 @@ const ShareButton = ({ onClick }) => (
         zIndex: 1000,
       }}
     >
-      <ShareOutlinedIcon sx={{ 
+      <ShareOutlinedIcon sx={{
         fontSize: 16,
         color: 'rgba(0, 0, 0, 1)'
       }} />

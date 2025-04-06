@@ -1,11 +1,37 @@
-html, body {
+html,
+body {
   margin: 0;
   width: 100%;
   height: 100%;
   font-size: 14px;
   overflow: hidden;
-  font-family: system-ui,"PingFang SC","Helvetica Neue","Microsoft Yahei",sans-serif;
+  font-family: system-ui, "PingFang SC", "Helvetica Neue", "Microsoft Yahei", sans-serif;
   word-break: break-all;
+}
+
+
+// 暗黑模式的 filter 实现
+html[data-theme='dark'] {
+  filter: invert(1) hue-rotate(180deg);
+
+  // 对特定元素进行反向过滤，使其保持原始颜色
+  img,
+  video,
+  .preserve-color,
+  [data-preserve-color="true"],
+  canvas {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  .page-background {
+    background: rgb(255, 255, 255);
+  }
+}
+
+
+// 背景颜色
+.page-background {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
 #root {
@@ -14,34 +40,41 @@ html, body {
 }
 
 @doorBgColor: #f5f5f5;
+
 .door-body {
   display: flex;
   background-color: @doorBgColor;
   width: 100%;
   height: 100%;
   flex-direction: column;
+
   &>div {
     display: flex;
     align-items: center;
     justify-content: center;
+
     &:first-child {
       flex: 1;
     }
+
     &:last-child {
       height: 56px;
       width: 100%;
+
       button {
         color: #999;
       }
     }
   }
+
   .door-input {
     display: flex;
-    background-color:#fff;
+    background-color: #fff;
     width: 360px;
     border-radius: 28px;
     border: 1px solid #999;
     position: relative;
+
     input {
       flex: 1;
       height: 48px;
@@ -50,21 +83,25 @@ html, body {
       border: none;
       outline: none;
       font-size: 16px;
-      &::-webkit-input-placeholder{
+
+      &::-webkit-input-placeholder {
         color: #ababab;
         font-weight: 200;
       }
     }
   }
+
   .door-input-enter {
     display: flex;
     align-items: center;
     padding: 0 6px;
     box-sizing: border-box;
+
     button {
       color: #ababab;
     }
   }
+
   .door-tooltip {
     position: absolute;
     top: 64px;
@@ -72,56 +109,58 @@ html, body {
     font-size: 12px;
   }
 }
-@keyframes failbg
-{
+
+@keyframes failbg {
   0% {
     background: @doorBgColor;
   }
-  50% { 
+
+  50% {
     background: #eb928c;
   }
+
   100% {
     background: @doorBgColor;
   }
 }
+
 .door-fail {
   animation: failbg 1s;
 }
-@keyframes swing
-{
-  15%
-  {
+
+@keyframes swing {
+  15% {
     -webkit-transform: translateX(5px);
     transform: translateX(5px);
   }
-  30%
-  {
+
+  30% {
     -webkit-transform: translateX(-5px);
     transform: translateX(-5px);
   }
-  50%
-  {
+
+  50% {
     -webkit-transform: translateX(3px);
     transform: translateX(3px);
   }
-  65%
-  {
+
+  65% {
     -webkit-transform: translateX(-3px);
     transform: translateX(-3px);
   }
-  80%
-  {
+
+  80% {
     -webkit-transform: translateX(2px);
     transform: translateX(2px);
   }
-  100%
-  {
+
+  100% {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
 }
-.door-swing
-{
+
+.door-swing {
   animation: swing 1s ease;
   animation-iteration-count: 1;
 }
@@ -144,6 +183,7 @@ html, body {
   align-items: center;
   flex-direction: column;
   justify-content: center;
+
   .reset-doing-text {
     padding-top: 20px;
     padding-bottom: 60px;
@@ -158,17 +198,21 @@ html, body {
   top: 50%;
   margin-left: -180px;
   transform: translateY(-50%);
-  & > div {
+
+  &>div {
     // padding: 10px 0;
     height: 80px;
   }
+
   .reset-btns {
     display: flex;
     justify-content: space-between;
+
     &>button {
       width: 42%;
     }
   }
+
   .setting-remark {
     padding: 20px 0;
     color: #999;
@@ -178,27 +222,32 @@ html, body {
 }
 
 .random-password {
-  & > div {
+  &>div {
     padding-bottom: 20px;
   }
+
   .random-password-label {
     display: flex;
     align-items: center;
     padding-bottom: 10px;
+
     // font-weight: bold;
     &>span {
       padding-left: 8px;
     }
   }
+
   .random-password-length-box {
     display: flex;
     align-items: center;
+
     &>div {
       &:first-child {
         flex: 1;
         padding-left: 5px;
         box-sizing: border-box;
       }
+
       &:last-child {
         width: 120px;
         box-sizing: border-box;

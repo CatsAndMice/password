@@ -112,20 +112,19 @@ export default class Recover extends React.Component {
     const isDisabled = attempts >= 3 && countdown > 0
 
     return (
-      <div style={{
+      <div className='page-background' style={{
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+        alignItems: 'center'
       }}>
         <div style={{
           position: 'relative',
           width: '400px',
           padding: '40px',
           borderRadius: '16px',
-          boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
+          boxShadow: '0 0 10px rgba(0,0,0,0.1), 0 0 20px rgba(0,0,0,0.05)',
           backdropFilter: 'blur(10px)',
           background: 'rgba(255, 255, 255, 0.9)'
         }}>

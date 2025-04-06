@@ -109,22 +109,19 @@ export default class Door extends React.Component {
     if (resetPassword) return <Reset onOut={this.handleResetOut} />
     if (recoverPassword) return <Recover firstThree={firstThree} onOut={this.handleRecoverOut} />
     return (
-      <div className={'door-body' + (fail ? ' door-fail' : '')} style={{
+      <div className={('door-body' + (fail ? ' door-fail' : '')) + ' page-background'} style={{
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+        alignItems: 'center'
       }}>
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          // gap: '25px',
           padding: '40px',
           borderRadius: '16px',
-          boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
           backdropFilter: 'blur(10px)'
         }}>
           <h2 style={{
