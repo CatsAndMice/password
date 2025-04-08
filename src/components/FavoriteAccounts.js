@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AccountForm from '../AccountForm'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -18,10 +18,27 @@ const FavoriteAccounts = ({
   onUpdate
 }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0)
+  const [selectedId, setSelectedId] = React.useState(null)
+
+  // 处理选中项
+  useEffect(() => {
+    if (data?.length > 0) {
+      const newIndex = selectedId
+        ? data.findIndex(item => item._id === selectedId)
+        : 0
+      setSelectedIndex(newIndex !== -1 ? newIndex : 0)
+      if (!selectedId || newIndex === -1) {
+        setSelectedId(data[0]._id)
+      }
+    }
+  }, [data, selectedId])
+
+
   // 添加一个 ref 来保存 AccountForm 的引用
   const accountFormRef = React.useRef()
   const handleSelect = (index) => {
     if (index === selectedIndex) return
+    setSelectedId(data[index]._id)
     setSelectedIndex(index)
     // 当选择一个新的账号时，调用 AccountForm 的 setState 方法锁定表单
     if (accountFormRef) {
