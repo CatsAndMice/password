@@ -20,6 +20,8 @@ import SnackbarMessage from './SnackbarMessage'
 import { updateFavicon } from "./utils/updateFavicon"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import D1API from './api/index'
 import ShareButton from './components/ShareButton'
 
@@ -88,7 +90,12 @@ export default class AccountForm extends React.Component {
     passwordEye: false,
     randomPasswordEl: null,
     message: { key: 0, type: 'info', body: '' }, // 添加消息状态
-    isLocked: true
+    isLocked: true,
+    expandedSections: {
+      password: false,
+      link: false,
+      remark: false
+    }
   }
 
   keydownAction = (e) => {
@@ -127,9 +134,15 @@ export default class AccountForm extends React.Component {
   }
 
   componentDidMount() {
-    console.log(111);
     const { stateValue } = this.decryptAndUpdateState(this.props.data, this.props.keyIV)
-    this.setState(stateValue)
+    this.setState({
+      ...stateValue,
+      expandedSections: {
+        password: Boolean(stateValue.passwordValue),
+        link: Boolean(stateValue.linkValue),
+        remark: Boolean(stateValue.remarkValue)
+      }
+    })
     window.addEventListener('keydown', this.keydownAction, true)
   }
 
@@ -140,7 +153,14 @@ export default class AccountForm extends React.Component {
     if (mode === 'FAVORITE') {
       stateValue.isLocked = this.state.isLocked
     }
-    this.setState(stateValue)
+    this.setState({
+      ...stateValue,
+      expandedSections: {
+        password: Boolean(stateValue.passwordValue),
+        link: Boolean(stateValue.linkValue),
+        remark: Boolean(stateValue.remarkValue)
+      }
+    })
   }
 
   constructor(props) {
@@ -297,13 +317,13 @@ export default class AccountForm extends React.Component {
   }
 
   handleShare = () => {
-    const { titleValue, usernameValue, passwordValue, linkValue,remarkValue } = this.state
+    const { titleValue, usernameValue, passwordValue, linkValue, remarkValue } = this.state
     const shareText = [
       titleValue && `标题：${titleValue}`,
       usernameValue && `用户名：${usernameValue}`,
       passwordValue && `密码：${passwordValue}`,
       linkValue && `链接：${linkValue}`,
-      remarkValue.trim() && `说明：${remarkValue.trim()}` 
+      remarkValue.trim() && `说明：${remarkValue.trim()}`
     ].filter(Boolean).join('\n')
 
     window.utools.copyText(shareText)
@@ -322,7 +342,7 @@ export default class AccountForm extends React.Component {
 
   // 在 render 方法中使用
   render() {
-    const { titleValue, usernameValue, passwordValue, linkValue, remarkValue, passwordEye, randomPasswordEl, message, isLocked } = this.state
+    const { titleValue, usernameValue, passwordValue, linkValue, remarkValue, passwordEye, randomPasswordEl, message, isLocked, expandedSections } = this.state
     const { mode } = this.props // 从 props 中获取是否为搜索模式
 
     return (
@@ -408,123 +428,134 @@ export default class AccountForm extends React.Component {
             }}
           />
         </div>
-        <div>
-          <TextField
-            type={passwordEye ? 'text' : 'password'}
-            fullWidth
-            label='密码'
-            onChange={this.handleInputChang('password')}
-            value={passwordValue}
-            disabled={isLocked}
-            variant='standard'
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <LockIcon className='account-form-prev-icon' />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <Tooltip title={passwordEye ? '关闭明文' : '明文显示'} placement='top'>
-                    <IconButton tabIndex={-1} onClick={this.handlePasswordVisible} size='small'>
-                      {passwordEye ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  </Tooltip>
-                  <span className='account-form-icon-divider' />
-                  <Tooltip title={isLocked ? '解锁后可生成随机密码' : '生成随机密码'} placement='top'>
-                    <span>
-                      <IconButton
-                        tabIndex={-1}
-                        onClick={this.handleShowRandomPassword}
-                        size='small'
-                        disabled={isLocked}
-                        sx={{
-                          '&.Mui-disabled': {
-                            color: 'rgba(0, 0, 0, 0.26)'
-                          }
-                        }}
-                      >
-                        <ShuffleIcon />
+
+
+
+        {(expandedSections.password || !isLocked || passwordValue) && (
+          <div>
+            <TextField
+              type={passwordEye ? 'text' : 'password'}
+              fullWidth
+              label='密码'
+              onChange={this.handleInputChang('password')}
+              value={passwordValue}
+              disabled={isLocked}
+              variant='standard'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <LockIcon className='account-form-prev-icon' />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <Tooltip title={passwordEye ? '关闭明文' : '明文显示'} placement='top'>
+                      <IconButton tabIndex={-1} onClick={this.handlePasswordVisible} size='small'>
+                        {passwordEye ? <VisibilityOffIcon /> : <VisibilityIcon />}
                       </IconButton>
-                    </span>
-                  </Tooltip>
-                  <span className='account-form-icon-divider' />
-                  <Tooltip title={'复制密码，快捷键 ' + (this.isMacOs ? 'Command' : 'Ctrl') + '+P'} placement='top-end'>
-                    <IconButton tabIndex={-1} onClick={this.handleCopy('passwordValue')} size='small'>
-                      <ContentCopyIcon />
-                    </IconButton>
-                  </Tooltip>
-                </InputAdornment>
-              )
-            }}
-            sx={{
-              ...baseTextFieldStyle,
-              opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
-              transition: 'opacity 0.2s', // 添加过渡效果
-            }}
-          />
-          <Popover
-            open={Boolean(randomPasswordEl)}
-            anchorEl={randomPasswordEl}
-            onClose={this.handleCloseRandomPassword}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
-            }}
-          >
-            <div className='random-password-popover'>
-              <RandomPassword from='accountform' ref={c => { this.randomPasswordRef = c }} />
-              <div className='random-password-popover-footer'>
-                <Button onClick={this.handleOkRandomPassword} variant='contained' color='primary' endIcon={<SendIcon />}>使用该密码</Button>
+                    </Tooltip>
+                    <span className='account-form-icon-divider' />
+                    <Tooltip title={isLocked ? '解锁后可生成随机密码' : '生成随机密码'} placement='top'>
+                      <span>
+                        <IconButton
+                          tabIndex={-1}
+                          onClick={this.handleShowRandomPassword}
+                          size='small'
+                          disabled={isLocked}
+                          sx={{
+                            '&.Mui-disabled': {
+                              color: 'rgba(0, 0, 0, 0.26)'
+                            }
+                          }}
+                        >
+                          <ShuffleIcon />
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                    <span className='account-form-icon-divider' />
+                    <Tooltip title={'复制密码，快捷键 ' + (this.isMacOs ? 'Command' : 'Ctrl') + '+P'} placement='top-end'>
+                      <IconButton tabIndex={-1} onClick={this.handleCopy('passwordValue')} size='small'>
+                        <ContentCopyIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                )
+              }}
+              sx={{
+                ...baseTextFieldStyle,
+                opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
+                transition: 'all 0.2s', // 添加过渡效果
+              }}
+            />
+            <Popover
+              open={Boolean(randomPasswordEl)}
+              anchorEl={randomPasswordEl}
+              onClose={this.handleCloseRandomPassword}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+            >
+              <div className='random-password-popover'>
+                <RandomPassword from='accountform' ref={c => { this.randomPasswordRef = c }} />
+                <div className='random-password-popover-footer'>
+                  <Button onClick={this.handleOkRandomPassword} variant='contained' color='primary' endIcon={<SendIcon />}>使用该密码</Button>
+                </div>
               </div>
-            </div>
-          </Popover>
-        </div>
-        <div>
-          <TextField
-            fullWidth
-            label='链接'
-            onChange={this.handleInputChang('link')}
-            value={linkValue}
-            disabled={isLocked}
-            sx={{
-              ...baseTextFieldStyle,
-              opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
-              transition: 'opacity 0.2s', // 添加过渡效果
-            }}
-            variant='standard'
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <SvgIcon fontSize="small" >
-                    <svg t="1742436154120" className='account-form-prev-icon' style={{ fill: 'rgba(44, 62, 80, 0.7)' }} viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7012" width="20" height="20"><path d="M509.4 508.5m-469.5 0a469.5 469.5 0 1 0 939 0 469.5 469.5 0 1 0-939 0Z" p-id="7013"></path><path d="M617.9 467.2c-0.3-0.6-0.5-1.2-0.8-1.8-0.1-0.1-0.1-0.2-0.2-0.4-7.2-14.5-22.7-23.9-39.9-22.6-22.5 1.8-39.4 21.5-37.6 44 0.5 5.8 2.1 11.1 4.6 15.9 11.4 25.7 6.4 57-14.6 78.1l-110 110.2c-27.3 27.3-71.7 27.3-99 0-27.3-27.3-27.3-71.7 0-99l41-41-0.3-0.3c9.5-8.2 15-20.7 14-34.1-1.8-22.5-21.5-39.4-44-37.6-10.8 0.8-20.2 5.8-27 13.2l-0.1-0.1-41.8 41.8c-59.4 59.4-59.4 155.6 0 215 59.4 59.4 155.6 59.4 215 0l110.3-110.3c46.2-46.3 56.2-114.8 30.4-171z" fill="#FFFFFF" p-id="7014"></path><path d="M762.4 257.4c-59.4-59.4-155.6-59.4-215 0L437.1 367.7c-46.2 46.2-56.2 114.7-30.5 170.9 0.3 0.6 0.5 1.2 0.8 1.8 0.1 0.1 0.1 0.2 0.2 0.4 7.2 14.5 22.7 23.9 39.9 22.6 22.5-1.8 39.4-21.5 37.6-44-0.5-5.8-2.1-11.1-4.6-15.9-11.4-25.7-6.4-57 14.6-78.1l110.1-110.1c27.3-27.3 71.7-27.3 99 0 27.3 27.3 27.3 71.7 0 99l-41 41 0.3 0.3c-9.5 8.2-15 20.7-14 34.1 1.8 22.5 21.5 39.4 44 37.6 10.8-0.8 20.2-5.8 27-13.2l0.1 0.1 41.8-41.8c59.3-59.4 59.3-155.7 0-215z" fill="#FFFFFF" p-id="7015"></path></svg>
-                  </SvgIcon>
-                  {/* <LinkIcon   /> */}
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <Tooltip title='浏览器中打开' placement='top'>
-                    <IconButton tabIndex={-1} onClick={this.handleOpenLink} size='small'>
-                      <OpenInBrowserIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                  <span className='account-form-icon-divider' />
-                  <Tooltip title='复制链接' placement='top-end'>
-                    <IconButton tabIndex={-1} onClick={this.handleCopy('linkValue')} size='small'>
-                      <ContentCopyIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </InputAdornment>
-              )
-            }}
-          />
-        </div>
-        <div>
+            </Popover>
+          </div>
+        )}
+
+
+        {(expandedSections.link || !isLocked || linkValue) && (
+          <div>
+            <TextField
+              fullWidth
+              label='链接'
+              onChange={this.handleInputChang('link')}
+              value={linkValue}
+              disabled={isLocked}
+              sx={{
+                ...baseTextFieldStyle,
+                opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
+                transition: 'all 0.2s', // 添加过渡效果
+              }}
+              variant='standard'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <SvgIcon fontSize="small" >
+                      <svg t="1742436154120" className='account-form-prev-icon' style={{ fill: 'rgba(44, 62, 80, 0.7)' }} viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7012" width="20" height="20"><path d="M509.4 508.5m-469.5 0a469.5 469.5 0 1 0 939 0 469.5 469.5 0 1 0-939 0Z" p-id="7013"></path><path d="M617.9 467.2c-0.3-0.6-0.5-1.2-0.8-1.8-0.1-0.1-0.1-0.2-0.2-0.4-7.2-14.5-22.7-23.9-39.9-22.6-22.5 1.8-39.4 21.5-37.6 44 0.5 5.8 2.1 11.1 4.6 15.9 11.4 25.7 6.4 57-14.6 78.1l-110 110.2c-27.3 27.3-71.7 27.3-99 0-27.3-27.3-27.3-71.7 0-99l41-41-0.3-0.3c9.5-8.2 15-20.7 14-34.1-1.8-22.5-21.5-39.4-44-37.6-10.8 0.8-20.2 5.8-27 13.2l-0.1-0.1-41.8 41.8c-59.4 59.4-59.4 155.6 0 215 59.4 59.4 155.6 59.4 215 0l110.3-110.3c46.2-46.3 56.2-114.8 30.4-171z" fill="#FFFFFF" p-id="7014"></path><path d="M762.4 257.4c-59.4-59.4-155.6-59.4-215 0L437.1 367.7c-46.2 46.2-56.2 114.7-30.5 170.9 0.3 0.6 0.5 1.2 0.8 1.8 0.1 0.1 0.1 0.2 0.2 0.4 7.2 14.5 22.7 23.9 39.9 22.6 22.5-1.8 39.4-21.5 37.6-44-0.5-5.8-2.1-11.1-4.6-15.9-11.4-25.7-6.4-57 14.6-78.1l110.1-110.1c27.3-27.3 71.7-27.3 99 0 27.3 27.3 27.3 71.7 0 99l-41 41 0.3 0.3c-9.5 8.2-15 20.7-14 34.1 1.8 22.5 21.5 39.4 44 37.6 10.8-0.8 20.2-5.8 27-13.2l0.1 0.1 41.8-41.8c59.3-59.4 59.3-155.7 0-215z" fill="#FFFFFF" p-id="7015"></path></svg>
+                    </SvgIcon>
+                    {/* <LinkIcon   /> */}
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <Tooltip title='浏览器中打开' placement='top'>
+                      <IconButton tabIndex={-1} onClick={this.handleOpenLink} size='small'>
+                        <OpenInBrowserIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <span className='account-form-icon-divider' />
+                    <Tooltip title='复制链接' placement='top-end'>
+                      <IconButton tabIndex={-1} onClick={this.handleCopy('linkValue')} size='small'>
+                        <ContentCopyIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                )
+              }}
+            />
+          </div>
+        )}
+
+
+        {(expandedSections.remark || !isLocked || remarkValue) && (<div>
           <TextField
             fullWidth
             label='说明'
@@ -567,10 +598,43 @@ export default class AccountForm extends React.Component {
                 letterSpacing: '0.2px',
               },
               opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
-              transition: 'opacity 0.2s', // 添加过渡效果
+              transition: 'all 0.2s', // 添加过渡效果
             }}
           />
-        </div>
+        </div>)}
+
+        {/* 添加展开/收起按钮 */}
+        {isLocked && (!passwordValue || !linkValue || !remarkValue) && (
+          <div className="flex justify-end mb-4" style={{
+            marginTop: '-12px',
+          }}>
+            <div
+              onClick={() => {
+                const allExpanded = !Object.values(expandedSections).includes(false);
+                this.setState({
+                  expandedSections: {
+                    password: !allExpanded,
+                    link: !allExpanded,
+                    remark: !allExpanded
+                  }
+                });
+              }}
+              className="inline-flex items-center cursor-pointer text-[13px] select-none transition-all duration-200   "
+              style={{
+                color: 'rgba(0, 0, 0, 0.6)'
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = '#2196F3'}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(0, 0, 0, 0.6)'}
+            >
+              {Object.values(expandedSections).includes(false) ?
+                <ExpandMoreIcon className="text-base mr-1" /> :
+                <ExpandLessIcon className="text-base mr-1" />
+              }
+              {Object.values(expandedSections).includes(false) ? '展开全部字段' : '收起空白字段'}
+            </div>
+          </div>
+        )}
+
         {isLocked && <ShareButton onClick={this.handleShare} />}
       </div>
     )
