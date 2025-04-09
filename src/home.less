@@ -90,10 +90,13 @@ html[data-theme='dark'] {
       transition: width 0.3s ease;
       overflow: visible; // 修改这里，让按钮可以溢出显示
       min-width: 0; // 添加这行，允许宽度收缩到0
-
       &.collapsed {
         width: 0;
         border-right: none;
+        
+        .collapsed-icon {
+          transform: rotate(180deg);
+        }
       }
     }
 
@@ -104,10 +107,12 @@ html[data-theme='dark'] {
       backdrop-filter: blur(10px);
       transition: width 0.3s ease;
     }
+
+
   }
 }
 
-.home-body > div:first-child.collapsed + div:last-child {
+.home-body>div:first-child.collapsed+div:last-child {
   width: 100%;
 }
 

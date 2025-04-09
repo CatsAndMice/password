@@ -31,8 +31,7 @@ class Home extends React.Component {
     exportData: null,
     importData: null,
     showFavorites: false,
-    showBackupSettings: false,
-    isGroupAreaCollapsed: false
+    showBackupSettings: false
   }
 
   handleDetectLive = () => {
@@ -336,7 +335,10 @@ class Home extends React.Component {
 
   // 添加处理展开/收起的方法
   handleToggleGroupArea = () => {
-    this.setState(prevState => ({ isGroupAreaCollapsed: !prevState.isGroupAreaCollapsed }));
+    const treeArea = document.querySelector('.tree-area')
+    if (treeArea) {
+      treeArea.classList.toggle('collapsed')
+    }
   }
 
   // 在 render 中添加导入对话框组件
@@ -420,7 +422,7 @@ class Home extends React.Component {
         ) : (
           <DndProvider backend={HTML5Backend}>
             <div className='home-body'>
-              <div className={`relative  ${this.state.isGroupAreaCollapsed ? 'collapsed' : ''}`}>
+              <div className={`relative tree-area`} onClick={(e) => e.stopPropagation()} >
                 {
                   groupTree && (
                     <Tree
@@ -438,28 +440,30 @@ class Home extends React.Component {
                     />)
                 }
 
-                <IconButton
-                  onClick={this.handleToggleGroupArea}
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    this.handleToggleGroupArea();
+                  }}
                   size="small"
                   className={`
-                    !absolute top-1/2 
-                    ${this.state.isGroupAreaCollapsed ? '-right-5' : '-right-2'}
+                    isolate
+                    !absolute top-[45%]
+                    -right-[15px]
                     -translate-y-1/2 
-                    bg-white hover:bg-[rgba(33,150,243,0.08)]
-                    shadow-[0_0_10px_rgba(0,0,0,0.1)]
-                    rounded-full 
-                    w-6 
-                    h-6
-                    border border-[#e0e0e0]
+                    bg-white
+                    shadow-[2px_0px_8px_rgba(0,0,0,0.15)]
+                    w-4
+                    h-8
                     z-50
-                    transition-all duration-200 ease-in-out 
-                    hover:scale-110
-                    flex items-center justify-center
+                    transition-all !duration-200 !ease-in-out 
+                    cursor-pointer
+                    flex !items-center !justify-center
+                    rounded-r-md
                   `}
                 >
-                  {this.state.isGroupAreaCollapsed ? <ChevronRightIcon className="!text-[#2196F3] hover:!text-[#1976D2] transition-colors duration-200" /> :
-                    <ChevronLeftIcon className="!text-[#2196F3] hover:!text-[#1976D2] transition-colors duration-200" />}
-                </IconButton>
+                  <ChevronLeftIcon className="collapsed-icon !text-[#2196F3] hover:!text-[#1976D2] transition-colors duration-200" />
+                </div>
               </div>
               <div>
                 <AccountArea
