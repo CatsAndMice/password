@@ -87,7 +87,14 @@ html[data-theme='dark'] {
       box-sizing: border-box;
       position: relative;
       background: rgb(255, 255, 255);
-      // backdrop-filter: blur(10px);
+      transition: width 0.3s ease;
+      overflow: visible; // 修改这里，让按钮可以溢出显示
+      min-width: 0; // 添加这行，允许宽度收缩到0
+
+      &.collapsed {
+        width: 0;
+        border-right: none;
+      }
     }
 
     &:last-child {
@@ -95,8 +102,13 @@ html[data-theme='dark'] {
       height: 100%;
       background: rgb(255, 255, 255);
       backdrop-filter: blur(10px);
+      transition: width 0.3s ease;
     }
   }
+}
+
+.home-body > div:first-child.collapsed + div:last-child {
+  width: 100%;
 }
 
 .random-password-popover {

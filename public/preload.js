@@ -96,8 +96,6 @@ window.services = {
     window.utools.shellShowItemInFolder(saveFile)
   },
 
-  // 自动备份数据
-  // autoBackup,
   // 获取原始密码
   getOriginalPassword: () => {
     const passDoc = window.utools.db.get('bcryptpass')
