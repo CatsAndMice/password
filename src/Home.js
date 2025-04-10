@@ -17,10 +17,8 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import CloseIcon from '@mui/icons-material/Close'
 import BackupSettings from './components/BackupSettings'
-
 
 class Home extends React.Component {
   state = {
@@ -64,8 +62,6 @@ class Home extends React.Component {
     }, '标题/用户名搜索')
     window.services.autoBackup()
   }
-
-
 
   componentWillUnmount() {
     const { group2Accounts, sortedGroup } = this.state
