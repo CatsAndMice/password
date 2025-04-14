@@ -1,7 +1,6 @@
 import React from 'react'
 import { DragSource, DropTarget } from 'react-dnd'
-import Avatar from '@mui/material/Avatar'
-import LinkIcon from '@mui/icons-material/Link'
+import LazyAvatar from './components/LazyAvatar'
 
 const boxSource = {
   beginDrag(props, monitor, component) {
@@ -52,56 +51,40 @@ class AccountItem extends React.Component {
           style={{ padding: '8px 12px' }}>
           <div style={{
             display: 'flex',
-            gap: '12px',
             alignItems: 'center'
           }}>
-            {!this.state.faviconError && data.account.favicon && (
-              <Avatar
-                src={data.account.favicon}
-                variant="square"
-                key={data.account.favicon}
-                sx={{
-                  width: 24,
-                  height: 24,
-                  borderRadius: '4px',
-                  marginTop: '2px',
-                  display: this.state.faviconLoaded ? 'flex' : 'none'
-                }}
-                onError={() => this.setState({ faviconLoaded: false })}
-                onLoad={() => this.setState({ faviconLoaded: true })}
-              >
-                <LinkIcon sx={{ fontSize: 18, color: 'rgba(44, 62, 80, 0.5)' }} />
-              </Avatar>
-            )}
-            <div style={{ 
-                flex: 1,
-                minWidth: 0, // 关键是这行，让flex item可以收缩到比内容更小
-                overflow: 'hidden' // 确保子元素不会溢出
-              }}>
-                <div id={data.account._id + '_title'}
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    color: '#2c3e50',
-                    marginBottom: '4px',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap'
-                  }}>
-                  {data.title}
-                </div>
-                <div className='account-item-username'
-                  id={data.account._id + '_username'}
-                  style={{
-                    fontSize: '13px',
-                    color: 'rgba(44, 62, 80, 0.7)',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap'
-                  }}>
-                  {data.username}
-                </div>
+            
+            <LazyAvatar src={data.account.favicon}
+              alt={data.title} />
+            <div style={{
+              flex: 1,
+              minWidth: 0, // 关键是这行，让flex item可以收缩到比内容更小
+              overflow: 'hidden' // 确保子元素不会溢出
+            }}>
+              <div id={data.account._id + '_title'}
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#2c3e50',
+                  marginBottom: '4px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}>
+                {data.title}
               </div>
+              <div className='account-item-username'
+                id={data.account._id + '_username'}
+                style={{
+                  fontSize: '13px',
+                  color: 'rgba(44, 62, 80, 0.7)',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}>
+                {data.username}
+              </div>
+            </div>
           </div>
         </div>
       </div>))
