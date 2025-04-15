@@ -2,9 +2,9 @@
 [uTools 插件——密码管家](https://u.tools/plugins/detail/%E5%AF%86%E7%A0%81%E7%AE%A1%E5%AE%B6/?c=eylamc1n2u)
 
 ## uTools 插件截图
-![1]([./images/3.png](https://i.111666.best/image/sgaFjkVkWmyX2D7gtRBj9o.png))
-![2](https://i.111666.best/image/K1esrWWx84v7DCcF2ui3wx.png)
-![3](https://i.111666.best/image/2L7yZSq5ugNu4u1VIy50Zf.png)
+<img width="912" alt="截屏2025-04-15 17 36 22" src="https://github.com/user-attachments/assets/4fafb61d-0eb4-4a2d-b4a8-fe5e6cdbb5bb" />
+<img width="912" alt="截屏2025-04-15 17 36 47" src="https://github.com/user-attachments/assets/9e4ccf9e-27ba-46ee-b96f-d339101b169f" />
+<img width="912" alt="截屏2025-04-15 17 36 59" src="https://github.com/user-attachments/assets/13c91831-29d2-4079-af7d-08eeceb57d6a" />
 
 ## 运行
 ```
