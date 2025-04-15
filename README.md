@@ -1,12 +1,10 @@
-## uTools 插件——密码管家
 
-[密码管家](https://u.tools/plugins/detail/%E5%AF%86%E7%A0%81%E7%AE%A1%E5%AE%B6/?c=eylamc1n2u)
+[uTools 插件——密码管家](https://u.tools/plugins/detail/%E5%AF%86%E7%A0%81%E7%AE%A1%E5%AE%B6/?c=eylamc1n2u)
 
 ## uTools 插件截图
-
-![1](./images/1.png)
-![2](./images/2.png)
-![3](./images/3.png)
+![1]([./images/3.png](https://i.111666.best/image/sgaFjkVkWmyX2D7gtRBj9o.png))
+![2](https://i.111666.best/image/K1esrWWx84v7DCcF2ui3wx.png)
+![3](https://i.111666.best/image/2L7yZSq5ugNu4u1VIy50Zf.png)
 
 ## 运行
 ```
