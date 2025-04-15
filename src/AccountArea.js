@@ -13,7 +13,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
-import D1API from './api/index'
+import D1API from './api/d1'
 
 const ACCOUNT_ITEM_HEIGHT = 65 //每个帐号的高度
 export default class AccountArea extends React.Component {

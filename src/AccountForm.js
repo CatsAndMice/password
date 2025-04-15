@@ -22,7 +22,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import D1API from './api/index'
+import D1API from './api/d1'
 import ShareButton from './components/ShareButton'
 
 // 基础样式配置
