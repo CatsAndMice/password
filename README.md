@@ -8,7 +8,7 @@
 ![2](./images/2.png)
 ![3](./images/3.png)
 
-### 运行
+## 运行
 ```
 npm install
 ```
