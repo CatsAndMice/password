@@ -1,8 +1,14 @@
-### uTools 插件截图
+## uTools 插件——密码管家
 
-![4A766C411CCB0253947C3BA8CFA3963D](https://user-images.githubusercontent.com/4998729/122719145-61a90800-d2a0-11eb-9a21-8e15035e7e39.png)
+[密码管家](https://u.tools/plugins/detail/%E5%AF%86%E7%A0%81%E7%AE%A1%E5%AE%B6/?c=eylamc1n2u)
 
-### 构建 - 运行
+## uTools 插件截图
+
+![1](./images/1.png)
+![2](./images/2.png)
+![3](./images/3.png)
+
+### 运行
 ```
 npm install
 ```
