@@ -26,6 +26,7 @@
     "babel-plugin-import": "^1.13.3",
     "copy-webpack-plugin": "^9.1.0",
     "css-loader": "^6.5.1",
+    "dotenv-webpack": "^8.1.0",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
     "postcss": "^8.5.3",

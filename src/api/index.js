@@ -17,16 +17,16 @@ const D1API = {
     },
 
     async query(sql, params = []) {
-        const DATABASE_ID = '3463f342-aa58-4d5e-9166-37e26c5a10ae',
-            ACCOUNT_ID = 'f2865efc51b5e31e84a5135d4dab809a'
+        const DATABASE_ID = process.env.D1_DATABASE_ID,
+            ACCOUNT_ID = process.env.D1_ACCOUNT_ID
         try {
             const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/d1/database/${DATABASE_ID}/query`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Bearer biAt1nwwtTpFiq27-tRLoBqC2dzlCpOMcqdMwztE',
+                    'Authorization': `Bearer ${process.env.D1_AUTH_TOKEN}`,
                     'Content-Type': 'application/json',
-                    'X-Auth-Key': `625677219503ba745caaacacccaf574282bf4`,
-                    'X-Auth-Email': 'li13034833806@gmail.com'
+                    'X-Auth-Key': process.env.D1_AUTH_KEY,
+                    'X-Auth-Email': process.env.D1_AUTH_EMAIL
                 },
                 body: JSON.stringify({
                     sql,
