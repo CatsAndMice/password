@@ -1,5 +1,7 @@
 const crypto = require('crypto')
 const bcrypt = require('./bcrypt/bcrypt.js')
+const webdavServices = require('./webdavServices.js')
+
 const { autoBackup, restoreBackup, getBackupFiles, getBackupDir, setBackupDir, resetBackupDir } = require('./backup.js')
 const getKeyIv = (passphrase) => {
   const hash1 = crypto.createHash('md5').update(passphrase).digest('hex')
@@ -24,6 +26,7 @@ const getOriginalPasswordPlus = (recovery) => {
 }
 
 window.services = {
+  ...webdavServices,
   // 备份恢复相关
   autoBackup,
   restoreBackup,

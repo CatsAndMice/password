@@ -47,10 +47,10 @@ const resetBackupDir = () => {
 
 const autoBackup = (isManual = false) => {
   // 开发环境不执行备份
-  if (window.utools.isDev()) {
-    console.warn('开发环境不执行备份')
-    return
-  }
+  // if (window.utools.isDev()) {
+  //   console.warn('开发环境不执行备份')
+  //   return
+  // }
   return new Promise((resolve) => {
     setTimeout(async () => {
       try {
@@ -86,17 +86,19 @@ const autoBackup = (isManual = false) => {
         const writeStream = fs.createWriteStream(backupFile)
 
         // 写入头部和其他小数据
+        const _backup_info = {
+          type: 'upassword_backup',
+          version: '1.0',
+          createTime: Date.now(),
+          platform: process.platform
+        }
         writeStream.write('{"_backup_info": ' +
-          JSON.stringify({
-            type: 'upassword_backup',
-            version: '1.0',
-            createTime: Date.now(),
-            platform: process.platform
-          }) + ',')
+          JSON.stringify(_backup_info) + ',')
 
+        const groups = window.utools.db.allDocs('group/')
         writeStream.write('"data": {')
         writeStream.write('"groups": ' +
-          JSON.stringify(window.utools.db.allDocs('group/')) + ',')
+          JSON.stringify(groups) + ',')
 
         // 分批写入 accounts 数据
         writeStream.write('"accounts": ')
@@ -104,8 +106,9 @@ const autoBackup = (isManual = false) => {
         writeStream.write(JSON.stringify(accounts) + ',')
 
         // 写入剩余数据和结束标记
+        const bcryptpass = window.utools.db.get('bcryptpass')
         writeStream.write('"bcryptpass": ' +
-          JSON.stringify(window.utools.db.get('bcryptpass')) + '}}')
+          JSON.stringify(bcryptpass) + '}}')
 
 
         // 等待写入完成
@@ -120,6 +123,18 @@ const autoBackup = (isManual = false) => {
         for (const f of oldFiles) {
           await fs.promises.unlink(path.join(backupDir, f))
         }
+
+        // 执行云备份
+        try {
+          const webdavConfig = window.services.getWebdavConfig()
+          if (webdavConfig?.enabled) {
+            await window.services.backupToWebdav(isManual, backupFile)
+          }
+        } catch (error) {
+          console.error('云备份失败:', error)
+          // 云备份失败不影响本地备份的结果
+        }
+
         resolve(true)
       } catch (error) {
         console.error('自动备份失败:', error)
