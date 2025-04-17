@@ -1,4 +1,5 @@
 import React from 'react'
+import '../assets/styles/fonts.css'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import StarOutlineIcon from '@mui/icons-material/StarOutline'
@@ -105,7 +106,7 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               textShadow: '0 2px 4px rgba(33, 150, 243, 0.2)',
-              fontFamily: '-apple-system, "PingFang SC", "Microsoft YaHei"',
+              fontFamily: 'MyFont',
               fontWeight: 700,
               letterSpacing: '1px',
             }
