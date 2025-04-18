@@ -14,6 +14,7 @@ import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser'
 import LockIcon from '@mui/icons-material/Lock'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
 import SendIcon from '@mui/icons-material/Send'
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import SvgIcon from '@mui/material/SvgIcon';
 import RandomPassword from './RandomPassword'
 import SnackbarMessage from './SnackbarMessage'
@@ -24,6 +25,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import D1API from './api/d1'
 import ShareButton from './components/ShareButton'
+import { autoFill } from './utils/autoFill'  // 添加导入
 
 // 基础样式配置
 const baseTextFieldStyle = {
@@ -78,6 +80,8 @@ const baseTextFieldStyle = {
     }
   },
 }
+
+
 export default class AccountForm extends React.Component {
   isMacOs = window.utools.isMacOs()
 
@@ -539,6 +543,16 @@ export default class AccountForm extends React.Component {
                     <Tooltip title='浏览器中打开' placement='top'>
                       <IconButton tabIndex={-1} onClick={this.handleOpenLink} size='small'>
                         <OpenInBrowserIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <span className='account-form-icon-divider' />
+                    <Tooltip title='自动填充账号密码' placement='top'>
+                      <IconButton
+                        tabIndex={-1}
+                        onClick={()=>autoFill(this.state) }
+                        size='small'
+                      >
+                        <AutoFixHighIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
                     <span className='account-form-icon-divider' />
