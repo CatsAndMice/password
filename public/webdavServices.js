@@ -8,16 +8,22 @@ module.exports = {
         return config ? {
             url: config.url,
             username: config.username,
-            password: config.password,
+            password: config.password && window.services.getOriginalPasswordPlus(config.password),
             enabled: config.enabled
         } : null
     },
 
     // 保存 WebDAV 配置
     setWebdavConfig(config) {
+        const password = config.password && window.services.getRecoveryPass(config.password)
+        const encryptedConfig = {
+            ...config,
+            password
+        }
+        window.utools.db.remove('system/webdav_config')
         return window.utools.db.put({
             _id: 'system/webdav_config',
-            ...config,
+            ...encryptedConfig,
             updateTime: Date.now()
         })
     },
@@ -148,7 +154,6 @@ module.exports = {
             return {
                 success: true,
                 path: remotePath,
-                // size: Buffer.byteLength(fileContent)
             }
         } catch (error) {
             console.error('WebDAV 备份失败:', error)
