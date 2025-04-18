@@ -3,12 +3,13 @@ export const autoFill = (state) => {
     if (!linkValue) return
 
     // window.D1API.trackEvent({ message: '使用自动填充功能' })
-
+    // 获取空闲浏览器实例
+    const idleUBrowsers = window.utools.getIdleUBrowsers();
     const ubrowser = window.utools.ubrowser
-    ubrowser
+    const browserConfig = ubrowser
         .goto(linkValue)
         .wait(1000) // 额外等待一小段时间，确保动态内容加载完成
-        .devTools()
+        // .devTools()
         // // 先找到密码框
         .evaluate((account) => {
             // 获取所有密码输入框，包括 iframe 中的
@@ -34,7 +35,6 @@ export const autoFill = (state) => {
             };
 
             const passwordInputs = getAllPasswordInputs();
-            console.log('所有密码框：', passwordInputs);
             const passwordInput = passwordInputs.find(input => {
                 const style = window.getComputedStyle(input);
                 return style.display !== 'none' &&
@@ -43,7 +43,7 @@ export const autoFill = (state) => {
                     input.offsetWidth > 0 &&
                     input.offsetHeight > 0
             });
-    
+
             if (!passwordInput) return null;
 
             // 从密码框向上查找用户名输入框
@@ -54,9 +54,16 @@ export const autoFill = (state) => {
                 if (element) {
                     const input = element.querySelector('input[type="text"], input[type="email"], input[name="username"], input[name="account"], input:not([type])')
                         || (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || !element.type));
-                    if (input) {
-                        usernameInput = input;
-                        break; // 找到用户名输入框后立即结束循环
+                    //    用户名输入框必须是密码输入框的上方
+                    if (input && input !== passwordInput.nextElementSibling) {
+                        // 获取两个输入框的位置信息
+                        const inputRect = input.getBoundingClientRect();
+                        const passwordRect = passwordInput.getBoundingClientRect();
+                        // 确保用户名框在密码框上方
+                        if (inputRect.top < passwordRect.top) {
+                            usernameInput = input;
+                            break;
+                        }
                     }
                 }
             }
@@ -72,5 +79,13 @@ export const autoFill = (state) => {
             usernameValue,
             passwordValue
         })
-        .run({ width: 1200, height: 800 })
+
+    console.log(idleUBrowsers);
+
+    // 根据是否有空闲实例决定运行方式
+    if (idleUBrowsers.length > 0) {
+        browserConfig.run(idleUBrowsers[0].id)
+    } else {
+        browserConfig.run({ width: 1200, height: 800 })
+    }
 }

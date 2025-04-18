@@ -549,7 +549,10 @@ export default class AccountForm extends React.Component {
                     <Tooltip title='自动填充账号密码' placement='top'>
                       <IconButton
                         tabIndex={-1}
-                        onClick={()=>autoFill(this.state) }
+                        onClick={() => {
+                          this.updateClickCount()
+                          autoFill(this.state)
+                        }}
                         size='small'
                       >
                         <AutoFixHighIcon fontSize="small" />
