@@ -17,6 +17,7 @@ import Alert from '@mui/material/Alert'
 import CloseIcon from '@mui/icons-material/Close'
 import { formatDate, formatFileSize } from '../utils/formatUtils'
 import Box from '@mui/material/Box'
+import { WEBDAV_DOCS_URL } from "../utils/const"
 
 const BackupRestore = ({ buttonStyle, onRestore }) => {
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -278,9 +279,27 @@ const BackupRestore = ({ buttonStyle, onRestore }) => {
         </DialogTitle>
         <DialogContent>
           <Box sx={{ padding: '10px 0' }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 500, marginBottom: '10px' }}>
-              备份文件存储位置
-            </Typography>
+            <Box className="flex items-baseline space-x-2" >
+              <Typography variant="subtitle1" sx={{ fontWeight: 500, marginBottom: '10px' }}>
+                备份文件存储位置
+              </Typography>
+              <Typography
+                component="a"
+                variant="body2"
+                onClick={() => window.utools.shellOpenExternal(WEBDAV_DOCS_URL)}
+                sx={{
+                  color: 'primary.main',
+                  textDecoration: 'none',
+                  '&:hover': {
+                    textDecoration: 'underline'
+                  },
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                （查看使用教程）
+              </Typography>
+            </Box>
 
             <TextField
               fullWidth
