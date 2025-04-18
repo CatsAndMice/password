@@ -373,8 +373,8 @@ class Home extends React.Component {
             maxWidth="sm"
             fullWidth
           >
-            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',  padding:'8px 8px 8px 24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 备份设置
               </div>
               <IconButton

@@ -2,6 +2,8 @@ const path = require('path')
 const outputPath = path.join(__dirname, 'dist')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
+const TerserPlugin = require('terser-webpack-plugin')  // 添加这行
+
 module.exports = {
   target: 'web',
   mode: 'development',
@@ -58,5 +60,17 @@ module.exports = {
         ]
       }
     ]
-  }
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        exclude: [
+          /node_modules\/charenc\/README\.js/,
+          /node_modules\/has-tostringtag\/test\/shams\/.*/,
+          /node_modules\/has-symbols\/test\/shams\/.*/
+        ],
+      }),
+    ],
+  },
 }

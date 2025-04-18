@@ -1,0 +1,6 @@
+{
+    "type": "commonjs",
+    "dependencies": {
+        "webdav": "^4.11.4"
+    }
+}

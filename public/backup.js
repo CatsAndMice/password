@@ -86,26 +86,35 @@ const autoBackup = (isManual = false) => {
         const writeStream = fs.createWriteStream(backupFile)
 
         // 写入头部和其他小数据
+        const _backup_info = {
+          type: 'upassword_backup',
+          version: '1.0',
+          createTime: Date.now(),
+          platform: process.platform
+        }
         writeStream.write('{"_backup_info": ' +
-          JSON.stringify({
-            type: 'upassword_backup',
-            version: '1.0',
-            createTime: Date.now(),
-            platform: process.platform
-          }) + ',')
+          JSON.stringify(_backup_info) + ',')
 
+        const groups = window.utools.db.allDocs('group/')
         writeStream.write('"data": {')
         writeStream.write('"groups": ' +
-          JSON.stringify(window.utools.db.allDocs('group/')) + ',')
+          JSON.stringify(groups) + ',')
 
         // 分批写入 accounts 数据
         writeStream.write('"accounts": ')
         const accounts = window.utools.db.allDocs('account/')
         writeStream.write(JSON.stringify(accounts) + ',')
 
+        const webdav_config = window.utools.db.get('system/webdav_config')
+        if (webdav_config) {
+          writeStream.write('"webdav_config": ' +
+            JSON.stringify(webdav_config) + ',')
+        }
+
         // 写入剩余数据和结束标记
+        const bcryptpass = window.utools.db.get('bcryptpass')
         writeStream.write('"bcryptpass": ' +
-          JSON.stringify(window.utools.db.get('bcryptpass')) + '}}')
+          JSON.stringify(bcryptpass) + '}}')
 
 
         // 等待写入完成
@@ -120,6 +129,18 @@ const autoBackup = (isManual = false) => {
         for (const f of oldFiles) {
           await fs.promises.unlink(path.join(backupDir, f))
         }
+
+        // 执行云备份
+        try {
+          const webdavConfig = window.services.getWebdavConfig()
+          if (webdavConfig?.enabled) {
+            await window.services.backupToWebdav(isManual, backupFile)
+          }
+        } catch (error) {
+          console.error('云备份失败:', error)
+          // 云备份失败不影响本地备份的结果
+        }
+
         resolve(true)
       } catch (error) {
         console.error('自动备份失败:', error)
@@ -140,7 +161,7 @@ const restoreBackup = (backupFilePath) => {
       }
 
       // 开始恢复数据
-      const { groups, accounts, bcryptpass } = backupData.data
+      const { groups, accounts, webdav_config = null, bcryptpass } = backupData.data
 
       // 删除并恢复分组数据
       const existingGroups = window.utools.db.allDocs('group/')
@@ -152,6 +173,8 @@ const restoreBackup = (backupFilePath) => {
       const groupResults = window.utools.db.bulkDocs(groups)
       const successGroups = groupResults.filter(ret => ret.ok).length
 
+
+
       // 删除并恢复账号数据
       const existingAccounts = window.utools.db.allDocs('account/')
       for (const doc of existingAccounts) {
@@ -162,6 +185,7 @@ const restoreBackup = (backupFilePath) => {
       const accountResults = window.utools.db.bulkDocs(accounts)
       const successAccounts = accountResults.filter(ret => ret.ok).length
 
+
       // 恢复密码设置
       if (bcryptpass) {
         const existingPass = window.utools.db.get('bcryptpass')
@@ -170,8 +194,21 @@ const restoreBackup = (backupFilePath) => {
         }
         // 去除_rev字段，避免版本冲突
         delete bcryptpass._rev
-        console.log(window.utools.db.put(bcryptpass), bcryptpass);
+        window.utools.db.put(bcryptpass)
       }
+
+
+      // 恢复云备份配置
+      if (webdav_config) {
+        const webdav_configDb = window.utools.db.get('system/webdav_config')
+        if (webdav_configDb) {
+          window.utools.db.remove('system/webdav_config')
+        }
+        // 去除_rev字段，避免版本冲突
+        delete webdav_config._rev
+        window.utools.db.put(webdav_config)
+      }
+
 
       // 如果有创建失败的数据，抛出错误
       if (successGroups !== groups.length || successAccounts !== accounts.length) {
