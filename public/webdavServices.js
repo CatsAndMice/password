@@ -96,7 +96,7 @@ module.exports = {
             const client = this.createWebdavClient(config)
 
             // 确保远程备份目录存在
-            const backupDir = '/密码管家云备份数据'
+            const backupDir = '/密码管家(谨慎删除)'
             const exists = await client.exists(backupDir)
             if (!exists) {
                 await client.createDirectory(backupDir)

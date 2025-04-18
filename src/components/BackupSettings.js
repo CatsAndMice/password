@@ -14,7 +14,7 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
-
+import { WEBDAV_DOCS_URL } from "../utils/const"
 const BackupSettings = ({ onClose, showMessage }) => {
     const [currentBackupDir, setCurrentBackupDir] = useState('')
     const [newBackupDir, setNewBackupDir] = useState('')
@@ -274,9 +274,27 @@ const BackupSettings = ({ onClose, showMessage }) => {
                 alignItems: 'center',
                 marginBottom: '16px'
             }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
-                    WebDAV 云备份配置
-                </Typography>
+                <Box className="flex items-baseline space-x-2" >
+                    <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                        WebDAV 云备份配置
+                    </Typography>
+                    <Typography
+                        component="a"
+                        variant="body2"
+                        onClick={() => window.utools.shellOpenExternal(WEBDAV_DOCS_URL)}
+                        sx={{
+                            color: 'primary.main',
+                            textDecoration: 'none',
+                            '&:hover': {
+                                textDecoration: 'underline'
+                            },
+                            cursor: 'pointer',
+                            fontSize: '12px'
+                        }}
+                    >
+                        （查看使用教程）
+                    </Typography>
+                </Box>
                 {showWebdavSwitch && (
                     <FormControlLabel
                         control={
