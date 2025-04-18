@@ -47,10 +47,10 @@ const resetBackupDir = () => {
 
 const autoBackup = (isManual = false) => {
   // 开发环境不执行备份
-  // if (window.utools.isDev()) {
-  //   console.warn('开发环境不执行备份')
-  //   return
-  // }
+  if (window.utools.isDev()) {
+    console.warn('开发环境不执行备份')
+    return
+  }
   return new Promise((resolve) => {
     setTimeout(async () => {
       try {
