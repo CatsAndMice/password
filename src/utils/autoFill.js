@@ -1,78 +1,4 @@
-// 公共自动填充函数字符串
-const autofillScript = `
-    function getAllPasswordInputs() {
-        let inputs = Array.from(document.querySelectorAll('input[type="password"]'));
-        if (inputs.length > 0) return inputs;
-        const iframes = document.querySelectorAll('iframe');
-        iframes.forEach(iframe => {
-            try {
-                const iframeInputs = Array.from(iframe.contentDocument.querySelectorAll('input[type="password"]'));
-                inputs = inputs.concat(iframeInputs);
-            } catch (e) { }
-        });
-        return inputs;
-    }
-    function doAutoFill(account) {
-        const passwordInputs = getAllPasswordInputs();
-        const passwordInput = passwordInputs.find(input => {
-            const style = window.getComputedStyle(input);
-            return style.display !== 'none' &&
-                style.visibility !== 'hidden' &&
-                style.opacity !== '0' &&
-                input.offsetWidth > 0 &&
-                input.offsetHeight > 0
-        });
-        if (!passwordInput) return false;
 
-        let usernameInput = null;
-        let element = passwordInput;
-        while (element && !usernameInput) {
-            element = element.previousElementSibling || element.parentElement;
-            if (element) {
-                let input = null;
-                if (
-                    element.tagName === 'INPUT' &&
-                    (
-                        element.type === 'text' ||
-                        element.type === 'email' ||
-                        !element.type ||
-                        element.getAttribute('name') === 'username' ||
-                        element.getAttribute('name') === 'account'
-                    )
-                ) {
-                    input = element;
-                } else {
-                    input = element.querySelector('input[type="text"], input[type="email"], input[name="username"], input[name="account"], input:not([type])');
-                }
-                if (input && input !== passwordInput.nextElementSibling) {
-                    const inputRect = input.getBoundingClientRect();
-                    const passwordRect = passwordInput.getBoundingClientRect();
-                    const inputStyle = window.getComputedStyle(input);
-                    const inputVisible =
-                        inputStyle.display !== 'none' &&
-                        inputStyle.visibility !== 'hidden' &&
-                        inputStyle.opacity !== '0' &&
-                        input.offsetWidth > 0 &&
-                        input.offsetHeight > 0;
-                    if (inputRect.top < passwordRect.top && inputVisible) {
-                        usernameInput = input;
-                        break;
-                    }
-                }
-            }
-        }
-        if (usernameInput) {
-            usernameInput.value = account.usernameValue;
-            //触发input事件
-            usernameInput.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-        if (passwordInput) {
-            passwordInput.value = account.passwordValue;
-            passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-        return true;
-    }
-`;
 
 
 // 跳转到登录页并自动填充
@@ -85,12 +11,82 @@ function gotoAndAutoFillLoginPage(ubrowser, loginHref, usernameValue, passwordVa
         // .devTools()
         .wait(1000)
         .evaluate((account) => {
-            eval(account.autofillScript);
+            function getAllPasswordInputs() {
+                let inputs = Array.from(document.querySelectorAll('input[type="password"]'));
+                if (inputs.length > 0) return inputs;
+                const iframes = document.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    try {
+                        const iframeInputs = Array.from(iframe.contentDocument.querySelectorAll('input[type="password"]'));
+                        inputs = inputs.concat(iframeInputs);
+                    } catch (e) { }
+                });
+                return inputs;
+            }
+            function doAutoFill(account) {
+                const passwordInputs = getAllPasswordInputs();
+                const passwordInput = passwordInputs.find(input => {
+                    const style = window.getComputedStyle(input);
+                    return style.display !== 'none' &&
+                        style.visibility !== 'hidden' &&
+                        style.opacity !== '0' &&
+                        input.offsetWidth > 0 &&
+                        input.offsetHeight > 0
+                });
+                if (!passwordInput) return false;
+        
+                let usernameInput = null;
+                let element = passwordInput;
+                while (element && !usernameInput) {
+                    element = element.previousElementSibling || element.parentElement;
+                    if (element) {
+                        let input = null;
+                        if (
+                            element.tagName === 'INPUT' &&
+                            (
+                                element.type === 'text' ||
+                                element.type === 'email' ||
+                                !element.type ||
+                                element.getAttribute('name') === 'username' ||
+                                element.getAttribute('name') === 'account'
+                            )
+                        ) {
+                            input = element;
+                        } else {
+                            input = element.querySelector('input[type="text"], input[type="email"], input[name="username"], input[name="account"], input:not([type])');
+                        }
+                        if (input && input !== passwordInput.nextElementSibling) {
+                            const inputRect = input.getBoundingClientRect();
+                            const passwordRect = passwordInput.getBoundingClientRect();
+                            const inputStyle = window.getComputedStyle(input);
+                            const inputVisible =
+                                inputStyle.display !== 'none' &&
+                                inputStyle.visibility !== 'hidden' &&
+                                inputStyle.opacity !== '0' &&
+                                input.offsetWidth > 0 &&
+                                input.offsetHeight > 0;
+                            if (inputRect.top < passwordRect.top && inputVisible) {
+                                usernameInput = input;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (usernameInput) {
+                    usernameInput.value = account.usernameValue;
+                    //触发input事件
+                    usernameInput.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                if (passwordInput) {
+                    passwordInput.value = account.passwordValue;
+                    passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                return true;
+            }
             doAutoFill(account);
         }, {
             usernameValue,
-            passwordValue,
-            autofillScript
+            passwordValue
         })
 
     if (idleUBrowsers.length > 0) {
@@ -113,7 +109,78 @@ export const autoFill = (state) => {
         // .devTools()
         .wait(1000)
         .evaluate((account) => {
-            eval(account.autofillScript);
+            function getAllPasswordInputs() {
+                let inputs = Array.from(document.querySelectorAll('input[type="password"]'));
+                if (inputs.length > 0) return inputs;
+                const iframes = document.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    try {
+                        const iframeInputs = Array.from(iframe.contentDocument.querySelectorAll('input[type="password"]'));
+                        inputs = inputs.concat(iframeInputs);
+                    } catch (e) { }
+                });
+                return inputs;
+            }
+            function doAutoFill(account) {
+                const passwordInputs = getAllPasswordInputs();
+                const passwordInput = passwordInputs.find(input => {
+                    const style = window.getComputedStyle(input);
+                    return style.display !== 'none' &&
+                        style.visibility !== 'hidden' &&
+                        style.opacity !== '0' &&
+                        input.offsetWidth > 0 &&
+                        input.offsetHeight > 0
+                });
+                if (!passwordInput) return false;
+        
+                let usernameInput = null;
+                let element = passwordInput;
+                while (element && !usernameInput) {
+                    element = element.previousElementSibling || element.parentElement;
+                    if (element) {
+                        let input = null;
+                        if (
+                            element.tagName === 'INPUT' &&
+                            (
+                                element.type === 'text' ||
+                                element.type === 'email' ||
+                                !element.type ||
+                                element.getAttribute('name') === 'username' ||
+                                element.getAttribute('name') === 'account'
+                            )
+                        ) {
+                            input = element;
+                        } else {
+                            input = element.querySelector('input[type="text"], input[type="email"], input[name="username"], input[name="account"], input:not([type])');
+                        }
+                        if (input && input !== passwordInput.nextElementSibling) {
+                            const inputRect = input.getBoundingClientRect();
+                            const passwordRect = passwordInput.getBoundingClientRect();
+                            const inputStyle = window.getComputedStyle(input);
+                            const inputVisible =
+                                inputStyle.display !== 'none' &&
+                                inputStyle.visibility !== 'hidden' &&
+                                inputStyle.opacity !== '0' &&
+                                input.offsetWidth > 0 &&
+                                input.offsetHeight > 0;
+                            if (inputRect.top < passwordRect.top && inputVisible) {
+                                usernameInput = input;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (usernameInput) {
+                    usernameInput.value = account.usernameValue;
+                    //触发input事件
+                    usernameInput.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                if (passwordInput) {
+                    passwordInput.value = account.passwordValue;
+                    passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                return true;
+            }
             function tryClickLoginEntry() {
                 const selectors = [
                     'a[href*="login"]', 'button', 'a', '[onclick*="login"]', '[class*="login"]', '[id*="login"]'
@@ -155,12 +222,13 @@ export const autoFill = (state) => {
             }
         }, {
             usernameValue,
-            passwordValue,
-            autofillScript
+            passwordValue
         })
 
     const runAndHandle = (runArg) => {
         browserConfig.run(runArg).then(res => {
+            console.log(res);
+            
             const query = res[0]
             if (query && query.needGoto && query.loginHref) {
                 gotoAndAutoFillLoginPage(ubrowser, query.loginHref, usernameValue, passwordValue)
