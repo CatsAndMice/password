@@ -9,12 +9,10 @@
 - [x] 随机密码生成器
 - [x] 本地备份与恢复
 - [x] WebDAV 云备份与恢复
-- [x] 备份历史管理（自动保留最近7个备份）
 - [x] 明暗主题切换（亮色/暗色/跟随系统）
 - [x] 数据加密存储（BCrypt + AES-256-CBC）
 - [x] 快捷键支持（复制用户名/密码、新增账号等）
 - [x] 拖拽操作（账号、分组均支持）
-- [x] 开源仓库与使用手册入口
 
 ## uTools 插件截图
 <img width="912" alt="截屏2025-04-15 17 36 22" src="https://github.com/user-attachments/assets/4fafb61d-0eb4-4a2d-b4a8-fe5e6cdbb5bb" />
