@@ -13,6 +13,11 @@ import SettingsSystemDaydreamIcon from '@mui/icons-material/SettingsSystemDaydre
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import CheckIcon from '@mui/icons-material/Check'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import Divider from '@mui/material/Divider'
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined'
+import { WEBDAV_DOCS_URL } from "../utils/const"
+import GitHubIcon from '@mui/icons-material/GitHub'
 
 // 在组件顶部添加状态
 const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
@@ -79,6 +84,15 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
   }, [isFollowSystem])
 
 
+  const [moreAnchorEl, setMoreAnchorEl] = React.useState(null)
+
+  const handleMoreClick = (event) => {
+    setMoreAnchorEl(event.currentTarget)
+  }
+  const handleMoreClose = () => {
+    setMoreAnchorEl(null)
+  }
+
   // 修改按钮部分
   return (
     <AppBar
@@ -115,28 +129,6 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
           <span>我的密码库</span>
         </Typography>
 
-
-
-
-        {/* 添加备份按钮 */}
-        <Button
-          startIcon={<BackupIcon />}
-          onClick={onBackupClick}
-          size="small"
-          sx={{
-            marginRight: '8px',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.08)',
-            },
-            transition: 'all 0.2s',
-            borderRadius: '6px',
-            color: 'rgba(0, 0, 0, 0.6)',
-            textTransform: 'none',
-            minWidth: 'auto',
-          }}
-        >
-          备份
-        </Button>
         <Button
           startIcon={showFavorites ? <StarIcon /> : <StarOutlineIcon />}
           onClick={onFavoriteClick}
@@ -174,6 +166,7 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
         >
           {isFollowSystem ? '跟随系统' : (isDarkMode ? '暗色模式' : '亮色模式')}
         </Button>
+
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
@@ -197,6 +190,70 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
           <MenuItem onClick={() => handleModeSelect('system')} sx={{ minHeight: '36px' }}>
             {isFollowSystem && <CheckIcon sx={{ mr: 1, fontSize: 18 }} />}
             跟随系统
+          </MenuItem>
+        </Menu>
+        <Divider orientation="vertical" sx={{ margin: '0 5px', borderColor: 'rgba(0,0,0,0.08)', height: '16px' }} />
+        <Button
+          onClick={handleMoreClick}
+          size="small"
+          sx={{
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.08)',
+            },
+            transition: 'all 0.2s',
+            borderRadius: '6px',
+            color: 'rgba(0, 0, 0, 0.6)',
+            textTransform: 'none',
+            minWidth: 'auto',
+          }}
+        >
+          <div className="rotate-90"> <MoreVertIcon /></div>
+        </Button>
+        <Menu
+          anchorEl={moreAnchorEl}
+          open={Boolean(moreAnchorEl)}
+          onClose={handleMoreClose}
+          sx={{
+
+            '& .MuiPaper-root': {
+              borderRadius: '8px',
+              padding: '0 8px', // 设置内边距为8px
+              minWidth: '160px', // 设置最小宽度为160px
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+            }
+          }}
+        >
+          <MenuItem
+            onClick={() => {
+              handleMoreClose();
+              onBackupClick();
+            }}
+            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
+          >
+            <BackupIcon sx={{ mr: 1, fontSize: 18 }} />
+            备份设置
+          </MenuItem>
+
+          <MenuItem
+            onClick={() => {
+              handleMoreClose();
+              window.utools.shellOpenExternal(WEBDAV_DOCS_URL)
+            }}
+            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
+          >
+            <MenuBookOutlinedIcon sx={{ mr: 1, fontSize: 18 }} />
+            使用手册
+          </MenuItem>
+          <Divider sx={{ borderColor: 'rgba(0,0,0,0.08)' }} />
+          <MenuItem
+            onClick={() => {
+              handleMoreClose();
+              window.utools.shellOpenExternal('https://github.com/CatsAndMice/password')
+            }}
+            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
+          >
+            <GitHubIcon sx={{ mr: 1, fontSize: 18 }} />
+            开源地址
           </MenuItem>
         </Menu>
       </Toolbar>
