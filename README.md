@@ -1,6 +1,21 @@
 
 [uTools 插件——密码管家](https://u.tools/plugins/detail/%E5%AF%86%E7%A0%81%E7%AE%A1%E5%AE%B6/?c=eylamc1n2u)
 
+## 功能清单
+- [x] 账号分组管理（支持拖拽排序、层级调整）
+- [x] 账号信息加密存储与管理（添加、编辑、删除、排序）
+- [x] 常用账号自动统计
+- [x] 全局搜索与分组筛选
+- [x] 随机密码生成器
+- [x] 本地备份与恢复
+- [x] WebDAV 云备份与恢复
+- [x] 备份历史管理（自动保留最近7个备份）
+- [x] 明暗主题切换（亮色/暗色/跟随系统）
+- [x] 数据加密存储（BCrypt + AES-256-CBC）
+- [x] 快捷键支持（复制用户名/密码、新增账号等）
+- [x] 拖拽操作（账号、分组均支持）
+- [x] 开源仓库与使用手册入口
+
 ## uTools 插件截图
 <img width="912" alt="截屏2025-04-15 17 36 22" src="https://github.com/user-attachments/assets/4fafb61d-0eb4-4a2d-b4a8-fe5e6cdbb5bb" />
 <img width="912" alt="截屏2025-04-15 17 36 47" src="https://github.com/user-attachments/assets/9e4ccf9e-27ba-46ee-b96f-d339101b169f" />
@@ -38,3 +53,6 @@ https://github.com/kelektiv/node.bcrypt.js
 3. 快捷键 Command/Ctrl + U 复制当前帐号用户名
 4. 快捷键 Command/Ctrl + P 复制当前帐号密码
 4. 快捷键 Command/Ctrl + N 新增帐号
+
+## Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=CatsAndMice/password&type=Date)](https://star-history.com/#CatsAndMice/password&Date)
