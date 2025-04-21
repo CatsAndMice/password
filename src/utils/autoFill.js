@@ -1,11 +1,7 @@
 
-
-
 // 跳转到登录页并自动填充
 function gotoAndAutoFillLoginPage(ubrowser, loginHref, usernameValue, passwordValue) {
     const idleUBrowsers = window.utools.getIdleUBrowsers();
-    const autofillScript = window.autofillScript;
-
     const browserConfig = ubrowser
         .goto(loginHref)
         // .devTools()
