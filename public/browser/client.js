@@ -177,6 +177,7 @@ const startClient = async (options) => {
         return;
       }
     }
+    // throw new Error("暂不支持多实例")
     const child = exec(
       `"${browserPath}" ${args.join(" ")}`,
       { windowsHide: true },

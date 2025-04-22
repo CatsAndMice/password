@@ -235,13 +235,19 @@ const utoolsAutoFill = (state) => {
         runAndHandle({ width: 1200, height: 800, show: true })
     }
 }
-export const autoFill = (state) => {
+export const autoFill =async (state) => {
     const { usernameValue, passwordValue, linkValue } = state
     if (!linkValue) return
     window.utools.hideMainWindow(false)
     try {
-        window.services.browserAutoFill(linkValue, usernameValue, passwordValue)
+       await window.services.browserAutoFill(linkValue, usernameValue, passwordValue).then(res => {
+            console.log(res);
+        },err=>{
+            console.log(err);
+            
+        })
     } catch (e) {
+        console.log(1212);
         utoolsAutoFill(state)
     }
 }

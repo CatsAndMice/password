@@ -239,6 +239,7 @@ async function autoFill(link, username, password) {
     if (evaluateResult && evaluateResult.result && evaluateResult.result.value) {
         const query = evaluateResult.result.value
         if (query && query.needGoto && query.loginHref) {
+           
             gotoAndAutoFillLoginPage(target, query.loginHref, username, password)
         }
         return
