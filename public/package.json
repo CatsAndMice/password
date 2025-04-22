@@ -1,6 +1,7 @@
 {
     "type": "commonjs",
     "dependencies": {
+        "chrome-remote-interface": "^0.33.3",
         "webdav": "^4.11.4"
     }
 }
