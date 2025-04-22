@@ -30,7 +30,7 @@ function gotoAndAutoFillLoginPage(ubrowser, loginHref, usernameValue, passwordVa
                         input.offsetHeight > 0
                 });
                 if (!passwordInput) return false;
-        
+
                 let usernameInput = null;
                 let element = passwordInput;
                 while (element && !usernameInput) {
@@ -92,12 +92,9 @@ function gotoAndAutoFillLoginPage(ubrowser, loginHref, usernameValue, passwordVa
     }
 }
 
-
-
-export const autoFill = (state) => {
+const utoolsAutoFill = (state) => {
     const { usernameValue, passwordValue, linkValue } = state
     if (!linkValue) return
-
     const idleUBrowsers = window.utools.getIdleUBrowsers();
     const ubrowser = window.utools.ubrowser
     const browserConfig = ubrowser
@@ -128,7 +125,7 @@ export const autoFill = (state) => {
                         input.offsetHeight > 0
                 });
                 if (!passwordInput) return false;
-        
+
                 let usernameInput = null;
                 let element = passwordInput;
                 while (element && !usernameInput) {
@@ -224,7 +221,7 @@ export const autoFill = (state) => {
     const runAndHandle = (runArg) => {
         browserConfig.run(runArg).then(res => {
             console.log(res);
-            
+
             const query = res[0]
             if (query && query.needGoto && query.loginHref) {
                 gotoAndAutoFillLoginPage(ubrowser, query.loginHref, usernameValue, passwordValue)
@@ -236,6 +233,16 @@ export const autoFill = (state) => {
         runAndHandle(idleUBrowsers[0].id)
     } else {
         runAndHandle({ width: 1200, height: 800, show: true })
+    }
+}
+export const autoFill = (state) => {
+    const { usernameValue, passwordValue, linkValue } = state
+    if (!linkValue) return
+    window.utools.hideMainWindow(false)
+    try {
+        window.services.browserAutoFill(linkValue, usernameValue, passwordValue)
+    } catch (e) {
+        utoolsAutoFill(state)
     }
 }
 

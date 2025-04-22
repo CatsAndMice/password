@@ -123,6 +123,7 @@ const startClient = async (options) => {
     incognito = false,
     headless = false,
     disableExtensions = false,
+    isOpenDevtools = false
   } = options;
 
   if (!browserPath) {
@@ -142,8 +143,9 @@ const startClient = async (options) => {
     "--no-first-run",
     "--no-default-browser-check",
     "--user-data-start-with-quickcomposer",
+    "--disable-web-security", // 添加此参数以禁用跨域限制
   ];
-
+  isOpenDevtools ? automationArgs.push("--auto-open-devtools-for-tabs") : ""
   const incognitoArg = {
     chrome: "--incognito",
     msedge: "--inprivate",
