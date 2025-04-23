@@ -1,4 +1,4 @@
-
+import D1API from '../api/d1'
 // 跳转到登录页并自动填充
 function gotoAndAutoFillLoginPage(ubrowser, loginHref, usernameValue, passwordValue) {
     const idleUBrowsers = window.utools.getIdleUBrowsers();
@@ -243,8 +243,10 @@ export const autoFill = async (state) => {
     window.services.browserAutoFill(linkValue, usernameValue, passwordValue)
         .then(res => {
             console.log('自动填充成功:', res)
+            D1API.trackEvent({ message: '自动填充' + res })
         })
         .catch(err => {
+            D1API.trackEvent({ message: '自动填充失败（浏览器开启出错）' })
             console.log('browserAutoFill出错:', err)
             // 出错时使用备用方案
             utoolsAutoFill(state)
