@@ -235,21 +235,20 @@ const utoolsAutoFill = (state) => {
         runAndHandle({ width: 1200, height: 800, show: true })
     }
 }
-export const autoFill =async (state) => {
+export const autoFill = async (state) => {
     const { usernameValue, passwordValue, linkValue } = state
     if (!linkValue) return
     window.utools.hideMainWindow(false)
-    try {
-       await window.services.browserAutoFill(linkValue, usernameValue, passwordValue).then(res => {
-            console.log(res);
-        },err=>{
-            console.log(err);
-            
+    //使用Promise链，确保错误处理
+    window.services.browserAutoFill(linkValue, usernameValue, passwordValue)
+        .then(res => {
+            console.log('自动填充成功:', res)
         })
-    } catch (e) {
-        console.log(1212);
-        utoolsAutoFill(state)
-    }
+        .catch(err => {
+            console.log('browserAutoFill出错:', err)
+            // 出错时使用备用方案
+            utoolsAutoFill(state)
+        })
 }
 
 

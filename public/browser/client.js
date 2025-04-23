@@ -89,14 +89,19 @@ const isPortAvailable = (port) => {
 
 const waitForPort = async (port, timeout = 30000) => {
   const startTime = Date.now();
+  let lastError = null;
+  
   while (Date.now() - startTime < timeout) {
     try {
       await CDP.Version({ port });
       return true;
     } catch (e) {
+      lastError = e;
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
+  
+  console.error(`等待端口 ${port} 超时，最后错误:`, lastError);
   return false;
 };
 
@@ -123,80 +128,120 @@ const startClient = async (options) => {
     incognito = false,
     headless = false,
     disableExtensions = false,
-    isOpenDevtools = false
+    isOpenDevtools = false,
+    startTimeout = 30000
   } = options;
 
   if (!browserPath) {
     throw new Error("未找到浏览器，或未指定浏览器路径");
   }
 
-  const port = await findAvailablePort(9222);
-  setCurrentClientPort(port);
+  // 添加重试逻辑
+  let retryCount = 0;
+  const maxRetries = 3;
+  
+  while (retryCount < maxRetries) {
+    try {
+      const port = await findAvailablePort(9222);
+      setCurrentClientPort(port);
 
-  const automationArgs = [
-    `--remote-debugging-port=${port}`,
-    "--disable-infobars",
-    "--disable-notifications",
-    "--disable-popup-blocking",
-    "--disable-save-password-bubble",
-    "--disable-translate",
-    "--no-first-run",
-    "--no-default-browser-check",
-    "--user-data-start-with-quickcomposer",
-    "--disable-web-security", // 添加此参数以禁用跨域限制
-  ];
-  isOpenDevtools ? automationArgs.push("--auto-open-devtools-for-tabs") : ""
-  const incognitoArg = {
-    chrome: "--incognito",
-    msedge: "--inprivate",
-  };
-
-  const optionArgs = [
-    windowSize ? `--window-size=${windowSize}` : "--start-maximized",
-    windowPosition ? `--window-position=${windowPosition}` : "",
-    proxy ? `--proxy-server=${proxy}` : "",
-    incognito ? incognitoArg[browserType] : "",
-    headless ? "--headless" : "",
-    disableExtensions ? "--disable-extensions" : "",
-    useSingleUserDataDir
-      ? `--user-data-dir=${path.join(
-        os.tmpdir(),
-        `${browserType}-debug-${port}`
-      )}`
-      : "",
-  ].filter(Boolean);
-
-  const args = [...automationArgs, ...optionArgs];
-
-  return new Promise(async (resolve, reject) => {
-    if (!useSingleUserDataDir) {
-      try {
-        await killRunningBrowser(browserType);
-      } catch (e) {
-        reject(e);
-        return;
+      const automationArgs = [
+        `--remote-debugging-port=${port}`,
+        "--disable-infobars",
+        "--disable-notifications",
+        "--disable-popup-blocking",
+        "--disable-save-password-bubble",
+        "--disable-translate",
+        "--no-first-run",
+        "--no-default-browser-check",
+        "--user-data-start-with-quickcomposer",
+        "--disable-web-security", // 添加此参数以禁用跨域限制
+      ];
+      
+      if (isOpenDevtools) {
+        automationArgs.push("--auto-open-devtools-for-tabs");
       }
-    }
-    // throw new Error("暂不支持多实例")
-    const child = exec(
-      `"${browserPath}" ${args.join(" ")}`,
-      { windowsHide: true },
-      async (error) => {
-        if (error) {
-          reject(error);
-          return;
+      
+      const incognitoArg = {
+        chrome: "--incognito",
+        msedge: "--inprivate",
+      };
+
+      const optionArgs = [
+        windowSize ? `--window-size=${windowSize}` : "--start-maximized",
+        windowPosition ? `--window-position=${windowPosition}` : "",
+        proxy ? `--proxy-server=${proxy}` : "",
+        incognito ? incognitoArg[browserType] : "",
+        headless ? "--headless" : "",
+        disableExtensions ? "--disable-extensions" : "",
+        useSingleUserDataDir
+          ? `--user-data-dir=${path.join(
+            os.tmpdir(),
+            `${browserType}-debug-${port}`
+          )}`
+          : "",
+      ].filter(Boolean);
+
+      const args = [...automationArgs, ...optionArgs];
+
+      return new Promise(async (resolve, reject) => {
+        let timeoutId = null;
+        
+        // 设置启动超时
+        timeoutId = setTimeout(() => {
+          reject(new Error(`浏览器启动超时(${startTimeout}ms)`));
+        }, startTimeout);
+        
+        if (!useSingleUserDataDir) {
+          try {
+            await killRunningBrowser(browserType);
+          } catch (e) {
+            clearTimeout(timeoutId);
+            reject(e);
+            return;
+          }
         }
-      }
-    );
+        
+        const child = exec(
+          `"${browserPath}" ${args.join(" ")}`,
+          { windowsHide: true },
+          async (error) => {
+            if (error) {
+              clearTimeout(timeoutId);
+              reject(error);
+              return;
+            }
+          }
+        );
+        
+        // 添加进程错误处理
+        child.on('error', (err) => {
+          clearTimeout(timeoutId);
+          reject(new Error(`浏览器进程启动失败: ${err.message}`));
+        });
 
-    waitForPort(port).then((success) => {
-      if (success) {
-        resolve({ pid: child.pid, port });
-      } else {
-        reject(new Error("浏览器启动超时，请检查是否有权限问题或防火墙限制"));
+        waitForPort(port).then((success) => {
+          clearTimeout(timeoutId);
+          if (success) {
+            resolve({ pid: child.pid, port });
+          } else {
+            reject(new Error("浏览器启动超时，请检查是否有权限问题或防火墙限制"));
+          }
+        });
+      });
+      
+    } catch (error) {
+      retryCount++;
+      console.error(`浏览器启动失败(尝试 ${retryCount}/${maxRetries}): ${error.message}`);
+      
+      if (retryCount >= maxRetries) {
+        throw new Error(`多次尝试启动浏览器失败: ${error.message}`);
       }
-    });
-  });
+      
+      // 重试前等待
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
 };
 
 const killRunningBrowser = (browserType = "msedge") => {

@@ -4,10 +4,20 @@ const { getCurrentClientPort } = require("./client");
 const initCDP = async (targetId) => {
   try {
     const port = await getCurrentClientPort();
-    const client = await CDP({
+    if (!port) {
+      throw new Error("无法获取浏览器调试端口");
+    }
+    // 添加超时控制
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("CDP连接超时")), 8000);
+    });
+
+    const connectionPromise = CDP({
       target: targetId,
       port,
     });
+
+    const client = await Promise.race([connectionPromise, timeoutPromise]);
 
     const { Page, Runtime, Target, Network, Emulation, DOM } = client;
     await Promise.all([
