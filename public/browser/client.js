@@ -64,7 +64,12 @@ const getBrowserPath = (browser = "msedge") => {
   } else {
     throw new Error("不支持的操作系统");
   }
-  return paths[browser].find((p) => fs.existsSync(p));
+  const browserPath = paths[browser].find((p) => fs.existsSync(p));
+  //  Edge 浏览器路径不存在时，使用 Chrome 浏览器路径
+  if (!browserPath) {
+    return paths['chrome'].find((p) => fs.existsSync(p));
+  }
+  return browserPath
 };
 
 const isPortAvailable = (port) => {
@@ -90,7 +95,7 @@ const isPortAvailable = (port) => {
 const waitForPort = async (port, timeout = 30000) => {
   const startTime = Date.now();
   let lastError = null;
-  
+
   while (Date.now() - startTime < timeout) {
     try {
       await CDP.Version({ port });
@@ -100,7 +105,7 @@ const waitForPort = async (port, timeout = 30000) => {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
-  
+
   console.error(`等待端口 ${port} 超时，最后错误:`, lastError);
   return false;
 };
@@ -139,7 +144,7 @@ const startClient = async (options) => {
   // 添加重试逻辑
   let retryCount = 0;
   const maxRetries = 3;
-  
+
   while (retryCount < maxRetries) {
     try {
       const port = await findAvailablePort(9222);
@@ -157,11 +162,11 @@ const startClient = async (options) => {
         "--user-data-start-with-quickcomposer",
         "--disable-web-security", // 添加此参数以禁用跨域限制
       ];
-      
+
       if (isOpenDevtools) {
         automationArgs.push("--auto-open-devtools-for-tabs");
       }
-      
+
       const incognitoArg = {
         chrome: "--incognito",
         msedge: "--inprivate",
@@ -186,12 +191,12 @@ const startClient = async (options) => {
 
       return new Promise(async (resolve, reject) => {
         let timeoutId = null;
-        
+
         // 设置启动超时
         timeoutId = setTimeout(() => {
           reject(new Error(`浏览器启动超时(${startTimeout}ms)`));
         }, startTimeout);
-        
+
         if (!useSingleUserDataDir) {
           try {
             await killRunningBrowser(browserType);
@@ -201,7 +206,7 @@ const startClient = async (options) => {
             return;
           }
         }
-        
+
         const child = exec(
           `"${browserPath}" ${args.join(" ")}`,
           { windowsHide: true },
@@ -213,7 +218,7 @@ const startClient = async (options) => {
             }
           }
         );
-        
+
         // 添加进程错误处理
         child.on('error', (err) => {
           clearTimeout(timeoutId);
@@ -229,15 +234,15 @@ const startClient = async (options) => {
           }
         });
       });
-      
+
     } catch (error) {
       retryCount++;
       console.error(`浏览器启动失败(尝试 ${retryCount}/${maxRetries}): ${error.message}`);
-      
+
       if (retryCount >= maxRetries) {
         throw new Error(`多次尝试启动浏览器失败: ${error.message}`);
       }
-      
+
       // 重试前等待
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
