@@ -16,8 +16,9 @@ import CheckIcon from '@mui/icons-material/Check'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Divider from '@mui/material/Divider'
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined'
-import { WEBDAV_DOCS_URL } from "../utils/const"
+import { WEBDAV_DOCS_URL, FEEDBACK_URL } from "../utils/const"
 import GitHubIcon from '@mui/icons-material/GitHub'
+import FeedbackIcon from '@mui/icons-material/Feedback'
 
 // 在组件顶部添加状态
 const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
@@ -228,9 +229,9 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
               handleMoreClose();
               onBackupClick();
             }}
-            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
+            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px'  }}
           >
-            <BackupIcon sx={{ mr: 1, fontSize: 18 }} />
+            <BackupIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)' }} />
             备份设置
           </MenuItem>
 
@@ -241,9 +242,21 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
             }}
             sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
           >
-            <MenuBookOutlinedIcon sx={{ mr: 1, fontSize: 18 }} />
+            <MenuBookOutlinedIcon sx={{ mr: 1, fontSize: 18 ,color: 'rgba(0, 0, 0, 0.6)' }} />
             使用手册
           </MenuItem>
+
+          <MenuItem
+            onClick={() => {
+              handleMoreClose();
+              window.utools.shellOpenExternal(FEEDBACK_URL)
+            }}
+            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
+          >
+            <FeedbackIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)' }} />
+            问题反馈
+          </MenuItem>
+
           <Divider sx={{ borderColor: 'rgba(0,0,0,0.08)' }} />
           <MenuItem
             onClick={() => {
@@ -252,7 +265,7 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
             }}
             sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
           >
-            <GitHubIcon sx={{ mr: 1, fontSize: 18 }} />
+            <GitHubIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)'  }} />
             开源地址
           </MenuItem>
         </Menu>

@@ -1,1 +1,2 @@
 export const WEBDAV_DOCS_URL = 'https://zwf4g5rfwiy.feishu.cn/docx/Omr1d3C9Xompv4xd68kc0wRnnug?from=from_copylink'
+export const FEEDBACK_URL = 'https://zwf4g5rfwiy.feishu.cn/share/base/form/shrcnr20eG76r0gclBsOI5MjWRd'
