@@ -13,6 +13,7 @@
 - [x] 数据加密存储（BCrypt + AES-256-CBC）
 - [x] 快捷键支持（复制用户名/密码、新增账号等）
 - [x] 拖拽操作（账号、分组均支持）
+- [x] 自动填充帐号密码（优先使用用户本地edge、google浏览器。若出错则使用utools自身集成的浏览器）
 
 ## uTools 插件截图
 <img width="912" alt="截屏2025-04-15 17 36 22" src="https://github.com/user-attachments/assets/4fafb61d-0eb4-4a2d-b4a8-fe5e6cdbb5bb" />
