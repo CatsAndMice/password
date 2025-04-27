@@ -8,7 +8,6 @@ import Search from './Search'
 import SnackbarMessage from './SnackbarMessage'
 import ExportDialog from './ExportDialog'
 import ImportDialog from './ImportDialog'
-import D1API from './api/d1'
 import Header from './components/Header'
 import FavoriteAccounts from './components/FavoriteAccounts'
 import { initializeData } from './utils/initializeData'
@@ -47,8 +46,6 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    // 添加登录成功埋点
-    D1API.trackEvent({ message: '登录成功' })
     const { groupTree, groupIds, group2Accounts, decryptAccountDic } = initializeData(this.props.keyIV)
     this.setState({ groupTree, groupIds, group2Accounts, decryptAccountDic })
     window.addEventListener('blur', this.handleDetectLive)

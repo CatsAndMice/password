@@ -239,15 +239,17 @@ export const autoFill = async (state) => {
     const { usernameValue, passwordValue, linkValue } = state
     if (!linkValue) return
     window.utools.hideMainWindow(false)
+
+    // 获取操作系统类型
+    const platform = window.utools.isMacOS() ? 'mac' : (utools.isWindows() ? 'windows' : 'linux')
     //使用Promise链，确保错误处理
     window.services.browserAutoFill(linkValue, usernameValue, passwordValue)
         .then(res => {
-            console.log('自动填充成功:', res)
-            D1API.trackEvent({ message: '自动填充' + res })
+
+            D1API.trackEvent({ message: `操作系统类型为${platform},自动填充${res}` })
         })
         .catch(err => {
-            D1API.trackEvent({ message: '自动填充失败（浏览器开启出错）' })
-            console.log('browserAutoFill出错:', err)
+            D1API.trackEvent({ message: `操作系统类型为${platform},自动填充失败（浏览器开启出错）` })
             // 出错时使用备用方案
             utoolsAutoFill(state)
         })

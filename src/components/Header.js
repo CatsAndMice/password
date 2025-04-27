@@ -258,6 +258,7 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
           </MenuItem>
 
           <Divider sx={{ borderColor: 'rgba(0,0,0,0.08)' }} />
+          
           <MenuItem
             onClick={() => {
               handleMoreClose();
