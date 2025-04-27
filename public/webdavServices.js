@@ -137,15 +137,20 @@ module.exports = {
                     'Content-Type': 'application/json'
                 }
             })
+    
             // 清理旧备份文件
             const backupFiles = files
                 .filter(file => {
                     file.filename = file.filename.replace(backupDir + '/', '')
                     return file.filename.startsWith('backup_') && (file.filename.endsWith('.json') || file.filename.endsWith('.txt'))
                 })
-                .sort((a, b) => b.lastmod - a.lastmod)
+                .sort((a, b) => {
+                    const aDate = new Date(a.lastmod)
+                    const bDate = new Date(b.lastmod)
+                    return bDate - aDate // 按日期降序排序，最近的在前
+                })
                 .slice(7) // 保留最近7个备份
-
+           
             // 删除多余的备份文件
             for (const file of backupFiles) {
                 await client.deleteFile(`${backupDir}/${file.filename}`)
