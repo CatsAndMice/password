@@ -19,6 +19,7 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined'
 import { WEBDAV_DOCS_URL, FEEDBACK_URL } from "../utils/const"
 import GitHubIcon from '@mui/icons-material/GitHub'
 import FeedbackIcon from '@mui/icons-material/Feedback'
+import NewBadge from './NewBadge'
 
 // 在组件顶部添加状态
 const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
@@ -229,10 +230,11 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
               handleMoreClose();
               onBackupClick();
             }}
-            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px'  }}
+            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
           >
-            <BackupIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)' }} />
+            <BackupIcon sx={{ mr: 1, fontSize: 18, color: 'rgba(0, 0, 0, 0.6)' }} />
             备份设置
+            <NewBadge />
           </MenuItem>
 
           <MenuItem
@@ -242,7 +244,7 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
             }}
             sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
           >
-            <MenuBookOutlinedIcon sx={{ mr: 1, fontSize: 18 ,color: 'rgba(0, 0, 0, 0.6)' }} />
+            <MenuBookOutlinedIcon sx={{ mr: 1, fontSize: 18, color: 'rgba(0, 0, 0, 0.6)' }} />
             使用手册
           </MenuItem>
 
@@ -253,12 +255,12 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
             }}
             sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
           >
-            <FeedbackIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)' }} />
+            <FeedbackIcon sx={{ mr: 1, fontSize: 18, color: 'rgba(0, 0, 0, 0.6)' }} />
             问题反馈
           </MenuItem>
 
           <Divider sx={{ borderColor: 'rgba(0,0,0,0.08)' }} />
-          
+
           <MenuItem
             onClick={() => {
               handleMoreClose();
@@ -266,7 +268,7 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
             }}
             sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
           >
-            <GitHubIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)'  }} />
+            <GitHubIcon sx={{ mr: 1, fontSize: 18, color: 'rgba(0, 0, 0, 0.6)' }} />
             开源地址
           </MenuItem>
         </Menu>
