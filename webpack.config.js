@@ -14,6 +14,11 @@ module.exports = {
     filename: '[name].js',
     path: outputPath
   },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
+  },
   plugins: [
     new CopyWebpackPlugin({ patterns: [{ from: 'public', to: outputPath }] }),
     new Dotenv({

@@ -19,9 +19,13 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined'
 import { WEBDAV_DOCS_URL, FEEDBACK_URL } from "../utils/const"
 import GitHubIcon from '@mui/icons-material/GitHub'
 import FeedbackIcon from '@mui/icons-material/Feedback'
+import NewBadge from './NewBadge'
+import KeyIcon from '@mui/icons-material/Key';
+import PasswordGeneratorDialog from './PasswordGeneratorDialog'
 
 // 在组件顶部添加状态
 const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
+  const [openPasswordGenerator, setOpenPasswordGenerator] = React.useState(false)
   // 从 localStorage 读取初始状态
   const [isDarkMode, setIsDarkMode] = React.useState(() => {
     const savedMode = localStorage.getItem('theme-mode')
@@ -69,6 +73,14 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
     setAnchorEl(null)
   }
 
+  const handleOpenPasswordGenerator = () => {
+    setOpenPasswordGenerator(true)
+  }
+
+  const handleClosePasswordGenerator = () => {
+    setOpenPasswordGenerator(false)
+  }
+
   // 添加系统主题监听
   React.useEffect(() => {
     if (isFollowSystem) {
@@ -96,182 +108,202 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
 
   // 修改按钮部分
   return (
-    <AppBar
-      position="static"
-      elevation={0}
-      sx={{
-        backgroundColor: 'rgb(255, 255, 255)',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
-        backdropFilter: 'blur(8px)'
-      }}
-    >
-      <Toolbar variant="dense" sx={{ height: '50px', padding: '0 16px !important' }}>
-        <Typography
-          variant="h6"
-          sx={{
-            flexGrow: 1,
-            color: 'rgba(0, 0, 0, 0.87)',
-            fontSize: '16px',
-            fontWeight: 600,
-            letterSpacing: '0.5px',
-            userSelect: 'none',
-            '& span': {
-              background: 'linear-gradient(45deg, #2196F3, #00BCD4)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              textShadow: '0 2px 4px rgba(33, 150, 243, 0.2)',
-              fontFamily: 'MyFont',
-              fontWeight: 700,
-              letterSpacing: '1px',
-            }
-          }}
-        >
-          <span>我的密码库</span>
-        </Typography>
-
-        <Button
-          startIcon={showFavorites ? <StarIcon /> : <StarOutlineIcon />}
-          onClick={onFavoriteClick}
-          size="small"
-          sx={{
-            marginRight: '8px',
-            '&:hover': {
-              backgroundColor: showFavorites ? 'rgba(33, 150, 243, 0.12)' : 'rgba(0, 0, 0, 0.08)',
-            },
-            transition: 'all 0.2s',
-            borderRadius: '6px',
-            color: showFavorites ? '#2196F3' : 'rgba(0, 0, 0, 0.6)',
-            textTransform: 'none',
-            minWidth: 'auto',
-          }}
-        >
-          常用账号
-        </Button>
-
-        {/* 修改暗黑模式切换按钮 */}
-        <Button
-          startIcon={isFollowSystem ? <SettingsSystemDaydreamIcon /> : (isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />)}
-          onClick={handleClick}
-          size="small"
-          sx={{
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.08)',
-            },
-            transition: 'all 0.2s',
-            borderRadius: '6px',
-            color: 'rgba(0, 0, 0, 0.6)',
-            textTransform: 'none',
-            minWidth: 'auto',
-          }}
-        >
-          {isFollowSystem ? '跟随系统' : (isDarkMode ? '暗色模式' : '亮色模式')}
-        </Button>
-
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          sx={{
-            '& .MuiPaper-root': {
-              borderRadius: '8px',
-              minWidth: '120px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-            }
-          }}
-        >
-          <MenuItem onClick={() => handleModeSelect('light')} sx={{ minHeight: '36px' }}>
-            {!isDarkMode && !isFollowSystem && <CheckIcon sx={{ mr: 1, fontSize: 18 }} />}
-            亮色模式
-          </MenuItem>
-          <MenuItem onClick={() => handleModeSelect('dark')} sx={{ minHeight: '36px' }}>
-            {isDarkMode && !isFollowSystem && <CheckIcon sx={{ mr: 1, fontSize: 18 }} />}
-            暗黑模式
-          </MenuItem>
-          <MenuItem onClick={() => handleModeSelect('system')} sx={{ minHeight: '36px' }}>
-            {isFollowSystem && <CheckIcon sx={{ mr: 1, fontSize: 18 }} />}
-            跟随系统
-          </MenuItem>
-        </Menu>
-        <Divider orientation="vertical" sx={{ margin: '0 5px', borderColor: 'rgba(0,0,0,0.08)', height: '16px' }} />
-        <Button
-          onClick={handleMoreClick}
-          size="small"
-          sx={{
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.08)',
-            },
-            transition: 'all 0.2s',
-            borderRadius: '6px',
-            color: 'rgba(0, 0, 0, 0.6)',
-            textTransform: 'none',
-            minWidth: 'auto',
-          }}
-        >
-          <div className="rotate-90"> <MoreVertIcon /></div>
-        </Button>
-        <Menu
-          anchorEl={moreAnchorEl}
-          open={Boolean(moreAnchorEl)}
-          onClose={handleMoreClose}
-          sx={{
-
-            '& .MuiPaper-root': {
-              borderRadius: '8px',
-              padding: '0 8px', // 设置内边距为8px
-              minWidth: '160px', // 设置最小宽度为160px
-              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-            }
-          }}
-        >
-          <MenuItem
-            onClick={() => {
-              handleMoreClose();
-              onBackupClick();
+    <>
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{
+          backgroundColor: 'rgb(255, 255, 255)',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+          backdropFilter: 'blur(8px)'
+        }}
+      >
+        <Toolbar variant="dense" sx={{ height: '50px', padding: '0 16px !important' }}>
+          <Typography
+            variant="h6"
+            sx={{
+              flexGrow: 1,
+              color: 'rgba(0, 0, 0, 0.87)',
+              fontSize: '16px',
+              fontWeight: 600,
+              letterSpacing: '0.5px',
+              userSelect: 'none',
+              '& span': {
+                background: 'linear-gradient(45deg, #2196F3, #00BCD4)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textShadow: '0 2px 4px rgba(33, 150, 243, 0.2)',
+                fontFamily: 'MyFont',
+                fontWeight: 700,
+                letterSpacing: '1px',
+              }
             }}
-            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px'  }}
           >
-            <BackupIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)' }} />
-            备份设置
-          </MenuItem>
+            <span>我的密码库</span>
+          </Typography>
 
-          <MenuItem
-            onClick={() => {
-              handleMoreClose();
-              window.utools.shellOpenExternal(WEBDAV_DOCS_URL)
+          <Button
+            startIcon={showFavorites ? <StarIcon /> : <StarOutlineIcon />}
+            onClick={onFavoriteClick}
+            size="small"
+            sx={{
+              marginRight: '8px',
+              '&:hover': {
+                backgroundColor: showFavorites ? 'rgba(33, 150, 243, 0.12)' : 'rgba(0, 0, 0, 0.08)',
+              },
+              transition: 'all 0.2s',
+              borderRadius: '6px',
+              color: showFavorites ? '#2196F3' : 'rgba(0, 0, 0, 0.6)',
+              textTransform: 'none',
+              minWidth: 'auto',
             }}
-            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
           >
-            <MenuBookOutlinedIcon sx={{ mr: 1, fontSize: 18 ,color: 'rgba(0, 0, 0, 0.6)' }} />
-            使用手册
-          </MenuItem>
+            常用账号
+          </Button>
 
-          <MenuItem
-            onClick={() => {
-              handleMoreClose();
-              window.utools.shellOpenExternal(FEEDBACK_URL)
+          {/* 修改暗黑模式切换按钮 */}
+          <Button
+            startIcon={isFollowSystem ? <SettingsSystemDaydreamIcon /> : (isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />)}
+            onClick={handleClick}
+            size="small"
+            sx={{
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.08)',
+              },
+              transition: 'all 0.2s',
+              borderRadius: '6px',
+              color: 'rgba(0, 0, 0, 0.6)',
+              textTransform: 'none',
+              minWidth: 'auto',
             }}
-            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
           >
-            <FeedbackIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)' }} />
-            问题反馈
-          </MenuItem>
+            {isFollowSystem ? '跟随系统' : (isDarkMode ? '暗色模式' : '亮色模式')}
+          </Button>
 
-          <Divider sx={{ borderColor: 'rgba(0,0,0,0.08)' }} />
-          
-          <MenuItem
-            onClick={() => {
-              handleMoreClose();
-              window.utools.shellOpenExternal('https://github.com/CatsAndMice/password')
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            sx={{
+              '& .MuiPaper-root': {
+                borderRadius: '8px',
+                minWidth: '120px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+              }
             }}
-            sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
           >
-            <GitHubIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)'  }} />
-            开源地址
-          </MenuItem>
-        </Menu>
-      </Toolbar>
-    </AppBar>
+            <MenuItem onClick={() => handleModeSelect('light')} sx={{ minHeight: '36px' }}>
+              {!isDarkMode && !isFollowSystem && <CheckIcon sx={{ mr: 1, fontSize: 18 }} />}
+              亮色模式
+            </MenuItem>
+            <MenuItem onClick={() => handleModeSelect('dark')} sx={{ minHeight: '36px' }}>
+              {isDarkMode && !isFollowSystem && <CheckIcon sx={{ mr: 1, fontSize: 18 }} />}
+              暗黑模式
+            </MenuItem>
+            <MenuItem onClick={() => handleModeSelect('system')} sx={{ minHeight: '36px' }}>
+              {isFollowSystem && <CheckIcon sx={{ mr: 1, fontSize: 18 }} />}
+              跟随系统
+            </MenuItem>
+          </Menu>
+          <Divider orientation="vertical" sx={{ margin: '0 5px', borderColor: 'rgba(0,0,0,0.08)', height: '16px' }} />
+          <Button
+            onClick={handleMoreClick}
+            size="small"
+            sx={{
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.08)',
+              },
+              transition: 'all 0.2s',
+              borderRadius: '6px',
+              color: 'rgba(0, 0, 0, 0.6)',
+              textTransform: 'none',
+              minWidth: 'auto',
+            }}
+          >
+            <div className="rotate-90"> <MoreVertIcon /></div>
+          </Button>
+          <Menu
+            anchorEl={moreAnchorEl}
+            open={Boolean(moreAnchorEl)}
+            onClose={handleMoreClose}
+            sx={{
+
+              '& .MuiPaper-root': {
+                borderRadius: '8px',
+                padding: '0 8px', // 设置内边距为8px
+                minWidth: '160px', // 设置最小宽度为160px
+                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+              }
+            }}
+          >
+
+            <MenuItem
+              onClick={() => {
+                handleMoreClose();
+                handleOpenPasswordGenerator();
+              }}
+              sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
+            >
+              <KeyIcon sx={{ mr: 1, fontSize: 18, color: 'rgba(0, 0, 0, 0.6)' }} />
+              密码生成器 <NewBadge />
+            </MenuItem>
+
+
+            <MenuItem
+              onClick={() => {
+                handleMoreClose();
+                onBackupClick();
+              }}
+              sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px'  }}
+            >
+              <BackupIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)' }} />
+              备份设置
+              </MenuItem>
+
+            <MenuItem
+              onClick={() => {
+                handleMoreClose();
+                window.utools.shellOpenExternal(WEBDAV_DOCS_URL)
+              }}
+              sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
+            >
+              <MenuBookOutlinedIcon sx={{ mr: 1, fontSize: 18 ,color: 'rgba(0, 0, 0, 0.6)' }} />
+              使用手册
+            </MenuItem>
+
+            <MenuItem
+              onClick={() => {
+                handleMoreClose();
+                window.utools.shellOpenExternal(FEEDBACK_URL)
+              }}
+              sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
+            >
+              <FeedbackIcon sx={{ mr: 1, fontSize: 18, color: 'rgba(0, 0, 0, 0.6)' }} />
+              问题反馈
+            </MenuItem>
+
+            <Divider sx={{ borderColor: 'rgba(0,0,0,0.08)' }} />
+
+            <MenuItem
+              onClick={() => {
+                handleMoreClose();
+                window.utools.shellOpenExternal('https://github.com/CatsAndMice/password')
+              }}
+              sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
+            >
+              <GitHubIcon sx={{ mr: 1, fontSize: 18, color: 'rgba(0, 0, 0, 0.6)' }} />
+              开源地址
+            </MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+
+      <PasswordGeneratorDialog
+        open={openPasswordGenerator}
+        onClose={handleClosePasswordGenerator}
+      />
+    </>
   )
 }
 

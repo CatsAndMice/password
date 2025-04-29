@@ -15,6 +15,8 @@ import Tab from '@mui/material/Tab'
 import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { WEBDAV_DOCS_URL } from "../utils/const"
+import D1API from '@/api/d1'
+
 const BackupSettings = ({ onClose, showMessage }) => {
     const [currentBackupDir, setCurrentBackupDir] = useState('')
     const [newBackupDir, setNewBackupDir] = useState('')
@@ -121,6 +123,7 @@ const BackupSettings = ({ onClose, showMessage }) => {
             setWebdavConfig(configToSave)
             setShowWebdavSwitch(true)
             showMessage('WebDAV配置保存成功', 'success')
+            D1API.trackEvent({ message: 'WebDAV配置保存成功' })
         } catch (error) {
             // 连接测试失败或保存失败时的错误处理
             showMessage(error.message || 'WebDAV配置验证失败', 'error')

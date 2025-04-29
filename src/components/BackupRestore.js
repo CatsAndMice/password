@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { formatDate, formatFileSize } from '../utils/formatUtils'
 import Box from '@mui/material/Box'
 import { WEBDAV_DOCS_URL } from "../utils/const"
+import D1API from '@/api/d1'
 
 const BackupRestore = ({ buttonStyle, onRestore }) => {
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -58,11 +59,14 @@ const BackupRestore = ({ buttonStyle, onRestore }) => {
     try {
       const result = await window.services.restoreBackup(backupPath)
       setRestoreResult(result)
+      D1API.trackEvent({ message: '数据恢复成功' })
     } catch (error) {
+      const message = typeof error === 'string' ? error : error.message || '恢复失败'
       setRestoreResult({
         success: false,
-        message: typeof error === 'string' ? error : error.message || '恢复失败'
+        message
       })
+      D1API.trackEvent({ message })
     } finally {
       setRestoring(false)
     }
