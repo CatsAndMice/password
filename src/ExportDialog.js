@@ -87,7 +87,7 @@ export default class ExportDialog extends React.Component {
     return (
       <Dialog open={open} onClose={this.handleClose}>
         <DialogTitle>明文帐号数据导出</DialogTitle>
-        <DialogContent>
+        <DialogContent dividers>
           <DialogContentText sx={{
             paddingBottom: '10px',
             color: '#2c3e50'
@@ -127,7 +127,7 @@ export default class ExportDialog extends React.Component {
           <FormControlLabel onChange={this.handleSubCheckeckChange} checked={subChecked} control={<Checkbox />} label='包含子分组帐号数据' />
         </DialogContent>
         <DialogActions>
-          <Button disabled={!password || password.length < 6} startIcon={<DescriptionIcon />} onClick={this.handleExport} color='primary'>
+          <Button disabled={!password || password.length < 6} startIcon={<DescriptionIcon />} variant='contained' onClick={this.handleExport} color='primary'>
             导出 TXT
           </Button>
         </DialogActions>

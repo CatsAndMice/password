@@ -166,7 +166,7 @@ export default class ImportDialog extends React.Component {
         return (
             <Dialog open={open} onClose={this.handleClose} maxWidth="md" fullWidth>
                 <DialogTitle>导入帐号数据到分组</DialogTitle>
-                <DialogContent>
+                <DialogContent dividers>
                     <DialogContentText sx={{
                         paddingBottom: '10px',
                         color: '#2c3e50'
@@ -294,6 +294,7 @@ export default class ImportDialog extends React.Component {
                         startIcon={<UploadFileIcon />}
                         onClick={this.handleImport}
                         color='primary'
+                        variant='contained'
                     >
                         导入数据
                     </Button>
