@@ -1,5 +1,8 @@
 import React from 'react'
 import AccountForm from './AccountForm'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import SearchOffIcon from '@mui/icons-material/SearchOff'
 import './search.less'
 export default class Search extends React.Component {
   state = {
@@ -110,7 +113,19 @@ export default class Search extends React.Component {
   }
 
   render() {
-    if (this.state.list.length === 0) return <div className='search-empty'>暂无搜索结果</div>
+    if (this.state.list.length === 0) {
+      return (
+        <div className="flex flex-col items-center justify-center h-full p-5 text-gray-500">
+          <SearchOffIcon className="!w-16 !h-16 mb-4 opacity-50" />
+          <h2 className="text-xl font-medium mb-2">
+            暂无搜索结果
+          </h2>
+          <p className="text-sm text-center">
+            试试换个关键词搜索
+          </p>
+        </div>
+      )
+    }
     const { keyIV, onAccountUpdate, decryptAccountDic } = this.props
     const { list, selectedIndex } = this.state
     return (
