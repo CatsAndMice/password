@@ -393,7 +393,8 @@ const BackupSettings = ({ onClose, showMessage }) => {
                             minHeight: '40px',
                             padding: '6px 16px',
                             alignItems: 'flex-start',
-                            textAlign: 'left'
+                            textAlign: 'left',
+                            textTransform: 'none'  // 添加这一行
                         }
                     }}
                 >

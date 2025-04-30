@@ -258,7 +258,7 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
               sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px'  }}
             >
               <BackupIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)' }} />
-              备份设置
+              备份设置<NewBadge />
               </MenuItem>
 
             <MenuItem
