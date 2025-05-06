@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../assets/styles/fonts.css'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -23,6 +23,8 @@ import NewBadge from './NewBadge'
 import KeyIcon from '@mui/icons-material/Key';
 import PasswordGeneratorDialog from './PasswordGeneratorDialog'
 
+const CURRENT_FEATURE_VERSION = '1.8.4' // 每次发布新功能时更新此版本号
+
 // 在组件顶部添加状态
 const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
   const [openPasswordGenerator, setOpenPasswordGenerator] = React.useState(false)
@@ -35,6 +37,10 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
   })
   const [isFollowSystem, setIsFollowSystem] = React.useState(() => {
     return localStorage.getItem('theme-mode') === null
+  })
+
+  const [showNewFeatureDot, setShowNewFeatureDot] = useState(() => {
+    return localStorage.getItem('has_viewed_new_features') !== CURRENT_FEATURE_VERSION
   })
 
   // 修改模式选择处理函数
@@ -101,6 +107,10 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
 
   const handleMoreClick = (event) => {
     setMoreAnchorEl(event.currentTarget)
+    if (showNewFeatureDot) {
+      setShowNewFeatureDot(false)
+      localStorage.setItem('has_viewed_new_features', CURRENT_FEATURE_VERSION)
+    }
   }
   const handleMoreClose = () => {
     setMoreAnchorEl(null)
@@ -219,6 +229,17 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
               color: 'rgba(0, 0, 0, 0.6)',
               textTransform: 'none',
               minWidth: 'auto',
+              position: 'relative',
+              '&::after': showNewFeatureDot ? {
+                content: '""',
+                position: 'absolute',
+                top: '2px',
+                right: '2px',
+                width: '5px',
+                height: '5px',
+                backgroundColor: '#f44336',
+                borderRadius: '50%'
+              } : {}
             }}
           >
             <div className="rotate-90"> <MoreVertIcon /></div>
@@ -255,11 +276,11 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
                 handleMoreClose();
                 onBackupClick();
               }}
-              sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px'  }}
+              sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
             >
-              <BackupIcon sx={{ mr: 1, fontSize: 18,color: 'rgba(0, 0, 0, 0.6)' }} />
+              <BackupIcon sx={{ mr: 1, fontSize: 18, color: 'rgba(0, 0, 0, 0.6)' }} />
               备份设置<NewBadge />
-              </MenuItem>
+            </MenuItem>
 
             <MenuItem
               onClick={() => {
@@ -268,7 +289,7 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
               }}
               sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
             >
-              <MenuBookOutlinedIcon sx={{ mr: 1, fontSize: 18 ,color: 'rgba(0, 0, 0, 0.6)' }} />
+              <MenuBookOutlinedIcon sx={{ mr: 1, fontSize: 18, color: 'rgba(0, 0, 0, 0.6)' }} />
               使用手册
             </MenuItem>
 
