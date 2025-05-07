@@ -24,6 +24,7 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 // import { getFavicon } from './utils/getFavicon'
 import CSVParser from './utils/csvParser'
+import CloseIcon from '@mui/icons-material/Close'
 export default class ImportDialog extends React.Component {
     state = {
         open: false,
@@ -107,7 +108,7 @@ export default class ImportDialog extends React.Component {
         const file = event.target.files[0]
         if (!file) return
 
-        if (!['text/plain', 'text/csv', 'application/csv'].includes(file.type) && 
+        if (!['text/plain', 'text/csv', 'application/csv'].includes(file.type) &&
             !file.name.endsWith('.csv') && !file.name.endsWith('.txt')) {
             this.props.showMessage('请上传 txt 或 csv 文件', 'error')
             return
@@ -176,8 +177,30 @@ export default class ImportDialog extends React.Component {
         const parsedAccounts = content ? this.parseContent(content) : []
 
         return (
-            <Dialog open={open} onClose={this.handleClose} maxWidth="md" fullWidth>
-                <DialogTitle>导入帐号数据到分组</DialogTitle>
+            <Dialog open={open}
+                onClose={(event, reason) => {
+                    if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
+                        this.handleClose()
+                    }
+                }}
+                maxWidth="md" fullWidth>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 8px 8px 24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        导入帐号数据到分组
+                    </div>
+                    <IconButton
+                        onClick={this.handleClose}
+                        size="small"
+                        sx={{
+                            color: 'rgba(0, 0, 0, 0.54)',
+                            '&:hover': {
+                                color: 'rgba(0, 0, 0, 0.87)',
+                            }
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
                 <DialogContent dividers>
                     <DialogContentText sx={{
                         paddingBottom: '10px',
@@ -270,7 +293,7 @@ export default class ImportDialog extends React.Component {
                                 }}
                             />
                             {parsedAccounts.length > 0 && (
-                                <TableContainer component={Paper} sx={{ maxHeight: 300 }}>
+                                <TableContainer component={Paper}>
                                     <Table stickyHeader size="small">
                                         <TableHead>
                                             <TableRow>
