@@ -23,6 +23,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { getFavicon } from './utils/getFavicon'
+import CSVParser from './utils/csvParser'
 export default class ImportDialog extends React.Component {
     state = {
         open: false,
@@ -106,14 +107,25 @@ export default class ImportDialog extends React.Component {
         const file = event.target.files[0]
         if (!file) return
 
-        if (file.type !== 'text/plain') {
-            this.props.showMessage('请上传 txt 文件', 'error')
+        if (!['text/plain', 'text/csv', 'application/csv'].includes(file.type) && 
+            !file.name.endsWith('.csv') && !file.name.endsWith('.txt')) {
+            this.props.showMessage('请上传 txt 或 csv 文件', 'error')
             return
         }
 
         const reader = new FileReader()
         reader.onload = (e) => {
-            this.setState({ content: e.target.result })
+            const content = e.target.result
+            if (file.name.endsWith('.csv')) {
+                const accounts = CSVParser.parseCSV(content)
+                if (accounts.length > 0) {
+                    this.setState({ content: CSVParser.convertToText(accounts) })
+                } else {
+                    this.props.showMessage('CSV 文件格式不正确或没有找到有效数据', 'error')
+                }
+            } else {
+                this.setState({ content: content })
+            }
         }
         reader.onerror = () => {
             this.props.showMessage('文件读取失败', 'error')
@@ -231,13 +243,13 @@ export default class ImportDialog extends React.Component {
                                         <InputAdornment position="end" sx={{ alignSelf: 'flex-start', mt: 1, mr: 1 }}>
                                             <input
                                                 type="file"
-                                                accept=".txt"
+                                                accept=".txt,.csv"
                                                 style={{ display: 'none' }}
                                                 onChange={this.handleFileUpload}
                                                 id="file-upload"
                                             />
                                             <label htmlFor="file-upload">
-                                                <Tooltip title="上传txt文件" placement="top">
+                                                <Tooltip title="上传txt或csv文件" placement="top">
                                                     <IconButton
                                                         component="span"
                                                         size="small"
@@ -262,12 +274,12 @@ export default class ImportDialog extends React.Component {
                                     <Table stickyHeader size="small">
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell>序号</TableCell>
-                                                <TableCell>标题</TableCell>
-                                                <TableCell>用户名</TableCell>
-                                                <TableCell>密码</TableCell>
-                                                <TableCell>链接</TableCell>
-                                                <TableCell>说明</TableCell>
+                                                <TableCell sx={{ whiteSpace: 'nowrap', padding: '6px 16px' }}>序号</TableCell>
+                                                <TableCell sx={{ whiteSpace: 'nowrap', padding: '6px 16px' }}>标题</TableCell>
+                                                <TableCell sx={{ whiteSpace: 'nowrap', padding: '6px 16px' }}>用户名</TableCell>
+                                                <TableCell sx={{ whiteSpace: 'nowrap', padding: '6px 16px' }}>密码</TableCell>
+                                                <TableCell sx={{ whiteSpace: 'nowrap', padding: '6px 16px' }}>链接</TableCell>
+                                                <TableCell sx={{ whiteSpace: 'nowrap', padding: '6px 16px' }}>说明</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
