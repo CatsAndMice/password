@@ -14,6 +14,8 @@ import Button from '@mui/material/Button'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import D1API from './api/d1'
+import OCRInputDialog from './components/OCRInputDialog'
+
 
 const ACCOUNT_ITEM_HEIGHT = 65 //每个帐号的高度
 export default class AccountArea extends React.Component {
@@ -21,7 +23,8 @@ export default class AccountArea extends React.Component {
 
   state = {
     selectedIndex: 0,
-    showDeleteConfirm: false
+    showDeleteConfirm: false,
+    showOCRDialog: false
   }
 
   keydownAction = (e) => {
@@ -84,8 +87,8 @@ export default class AccountArea extends React.Component {
     this.setState({ selectedIndex: index })
   }
 
-  handleCreate = () => {
-    const index = this.props.onCreate()
+  handleCreate = (accountData) => {
+    const index = this.props.onCreate(accountData)
     const isNumber = typeof index === 'number'
     if (isNumber) {
       this.setState({ selectedIndex: index })
@@ -138,6 +141,22 @@ export default class AccountArea extends React.Component {
     this.setState({ selectedIndex: data.indexOf(selectedNode) })
   }
 
+  // 添加处理方法
+  handleOpenOCRDialog = () => {
+    this.setState({ showOCRDialog: true })
+  }
+
+  handleCloseOCRDialog = () => {
+    this.setState({ showOCRDialog: false })
+  }
+
+  handleOCRConfirm = (accountData) => {
+    this.handleCreate(accountData)
+  }
+
+
+
+
   render() {
     const { keyIV, data, onUpdate, decryptAccountDic } = this.props
     const { selectedIndex, showDeleteConfirm } = this.state
@@ -161,9 +180,10 @@ export default class AccountArea extends React.Component {
           <div className='account-list-footer'>
             <Tooltip title={'新增帐号 ' + (this.isMacOs ? '⌘' : 'Ctrl') + '+N'} placement='top'>
               <div>
-                <IconButton tabIndex={-1} onClick={this.handleCreate} size='small'>
+                <IconButton tabIndex={-1} onClick={this.handleOpenOCRDialog} size='small'>
                   <AddIcon />
                 </IconButton>
+
               </div>
             </Tooltip>
             <Tooltip title='删除帐号' placement='top'>
@@ -173,6 +193,15 @@ export default class AccountArea extends React.Component {
                 </IconButton>
               </div>
             </Tooltip>
+
+            <OCRInputDialog
+              open={this.state.showOCRDialog}
+              onClose={this.handleCloseOCRDialog}
+              onConfirm={this.handleOCRConfirm}
+              onCreate={this.handleCreate}
+            />
+
+
             <Dialog
               open={showDeleteConfirm}
               onClose={this.handleCloseDeleteConfirm}

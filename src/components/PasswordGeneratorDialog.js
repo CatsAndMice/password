@@ -30,7 +30,7 @@ const PasswordGeneratorDialog = ({ open, onClose }) => {
         }
     }, [])
 
-    useEffect(() => {  
+    useEffect(() => {
         if (open) {
             setTimeout(() => {
                 console.log(randomPasswordRef.current);
@@ -44,7 +44,11 @@ const PasswordGeneratorDialog = ({ open, onClose }) => {
     return (
         <Dialog
             open={open}
-            onClose={onClose}
+            onClose={(event, reason) => {
+                if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
+                    onClose()
+                }
+            }}
             maxWidth="sm"
             fullWidth
         >
@@ -61,7 +65,7 @@ const PasswordGeneratorDialog = ({ open, onClose }) => {
                     sx={{
                         position: 'absolute',
                         right: 8,
-                        top: 8,
+                        top: 11,
                         color: (theme) => theme.palette.grey[500],
                     }}
                 >

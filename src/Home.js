@@ -18,7 +18,7 @@ import IconButton from '@mui/material/IconButton'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import CloseIcon from '@mui/icons-material/Close'
 import BackupSettings from './components/BackupSettings'
-
+import { getFavicon } from "./utils/getFavicon"
 class Home extends React.Component {
   state = {
     selectedGroupId: '',
@@ -134,51 +134,93 @@ class Home extends React.Component {
     this.setState({ selectedGroupId: node ? node._id : '' })
   }
 
-  handleAccountCreate = () => {
+  // 检查是否存在空白账号
+  findEmptyAccountIndex = (accounts, decryptAccountDic) => {
+    return accounts.findIndex(account => {
+      const decryptedAcc = decryptAccountDic[account._id]
+      return !decryptedAcc.title && !decryptedAcc.username
+    })
+  }
+
+  // 加密账号信息
+  encryptAccountInfo = (accountInfo) => {
+    if (!accountInfo) return {}
+    const fields = ['title', 'username', 'password', 'link', 'remark']
+    return fields.reduce((acc, field) => {
+      acc[field] = accountInfo[field]
+        ? window.services.encryptValue(this.props.keyIV, accountInfo[field])
+        : ''
+      return acc
+    }, {})
+  }
+
+  // 更新账号字典
+  updateAccountDictionary = (decryptAccountDic, newAccount, accountInfo) => {
+    if (accountInfo) {
+      decryptAccountDic[newAccount._id] = {
+        account: newAccount,
+        title: accountInfo.title,
+        username: accountInfo.username
+      }
+      // 获取 favicon 更新帐号
+      getFavicon(accountInfo.link).then(favicon => {
+        const accountDic = decryptAccountDic[newAccount._id]
+        if (accountDic) {
+          accountDic.account.favicon = favicon
+          this.handleAccountUpdate(accountDic.account)
+        }
+      })
+    } else {
+      decryptAccountDic[newAccount._id] = { account: newAccount }
+    }
+  }
+
+  handleAccountCreate = (accountInfo) => {
     const { selectedGroupId, group2Accounts, decryptAccountDic } = this.state
     if (!selectedGroupId) return
 
+    // 检查空白账号
     if (selectedGroupId in group2Accounts) {
-      // 在一次循环中同时查找空白账号和其索引
-      let emptyAccountIndex = -1
-      const accounts = group2Accounts[selectedGroupId]
-      for (let i = 0; i < accounts.length; i++) {
-        const decryptedAcc = decryptAccountDic[accounts[i]._id]
-        if (!decryptedAcc.title && !decryptedAcc.username) {
-          emptyAccountIndex = i
-          break
+      const emptyIndex = this.findEmptyAccountIndex(group2Accounts[selectedGroupId], decryptAccountDic)
+      if (emptyIndex !== -1) {
+        if (accountInfo) {
+          // 更新空白账号信息
+          const emptyAccount = group2Accounts[selectedGroupId][emptyIndex]
+          const encryptedInfo = this.encryptAccountInfo(accountInfo)
+          Object.assign(emptyAccount, encryptedInfo)
+          this.handleAccountUpdate(emptyAccount)
+          this.updateAccountDictionary(decryptAccountDic, emptyAccount, accountInfo)
         }
-      }
-      if (emptyAccountIndex !== -1) {
-        return emptyAccountIndex
+        return emptyIndex
       }
     }
 
-
+    // 创建新账号
     const dateNow = Date.now()
     const newAccount = {
       _id: 'account/' + dateNow,
       groupId: selectedGroupId,
-      createAt: dateNow
+      createAt: dateNow,
+      sort: selectedGroupId in group2Accounts
+        ? group2Accounts[selectedGroupId][group2Accounts[selectedGroupId].length - 1].sort + 1
+        : 0,
+      ...this.encryptAccountInfo(accountInfo)
     }
-    if (selectedGroupId in group2Accounts) {
-      newAccount.sort = group2Accounts[selectedGroupId][group2Accounts[selectedGroupId].length - 1].sort + 1
-    } else {
-      newAccount.sort = 0
-    }
+
+    // 保存到数据库
     const result = window.utools.db.put(newAccount)
-    if (result.error) {
-      return this.alertDbError()
-    }
+    if (result.error) return this.alertDbError()
     newAccount._id = result.id
     newAccount._rev = result.rev
 
+    // 更新本地数据
     if (selectedGroupId in group2Accounts) {
       group2Accounts[selectedGroupId].push(newAccount)
     } else {
       group2Accounts[selectedGroupId] = [newAccount]
     }
-    decryptAccountDic[newAccount._id] = { account: newAccount }
+
+    this.updateAccountDictionary(decryptAccountDic, newAccount, accountInfo)
     this.setState({ selectedGroupId })
   }
 
@@ -370,7 +412,7 @@ class Home extends React.Component {
             maxWidth="sm"
             fullWidth
           >
-            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',  padding:'8px 8px 8px 24px' }}>
+            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 8px 8px 24px' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 备份设置
               </div>
