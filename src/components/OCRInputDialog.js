@@ -139,7 +139,7 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                     fullWidth
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
-                    placeholder=" 请按照输入：标题,用户名,密码,链接,说明（使用英文逗号分隔）"
+                    placeholder=" 请按照格式输入：标题,用户名,密码,链接,说明（使用英文逗号分隔）"
                     variant="outlined"
                     sx={{
                         '& .MuiOutlinedInput-root': {
