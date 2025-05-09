@@ -13,7 +13,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
-import D1API from './api/d1'
 import OCRInputDialog from './components/OCRInputDialog'
 
 
@@ -106,9 +105,6 @@ export default class AccountArea extends React.Component {
       }
       const titleInput = document.querySelector('#accountFormTitle')
       if (titleInput) titleInput.focus()
-      D1API.trackEvent({
-        message: '新增帐号'
-      })
     }, 50)
   }
 

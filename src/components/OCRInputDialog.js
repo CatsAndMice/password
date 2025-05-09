@@ -11,7 +11,7 @@ import Tooltip from '@mui/material/Tooltip'
 import CloseIcon from '@mui/icons-material/Close'
 import InputAdornment from '@mui/material/InputAdornment'
 import { createWorker, OEM } from 'tesseract.js'
-
+import D1API from '@/api/d1'
 const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
     const [inputText, setInputText] = useState('')
     const [recognizing, setRecognizing] = useState(false)
@@ -38,7 +38,6 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                     }
                 }
             });
-
             const { data: { text } } = await workerRef.current.recognize(file);
             if (text) {
                 const processedText = text.replace(/\s+/g, '').replace(/\n/g, ',');
@@ -46,6 +45,7 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
             }
             await workerRef.current.terminate();
             workerRef.current = null;
+            D1API.trackEvent({ message: '图片识别成功' })
         } catch (error) {
             setInputText('图片识别出现问题，请尝试以下方法：\n1. 确保图片清晰可读\n2. 调整图片亮度和对比度\n3. 重新截取或拍摄图片\n4. 手动输入文本')
         } finally {
@@ -96,6 +96,7 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
             remark: others[1] || ''
         })
         handleClose()
+        D1API.trackEvent({ message: '快速新建帐号' })
     }
 
     return (
@@ -253,6 +254,7 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                     onClick={() => {
                         handleClose()
                         onCreate()
+                        D1API.trackEvent({ message: '直接新建' })
                     }}
                 >
                     直接新建

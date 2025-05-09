@@ -52,9 +52,7 @@ const D1API = {
         try {
             const { message } = eventData
             const user_id = await this.getUserId()
-            // user_id1743406254687_9f7ab182 为正式环境开发人员ID
-            if (!user_id || user_id === 'user_id1743406254687_9f7ab182') return
-
+   
             await this.query(
                 `INSERT INTO events (user_id, message) VALUES (?, ?)`,
                 [user_id, JSON.stringify(message)]

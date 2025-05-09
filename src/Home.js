@@ -19,6 +19,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import CloseIcon from '@mui/icons-material/Close'
 import BackupSettings from './components/BackupSettings'
 import { getFavicon } from "./utils/getFavicon"
+import D1API from '@/api/d1'
 class Home extends React.Component {
   state = {
     selectedGroupId: '',
@@ -58,6 +59,10 @@ class Home extends React.Component {
       })
     }, '标题/用户名搜索')
     window.services.autoBackup()
+     // 添加登录成功埋点
+     D1API.trackEvent({
+      message: '登录成功'
+    })
   }
 
   componentWillUnmount() {
