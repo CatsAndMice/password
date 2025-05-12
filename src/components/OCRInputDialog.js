@@ -148,74 +148,74 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                             backgroundColor: '#ffffff'
                         }
                     }}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end" sx={{ alignSelf: 'flex-start', mt: 1, mr: 1 }}>
-                                {recognizing ? (
-                                    <div className="flex items-center gap-2">
-                                        <div className="text-sm text-blue-500">{progress}%</div>
-                                        <Tooltip title="取消识别" placement="top">
-                                            <IconButton
-                                                onClick={handleCancelRecognize}
-                                                size="small"
-                                                sx={{
-                                                    border: '1px solid rgba(0, 0, 0, 0.23)',
-                                                    borderRadius: '4px',
-                                                    '&:hover': {
-                                                        backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                                                    }
-                                                }}
-                                            >
-                                                <CloseIcon fontSize="small" />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </div>
-                                ) : (
-                                    <React.Fragment>
-                                        <input
-                                            type="file"
-                                            accept="image/bmp,image/jpeg,image/png,image/pbm,image/webp"
-                                            style={{ display: 'none' }}
-                                            onChange={handleImageUpload}
-                                            id="image-upload"
-                                        />
-                                        <label htmlFor="image-upload">
-                                            <Tooltip title="上传图片识别" placement="top">
-                                                <IconButton
-                                                    component="span"
-                                                    size="small"
-                                                    sx={{
-                                                        border: '1px solid rgba(0, 0, 0, 0.23)',
-                                                        borderRadius: '4px',
-                                                        '&:hover': {
-                                                            backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                                                        }
-                                                    }}
-                                                >
-                                                    <PhotoCamera fontSize="small" />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </label>
-                                    </React.Fragment>
-                                )}
-                            </InputAdornment>
-                        )
-                    }}
+                    // InputProps={{
+                    //     endAdornment: (
+                    //         <InputAdornment position="end" sx={{ alignSelf: 'flex-start', mt: 1, mr: 1 }}>
+                    //             {recognizing ? (
+                    //                 <div className="flex items-center gap-2">
+                    //                     <div className="text-sm text-blue-500">{progress}%</div>
+                    //                     <Tooltip title="取消识别" placement="top">
+                    //                         <IconButton
+                    //                             onClick={handleCancelRecognize}
+                    //                             size="small"
+                    //                             sx={{
+                    //                                 border: '1px solid rgba(0, 0, 0, 0.23)',
+                    //                                 borderRadius: '4px',
+                    //                                 '&:hover': {
+                    //                                     backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                    //                                 }
+                    //                             }}
+                    //                         >
+                    //                             <CloseIcon fontSize="small" />
+                    //                         </IconButton>
+                    //                     </Tooltip>
+                    //                 </div>
+                    //             ) : (
+                    //                 <React.Fragment>
+                    //                     <input
+                    //                         type="file"
+                    //                         accept="image/bmp,image/jpeg,image/png,image/pbm,image/webp"
+                    //                         style={{ display: 'none' }}
+                    //                         onChange={handleImageUpload}
+                    //                         id="image-upload"
+                    //                     />
+                    //                     <label htmlFor="image-upload">
+                    //                         <Tooltip title="上传图片识别" placement="top">
+                    //                             <IconButton
+                    //                                 component="span"
+                    //                                 size="small"
+                    //                                 sx={{
+                    //                                     border: '1px solid rgba(0, 0, 0, 0.23)',
+                    //                                     borderRadius: '4px',
+                    //                                     '&:hover': {
+                    //                                         backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                    //                                     }
+                    //                                 }}
+                    //                             >
+                    //                                 <PhotoCamera fontSize="small" />
+                    //                             </IconButton>
+                    //                         </Tooltip>
+                    //                     </label>
+                    //                 </React.Fragment>
+                    //             )}
+                    //         </InputAdornment>
+                    //     )
+                    // }}
 
-                    onPaste={async (e) => {
-                        const items = e.clipboardData.items;
-                        for (let item of items) {
-                            if (item.type.indexOf('image') !== -1) {
-                                e.preventDefault();
-                                const file = item.getAsFile();
-                                try {
-                                    await handleImageUpload({ target: { files: [file] } });
-                                } catch (error) {
-                                    console.error('OCR 识别失败:', error);
-                                }
-                            }
-                        }
-                    }}
+                    // onPaste={async (e) => {
+                    //     const items = e.clipboardData.items;
+                    //     for (let item of items) {
+                    //         if (item.type.indexOf('image') !== -1) {
+                    //             e.preventDefault();
+                    //             const file = item.getAsFile();
+                    //             try {
+                    //                 await handleImageUpload({ target: { files: [file] } });
+                    //             } catch (error) {
+                    //                 console.error('OCR 识别失败:', error);
+                    //             }
+                    //         }
+                    //     }
+                    // }}
                 />
                 <div className="p-3 pl-0 flex items-center gap-2">
                     <svg className="w-5 h-5 text-slate-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
