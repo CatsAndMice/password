@@ -47,6 +47,7 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
             workerRef.current = null;
             D1API.trackEvent({ message: '图片识别成功' })
         } catch (error) {
+            D1API.trackEvent({ message: `图片识别失败: ${error.message}` })
             setInputText('图片识别出现问题，请尝试以下方法：\n1. 确保图片清晰可读\n2. 调整图片亮度和对比度\n3. 重新截取或拍摄图片\n4. 手动输入文本')
         } finally {
             setRecognizing(false)
