@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import '../assets/styles/fonts.css'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import StarOutlineIcon from '@mui/icons-material/StarOutline'
@@ -159,7 +158,6 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick, groupIds, group
               <span className="font-mono font-medium">全部账号：{accountCount}</span>
             </div>
           </Typography>
-
           <Button
             startIcon={showFavorites ? <StarIcon /> : <StarOutlineIcon />}
             onClick={onFavoriteClick}
