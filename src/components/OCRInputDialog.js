@@ -6,54 +6,54 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
-import PhotoCamera from '@mui/icons-material/PhotoCamera'
-import Tooltip from '@mui/material/Tooltip'
+// import PhotoCamera from '@mui/icons-material/PhotoCamera'
+// import Tooltip from '@mui/material/Tooltip'
 import CloseIcon from '@mui/icons-material/Close'
-import InputAdornment from '@mui/material/InputAdornment'
+// import InputAdornment from '@mui/material/InputAdornment'
 import { createWorker, OEM } from 'tesseract.js'
 import D1API from '@/api/d1'
 const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
     const [inputText, setInputText] = useState('')
-    const [recognizing, setRecognizing] = useState(false)
-    const [progress, setProgress] = useState(0)
+    // const [recognizing, setRecognizing] = useState(false)
+    // const [progress, setProgress] = useState(0)
     const workerRef = React.useRef(null)
 
-    const handleImageUpload = async (event) => {
-        const file = event.target.files[0]
-        if (!file) return
+    // const handleImageUpload = async (event) => {
+    //     const file = event.target.files[0]
+    //     if (!file) return
 
-        setRecognizing(true)
-        setProgress(0)
+    //     setRecognizing(true)
+    //     setProgress(0)
 
-        try {
-            workerRef.current = await createWorker(
-                'chi_sim',
-                OEM.DEFAULT, {
-                langPath: process.env.TESSERACT_LANG_PATH,
-                workerPath: process.env.TESSERACT_WORKER_PATH,
-                corePath: process.env.TESSERACT_CORE_PATH,
-                logger: ({ progress, status }) => {
-                    if (status === 'recognizing text') {
-                        setProgress(Math.round(progress * 100))
-                    }
-                }
-            });
-            const { data: { text } } = await workerRef.current.recognize(file);
-            if (text) {
-                const processedText = text.replace(/\s+/g, '').replace(/\n/g, ',');
-                setInputText(processedText);
-            }
-            await workerRef.current.terminate();
-            workerRef.current = null;
-            D1API.trackEvent({ message: '图片识别成功' })
-        } catch (error) {
-            D1API.trackEvent({ message: `图片识别失败: ${error.message}` })
-            setInputText('图片识别出现问题，请尝试以下方法：\n1. 确保图片清晰可读\n2. 调整图片亮度和对比度\n3. 重新截取或拍摄图片\n4. 手动输入文本')
-        } finally {
-            setRecognizing(false)
-            setProgress(0)
-        }
-    }
+    //     try {
+    //         workerRef.current = await createWorker(
+    //             'chi_sim',
+    //             OEM.DEFAULT, {
+    //             langPath: process.env.TESSERACT_LANG_PATH,
+    //             workerPath: process.env.TESSERACT_WORKER_PATH,
+    //             corePath: process.env.TESSERACT_CORE_PATH,
+    //             logger: ({ progress, status }) => {
+    //                 if (status === 'recognizing text') {
+    //                     setProgress(Math.round(progress * 100))
+    //                 }
+    //             }
+    //         });
+    //         const { data: { text } } = await workerRef.current.recognize(file);
+    //         if (text) {
+    //             const processedText = text.replace(/\s+/g, '').replace(/\n/g, ',');
+    //             setInputText(processedText);
+    //         }
+    //         await workerRef.current.terminate();
+    //         workerRef.current = null;
+    //         D1API.trackEvent({ message: '图片识别成功' })
+    //     } catch (error) {
+    //         D1API.trackEvent({ message: `图片识别失败: ${error.message}` })
+    //         setInputText('图片识别出现问题，请尝试以下方法：\n1. 确保图片清晰可读\n2. 调整图片亮度和对比度\n3. 重新截取或拍摄图片\n4. 手动输入文本')
+    //     } finally {
+    //         setRecognizing(false)
+    //         setProgress(0)
+    //     }
+    // }
 
     const handleCancelRecognize = async () => {
         if (workerRef.current) {

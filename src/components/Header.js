@@ -20,13 +20,18 @@ import { WEBDAV_DOCS_URL, FEEDBACK_URL } from "../utils/const"
 import GitHubIcon from '@mui/icons-material/GitHub'
 import FeedbackIcon from '@mui/icons-material/Feedback'
 import NewBadge from './NewBadge'
-import KeyIcon from '@mui/icons-material/Key';
+import KeyIcon from '@mui/icons-material/Key'
 import PasswordGeneratorDialog from './PasswordGeneratorDialog'
+import FolderIcon from '@mui/icons-material/Folder'
 
 const CURRENT_FEATURE_VERSION = '1.8.4' // 每次发布新功能时更新此版本号
 
 // 在组件顶部添加状态
-const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
+const Header = ({ onFavoriteClick, showFavorites, onBackupClick, groupIds, group2Accounts }) => {
+
+  const groupCount = groupIds?.length || 0
+  const accountCount = Object.values(group2Accounts || {}).reduce((total, accounts) => total + accounts.length, 0)
+
   const [openPasswordGenerator, setOpenPasswordGenerator] = React.useState(false)
   // 从 localStorage 读取初始状态
   const [isDarkMode, setIsDarkMode] = React.useState(() => {
@@ -133,24 +138,26 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick }) => {
             variant="h6"
             sx={{
               flexGrow: 1,
-              color: 'rgba(0, 0, 0, 0.87)',
-              fontSize: '16px',
-              fontWeight: 600,
-              letterSpacing: '0.5px',
-              userSelect: 'none',
-              '& span': {
-                background: 'linear-gradient(45deg, #2196F3, #00BCD4)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                textShadow: '0 2px 4px rgba(33, 150, 243, 0.2)',
-                fontFamily: 'MyFont',
-                fontWeight: 700,
-                letterSpacing: '1px',
+              fontSize: '14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              color: 'rgba(0, 0, 0, 0.6)',
+              '& .stat-item': {
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
               }
             }}
           >
-            <span>我的密码库</span>
+            <div className="stat-item">
+              <FolderIcon className="text-gray-500" sx={{ fontSize: 16 }} />
+              <span className="font-mono font-medium">全部分组：{groupCount}</span>
+            </div>
+            <div className="stat-item">
+              <KeyIcon className="text-gray-500" sx={{ fontSize: 16 }} />
+              <span className="font-mono font-medium">全部账号：{accountCount}</span>
+            </div>
           </Typography>
 
           <Button

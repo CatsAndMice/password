@@ -59,8 +59,8 @@ class Home extends React.Component {
       })
     }, '标题/用户名搜索')
     window.services.autoBackup()
-     // 添加登录成功埋点
-     D1API.trackEvent({
+    // 添加登录成功埋点
+    D1API.trackEvent({
       message: '登录成功'
     })
   }
@@ -114,6 +114,8 @@ class Home extends React.Component {
     if (result.ok) {
       node._id = result.id
       node._rev = result.rev
+      const { groupIds, groupTree } = initializeData(this.props.keyIV)
+      this.setState({ groupIds, groupTree })
     } else {
       this.alertDbError()
     }
@@ -123,7 +125,11 @@ class Home extends React.Component {
     const result = window.utools.db.remove(node)
     if (result.error) {
       this.alertDbError()
+      return
     }
+    // 更新 groupIds 和 groupTree
+    const { groupIds, groupTree } = initializeData(this.props.keyIV)
+    this.setState({ groupIds, groupTree })
   }
 
   handleGroupMove = (sourceNode, targeNode) => {
@@ -402,6 +408,8 @@ class Home extends React.Component {
             onFavoriteClick={this.handleFavoriteClick}
             showFavorites={this.state.showFavorites}
             onBackupClick={this.handleBackupSettingsClick}
+            groupIds={groupIds}
+            group2Accounts={group2Accounts}
           />
         )}
 
