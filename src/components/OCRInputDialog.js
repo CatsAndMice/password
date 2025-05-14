@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton'
 // import Tooltip from '@mui/material/Tooltip'
 import CloseIcon from '@mui/icons-material/Close'
 // import InputAdornment from '@mui/material/InputAdornment'
-import { createWorker, OEM } from 'tesseract.js'
+// import { createWorker, OEM } from 'tesseract.js'
 import D1API from '@/api/d1'
 const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
     const [inputText, setInputText] = useState('')
