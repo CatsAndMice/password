@@ -19,6 +19,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import CloseIcon from '@mui/icons-material/Close'
 import BackupSettings from './components/BackupSettings'
 import { getFavicon } from "./utils/getFavicon"
+import BatchOperations from "./components/BatchOperations"
 import D1API from '@/api/d1'
 class Home extends React.Component {
   state = {
@@ -29,8 +30,36 @@ class Home extends React.Component {
     exportData: null,
     importData: null,
     showFavorites: false,
-    showBackupSettings: false
+    showBackupSettings: false,
+    showBatchOperations: false
   }
+
+  handleBatchOperationsClick = () => {
+    this.setState({ showBatchOperations: true })
+  }
+
+  handleCloseBatchOperations = () => {
+    this.setState({ showBatchOperations: false })
+  }
+
+  handleBatchDelete = (accountIds) => {
+    const { decryptAccountDic } = this.state
+    accountIds.forEach(id => {
+      if (decryptAccountDic[id]) {
+        const result = window.utools.db.remove(decryptAccountDic[id].account)
+      
+        if (result.error) {
+          return this.alertDbError()
+        }
+      }
+    })
+    this.showMessage(`成功删除 ${accountIds.length} 个账号`)
+    const { groupIds, group2Accounts, decryptAccountDic: reDecryptAccountDic } = initializeData(this.props.keyIV)
+    console.log(reDecryptAccountDic,'re');
+    
+    this.setState({ groupIds, group2Accounts, decryptAccountDic: reDecryptAccountDic })
+  }
+
 
   handleDetectLive = () => {
     // 窗口无焦点 5 分钟，自动退出
@@ -389,7 +418,7 @@ class Home extends React.Component {
 
   // 在 render 中添加导入对话框组件
   render() {
-    const { searchKey, selectedGroupId, groupIds, groupTree, group2Accounts, sortedGroup, decryptAccountDic, snackbarMessage, exportData, importData, showFavorites, showBackupSettings } = this.state
+    const { searchKey, selectedGroupId, groupIds, groupTree, group2Accounts, sortedGroup, decryptAccountDic, snackbarMessage, exportData, importData, showFavorites, showBackupSettings, showBatchOperations } = this.state
     if (!group2Accounts) {
       return (
         <div className='home-loading'>
@@ -408,6 +437,7 @@ class Home extends React.Component {
             onFavoriteClick={this.handleFavoriteClick}
             showFavorites={this.state.showFavorites}
             onBackupClick={this.handleBackupSettingsClick}
+            onBatchOperationsClick={this.handleBatchOperationsClick}
             groupIds={groupIds}
             group2Accounts={group2Accounts}
           />
@@ -450,6 +480,26 @@ class Home extends React.Component {
             </DialogContent>
           </Dialog>
         )}
+
+        {/* 批量操作 */}
+        {
+          showBatchOperations && (
+            <Dialog
+              fullScreen
+              open={showBatchOperations}
+              onClose={this.handleCloseBatchOperations}
+            >
+              <BatchOperations
+                onClose={this.handleCloseBatchOperations}
+                groupTree={groupTree}
+                keyIV={this.props.keyIV}
+                group2Accounts={group2Accounts}
+                decryptAccountDic={decryptAccountDic}
+                onBatchDelete={this.handleBatchDelete}
+              />
+            </Dialog>
+          )
+        }
 
         {searchKey ? (
           <Search

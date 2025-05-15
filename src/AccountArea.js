@@ -201,14 +201,6 @@ export default class AccountArea extends React.Component {
             <Dialog
               open={showDeleteConfirm}
               onClose={this.handleCloseDeleteConfirm}
-              PaperProps={{
-                sx: {
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
-                  minWidth: '320px',
-                  backgroundColor: '#ffffff'
-                }
-              }}
             >
               <DialogTitle sx={{
                 fontSize: '16px',
@@ -220,25 +212,13 @@ export default class AccountArea extends React.Component {
                 确认删除此帐号?
               </DialogTitle>
               <DialogContent>
-                <DialogContentText sx={{
-                  color: '#2c3e50',
-                  fontSize: '14px',
-                }}>
+                <DialogContentText >
                   删除后将无法恢复，请确认是否继续？
                 </DialogContentText>
               </DialogContent>
-              <DialogActions sx={{
-                padding: '12px 24px',
-                // borderTop: '1px solid rgba(0, 0, 0, 0.05)'
-              }}>
+              <DialogActions >
                 <Button
                   onClick={this.handleCloseDeleteConfirm}
-                  sx={{
-                    borderRadius: '8px',
-                    textTransform: 'none',
-                    minWidth: '76px',
-                    color: '#2c3e50'
-                  }}
                 >
                   取消
                 </Button>
@@ -247,16 +227,6 @@ export default class AccountArea extends React.Component {
                   color='error'
                   variant='contained'
                   autoFocus
-                  sx={{
-                    borderRadius: '8px',
-                    textTransform: 'none',
-                    minWidth: '76px',
-                    boxShadow: 'none',
-                    '&:hover': {
-                      boxShadow: 'none',
-                      backgroundColor: '#d32f2f'
-                    }
-                  }}
                 >
                   删除
                 </Button>
