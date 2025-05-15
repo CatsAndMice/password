@@ -47,7 +47,7 @@ class Home extends React.Component {
     accountIds.forEach(id => {
       if (decryptAccountDic[id]) {
         const result = window.utools.db.remove(decryptAccountDic[id].account)
-      
+
         if (result.error) {
           return this.alertDbError()
         }
@@ -55,8 +55,8 @@ class Home extends React.Component {
     })
     this.showMessage(`成功删除 ${accountIds.length} 个账号`)
     const { groupIds, group2Accounts, decryptAccountDic: reDecryptAccountDic } = initializeData(this.props.keyIV)
-    console.log(reDecryptAccountDic,'re');
-    
+    console.log(reDecryptAccountDic, 're');
+
     this.setState({ groupIds, group2Accounts, decryptAccountDic: reDecryptAccountDic })
   }
 
@@ -490,6 +490,7 @@ class Home extends React.Component {
               onClose={this.handleCloseBatchOperations}
             >
               <BatchOperations
+                showMessage={this.showMessage}
                 onClose={this.handleCloseBatchOperations}
                 groupTree={groupTree}
                 keyIV={this.props.keyIV}

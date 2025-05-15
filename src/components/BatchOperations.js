@@ -78,7 +78,7 @@ const columns = [
       }
     }
   }
-const BatchOperations = ({ onClose, groupTree, keyIV, decryptAccountDic, onBatchDelete }) => {
+const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccountDic, onBatchDelete }) => {
   const [selectedAccounts, setSelectedAccounts] = useState(new Set())
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [list, setList] = useState([])
@@ -113,6 +113,26 @@ const BatchOperations = ({ onClose, groupTree, keyIV, decryptAccountDic, onBatch
     setShowDeleteConfirm(false)
     onBatchDelete(selectedRowKeys)
   }
+
+  const handleCopy = () => {
+    const copyContent = selectedRowKeys.map(key => {
+      const item = list.find(i => i.key === key)
+      return `标题：${item.title}
+用户名：${item.username}
+密码：${item.password}
+链接：${item.link}
+说明：${item.remark}`
+    }).join('\n\n')
+
+    navigator.clipboard.writeText(copyContent).then(() => {
+      showMessage('已复制到剪贴板')
+      setSelectedRowKeys([])
+    }).catch(() => {
+      showMessage('复制失败', 'error')
+    })
+  }
+
+
 
   const generateGroupDic = (array, dic) => {
     for (const g of array) {
@@ -220,7 +240,7 @@ const BatchOperations = ({ onClose, groupTree, keyIV, decryptAccountDic, onBatch
                       <IconButton
                         size="small"
                         disabled={selectedRowKeys.length === 0}
-                        // onClick={handleCopy}
+                        onClick={handleCopy}
                         sx={iconStyle}
                       >
                         <ContentCopyIcon />
