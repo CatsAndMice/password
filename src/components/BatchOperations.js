@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
@@ -11,41 +11,48 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogActions from '@mui/material/DialogActions'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove'
-import { Table } from "@arco-design/web-react"
+// import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove'
+import { Table, Input } from "@arco-design/web-react"
 import Tooltip from '@mui/material/Tooltip'
 import "@arco-design/web-react/dist/css/arco.css"
-const columns = [
+import { IconSearch } from '@arco-design/web-react/icon'
+
+const originColumns = [
   {
+    key: 'name',
     title: '分组名',
     dataIndex: 'name',
     fixed: 'left',
     width: 120,
-    resizable: true
   },
   {
+    key: 'title',
     title: '标题',
     dataIndex: 'title',
     fixed: 'left',
     width: 150,
   },
   {
+    key: 'username',
     title: '用户名',
     dataIndex: 'username',
     width: 150,
   },
   {
+    key: 'password',
     title: '密码',
     dataIndex: 'password',
     width: 200,
   },
   {
+    key: 'link',
     title: '链接',
     dataIndex: 'link',
     width: 200,
     ellipsis: true
   },
   {
+    key: 'remark',
     title: '说明',
     dataIndex: 'remark'
   }
@@ -81,9 +88,11 @@ const columns = [
 const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccountDic, onBatchDelete }) => {
   const [selectedAccounts, setSelectedAccounts] = useState(new Set())
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [columns, setColumns] = useState(originColumns)
   const [list, setList] = useState([])
   const [tableHeight, setTableHeight] = useState('400px')
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const inputRef = useRef(null)
   const groupDic = {},
     groupId2NameCache = {}
 
@@ -175,6 +184,7 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
       groupedAccounts[groupId].push({
         key: cdata.account._id,
         username: cdata.username || '-',
+        groupId,
         name: groupName(groupId),
         title: cdata.title || '-',
         password: window.services.decryptValue(keyIV, cdata.account.password) || '-',
@@ -187,10 +197,63 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
     setSelectedRowKeys([])
   }
 
+  const setFilter = () => {
+    const groupEntries = Object.entries(groupId2NameCache)
+    const filters = groupEntries.map(([id, name]) => ({
+      text: name,
+      value: id
+    }))
+
+    setColumns(prevColumns => {
+      const newColumns = [...prevColumns];
+      newColumns[0] = {
+        ...newColumns[0], filters,
+        onFilter: (value, row) => {
+          return row.groupId == value
+        }
+      }
+      newColumns[1] = {
+        ...newColumns[1],
+        filterIcon: <IconSearch />,
+        filterDropdown: ({ filterKeys, setFilterKeys, confirm }) => {
+          return (
+            <div className='arco-table-custom-filter'>
+              <Input.Search
+                ref={inputRef}
+                searchButton
+                allowClear
+                placeholder='请输入用户名'
+                value={filterKeys[0] || ''}
+                onChange={(value) => {
+                  setFilterKeys(value ? [value] : []);
+                }}
+                onSearch={() => {
+                  confirm();
+                }}
+              />
+            </div>
+          );
+        },
+        onFilter: (value, row) => {
+          console.log(value, row);
+          return value ? row.title.indexOf(value) !== -1 : true
+        },
+        onFilterDropdownVisibleChange: (visible) => {
+          if (visible) {
+            setTimeout(() => inputRef.current.focus(), 150);
+          }
+        },
+      }
+
+
+      return newColumns;
+    });
+  }
 
   useEffect(() => {
     generateGroupDic(groupTree, groupDic)
     getList()
+    setFilter()
     const height = window.innerHeight - 190
     setTableHeight(`${height}px`)
   }, [decryptAccountDic])
@@ -199,6 +262,13 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
 
   return (
     <>
+      <style>
+        {`
+          .arco-trigger {
+            z-index: 1300;
+          }
+        `}
+      </style>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }} className="bg-white">
         <Box className="flex items-center  p-2 border-b border-gray-200">
           <IconButton onClick={onClose} size="small">
@@ -247,7 +317,7 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
                       </IconButton>
                     </span>
                   </Tooltip>
-                  <Tooltip title="移动选中账号" placement="top">
+                  {/* <Tooltip title="移动选中账号" placement="top">
                     <span>
                       <IconButton
                         size="small"
@@ -258,7 +328,7 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
                         <DriveFileMoveIcon />
                       </IconButton>
                     </span>
-                  </Tooltip>
+                  </Tooltip> */}
 
                   <Tooltip title="删除选中账号" placement="top">
                     <span>
