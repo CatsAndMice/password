@@ -223,7 +223,7 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
           );
         },
         onFilter: (value, row) => {
-          return value ? row.title.indexOf(value) !== -1 : true
+          return value ? row.title.toLowerCase().indexOf(value.toLowerCase()) !== -1 : true
         },
         onFilterDropdownVisibleChange: (visible) => {
           if (visible) {
