@@ -53,5 +53,5 @@ https://github.com/kelektiv/node.bcrypt.js
 4. 快捷键 Command/Ctrl + P 复制当前帐号密码
 4. 快捷键 Command/Ctrl + N 新增帐号
 
-## Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=CatsAndMice/password&type=Date)](https://star-history.com/#CatsAndMice/password&Date)
+<!-- ## Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=CatsAndMice/password&type=Date)](https://star-history.com/#CatsAndMice/password&Date) -->
