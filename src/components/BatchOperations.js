@@ -11,11 +11,12 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogActions from '@mui/material/DialogActions'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-// import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove'
-import { Table, Input } from "@arco-design/web-react"
+import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove'
+import { Table, Input, TreeSelect } from "@arco-design/web-react"
 import Tooltip from '@mui/material/Tooltip'
 import "@arco-design/web-react/dist/css/arco.css"
 import { IconSearch } from '@arco-design/web-react/icon'
+import CloseIcon from '@mui/icons-material/Close'
 
 const originColumns = [
   {
@@ -85,37 +86,25 @@ const originColumns = [
       }
     }
   }
-const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccountDic, onBatchDelete }) => {
-  const [selectedAccounts, setSelectedAccounts] = useState(new Set())
+const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccountDic, onBatchDelete, onBatchMove }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [columns, setColumns] = useState(originColumns)
   const [list, setList] = useState([])
   const [tableHeight, setTableHeight] = useState('400px')
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [showMoveDialog, setShowMoveDialog] = useState(false)
+  const [targetGroupId, setTargetGroupId] = useState('')
+
   const inputRef = useRef(null)
   const groupDic = {},
     groupId2NameCache = {}
 
-  const handleSelectAll = () => {
-    if (selectedAccounts.size === accounts.length) {
-      setSelectedAccounts(new Set())
-    } else {
-      setSelectedAccounts(new Set(accounts.map(acc => acc._id)))
-    }
-  }
-
-  const handleSelectAccount = (accountId) => {
-    const newSelected = new Set(selectedAccounts)
-    if (newSelected.has(accountId)) {
-      newSelected.delete(accountId)
-    } else {
-      newSelected.add(accountId)
-    }
-    setSelectedAccounts(newSelected)
-  }
-
   const handleDelete = () => {
     setShowDeleteConfirm(true)
+  }
+
+  const handleMove = () => {
+    setShowMoveDialog(true)
   }
 
   const handleConfirmDelete = () => {
@@ -140,8 +129,6 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
       showMessage('复制失败', 'error')
     })
   }
-
-
 
   const generateGroupDic = (array, dic) => {
     for (const g of array) {
@@ -244,11 +231,22 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
           }
         },
       }
-
-
       return newColumns;
     });
   }
+
+  const handleConfirmMove = () => {
+    if (!targetGroupId) {
+      showMessage('请选择目标分组', 'error')
+      return
+    }
+    onBatchMove(selectedRowKeys, targetGroupId)
+    setShowMoveDialog(false)
+    setTargetGroupId('')
+    setSelectedRowKeys([])
+    showMessage('移动成功')
+  }
+
 
   useEffect(() => {
     generateGroupDic(groupTree, groupDic)
@@ -257,8 +255,6 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
     const height = window.innerHeight - 190
     setTableHeight(`${height}px`)
   }, [decryptAccountDic])
-
-
 
   return (
     <>
@@ -317,18 +313,18 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
                       </IconButton>
                     </span>
                   </Tooltip>
-                  {/* <Tooltip title="移动选中账号" placement="top">
+                  <Tooltip title="移动选中账号" placement="top">
                     <span>
                       <IconButton
                         size="small"
                         disabled={selectedRowKeys.length === 0}
-                        // onClick={handleMove}
+                        onClick={handleMove}
                         sx={iconStyle}
                       >
                         <DriveFileMoveIcon />
                       </IconButton>
                     </span>
-                  </Tooltip> */}
+                  </Tooltip>
 
                   <Tooltip title="删除选中账号" placement="top">
                     <span>
@@ -365,6 +361,68 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
             >删除</Button>
           </DialogActions>
         </Dialog>
+
+        {/* 移动账号对话框 */}
+        <Dialog
+          open={showMoveDialog}
+          onClose={(event, reason) => {
+            if (reason !== 'backdropClick') {
+              setShowMoveDialog(false)
+            }
+          }}
+          disableEscapeKeyDown
+        >
+          <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 8px 8px 24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              移动账号
+            </div>
+            <IconButton
+              onClick={() => setShowMoveDialog(false)}
+              size="small"
+              sx={{
+                color: 'rgba(0, 0, 0, 0.54)',
+                '&:hover': {
+                  color: 'rgba(0, 0, 0, 0.87)',
+                }
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent dividers>
+            <DialogContentText sx={{ mb: 2 }}>
+              选择要移动到的目标分组：
+            </DialogContentText>
+            <div style={{ minWidth: '300px', maxHeight: '400px', overflow: 'auto' }}>
+              <TreeSelect
+                treeData={groupTree}
+                placeholder="请选择目标分组"
+                value={targetGroupId}
+                onChange={value => setTargetGroupId(value)}
+                style={{
+                  width: '100%',
+                }}
+                fieldNames={{
+                  key: '_id',
+                  title: 'name',
+                  children: 'childs'
+                }}
+              />
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setShowMoveDialog(false)}>
+              取消
+            </Button>
+            <Button
+              disabled={!targetGroupId}
+              variant="contained"
+              onClick={handleConfirmMove}
+            >
+              移动
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </>
 
@@ -372,3 +430,5 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
 }
 
 export default BatchOperations
+
+

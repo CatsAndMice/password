@@ -325,6 +325,45 @@ class Home extends React.Component {
     this.handleAccountUpdate(account)
   }
 
+
+  handleBatchMove = (accountIds, targetGroupId) => {
+    const { decryptAccountDic, group2Accounts } = this.state
+    accountIds.forEach(id => {
+      if (decryptAccountDic[id]) {
+        const account = decryptAccountDic[id].account
+        const oldGroupId = account.groupId
+        // 从原分组移除
+        group2Accounts[oldGroupId].splice(group2Accounts[oldGroupId].indexOf(account), 1)
+        if (group2Accounts[oldGroupId].length === 0) {
+          delete group2Accounts[oldGroupId]
+        }
+        // 添加到新分组
+        if (targetGroupId in group2Accounts) {
+          account.sort = group2Accounts[targetGroupId][group2Accounts[targetGroupId].length - 1].sort + 1
+          group2Accounts[targetGroupId].push(account)
+        } else {
+          account.sort = 0
+          group2Accounts[targetGroupId] = [account]
+        }
+        // 更新账号分组ID
+        account.groupId = targetGroupId
+        // 保存到数据库
+        const result = window.utools.db.put(account)
+        if (result.error) {
+          return this.alertDbError()
+        }
+        
+        // 更新 decryptAccountDic 中的账号数据
+        decryptAccountDic[id] = {
+          ...decryptAccountDic[id],
+          account: { ...account }
+        }
+      }
+    })
+    this.setState({ group2Accounts, decryptAccountDic: { ...decryptAccountDic } })
+  }
+
+
   findGroupById = (id, childs) => {
     for (const c of childs) {
       if (c._id === id) return c
@@ -497,6 +536,7 @@ class Home extends React.Component {
                 group2Accounts={group2Accounts}
                 decryptAccountDic={decryptAccountDic}
                 onBatchDelete={this.handleBatchDelete}
+                onBatchMove={this.handleBatchMove}
               />
             </Dialog>
           )
