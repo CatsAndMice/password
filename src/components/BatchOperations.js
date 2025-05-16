@@ -163,11 +163,9 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
     for (const id in decryptAccountDic) {
       const cdata = decryptAccountDic[id]
       const groupId = cdata.account.groupId
-
       if (!groupedAccounts[groupId]) {
         groupedAccounts[groupId] = []
       }
-
       groupedAccounts[groupId].push({
         key: cdata.account._id,
         username: cdata.username || '-',
