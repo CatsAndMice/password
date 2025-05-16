@@ -24,7 +24,7 @@ import PasswordGeneratorDialog from './PasswordGeneratorDialog'
 import FolderIcon from '@mui/icons-material/Folder'
 
 
-const CURRENT_FEATURE_VERSION = '1.8.4' // 每次发布新功能时更新此版本号
+const CURRENT_FEATURE_VERSION = '1.9.0' // 每次发布新功能时更新此版本号
 
 // 在组件顶部添加状态
 const Header = ({ onFavoriteClick, showFavorites, onBackupClick, onBatchOperationsClick, groupIds, group2Accounts }) => {
@@ -281,7 +281,7 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick, onBatchOperatio
               }}
               sx={{ minHeight: '36px', borderRadius: '4px', paddingLeft: '8px' }}
             >
-              <svg t="1747277557580" className="icon mr-2"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3161" width="20" height="20"><path d="M774.144 340.992H238.592A114.688 114.688 0 0 0 123.904 455.68v307.2a114.688 114.688 0 0 0 114.688 114.688h535.552a114.688 114.688 0 0 0 114.688-114.688v-307.2a114.688 114.688 0 0 0-114.688-114.688z m-114.688 295.424h-125.952v126.464a27.136 27.136 0 1 1-54.784 0v-126.976H353.28a27.648 27.648 0 0 1 0-54.784h125.44V454.656a27.136 27.136 0 1 1 54.784 0v126.464h125.44a27.648 27.648 0 0 1 0 54.784zM331.264 229.888h358.4a25.6 25.6 0 0 0 0-51.2h-358.4a25.6 25.6 0 1 0 0 51.2zM228.864 313.856h563.2a25.6 25.6 0 0 0 0-51.2h-563.2a25.6 25.6 0 0 0 0 51.2z" fill="rgba(0, 0, 0, 0.6)" p-id="3162"></path></svg>
+              <svg t="1747277557580" className="icon mr-2" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3161" width="20" height="20"><path d="M774.144 340.992H238.592A114.688 114.688 0 0 0 123.904 455.68v307.2a114.688 114.688 0 0 0 114.688 114.688h535.552a114.688 114.688 0 0 0 114.688-114.688v-307.2a114.688 114.688 0 0 0-114.688-114.688z m-114.688 295.424h-125.952v126.464a27.136 27.136 0 1 1-54.784 0v-126.976H353.28a27.648 27.648 0 0 1 0-54.784h125.44V454.656a27.136 27.136 0 1 1 54.784 0v126.464h125.44a27.648 27.648 0 0 1 0 54.784zM331.264 229.888h358.4a25.6 25.6 0 0 0 0-51.2h-358.4a25.6 25.6 0 1 0 0 51.2zM228.864 313.856h563.2a25.6 25.6 0 0 0 0-51.2h-563.2a25.6 25.6 0 0 0 0 51.2z" fill="rgba(0, 0, 0, 0.6)" p-id="3162"></path></svg>
               帐号批量管理
               <NewBadge />
             </MenuItem>
