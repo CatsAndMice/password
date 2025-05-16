@@ -183,6 +183,9 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
   }
 
   const setFilter = () => {
+    Object.keys(groupDic).forEach(id => {
+      groupName(id)
+    })
     const groupEntries = Object.entries(groupId2NameCache)
     const filters = groupEntries.map(([id, name]) => ({
       text: name,
@@ -220,7 +223,6 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
           );
         },
         onFilter: (value, row) => {
-          console.log(value, row);
           return value ? row.title.indexOf(value) !== -1 : true
         },
         onFilterDropdownVisibleChange: (visible) => {
@@ -229,8 +231,8 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
           }
         },
       }
-      return newColumns;
-    });
+      return newColumns
+    })
   }
 
   const handleConfirmMove = () => {
@@ -248,8 +250,8 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
 
   useEffect(() => {
     generateGroupDic(groupTree, groupDic)
-    getList()
     setFilter()
+    getList()
     const height = window.innerHeight - 190
     setTableHeight(`${height}px`)
   }, [decryptAccountDic])
