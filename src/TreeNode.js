@@ -70,22 +70,8 @@ class TreeNode extends React.Component {
               </div>
             ) : (
               <div className='tree-node-title flex items-center '>
-                {isSelected ? (<svg width="16" height="16" className='mr-2 shrink-0' viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_714_6439)">
-                    <path d="M12.7186 3.42859H6.9899L5.43659 1.90479H1.55331C0.69899 1.90479 0 2.5905 0 3.42859L0 13.115L14.2719 13.4352V4.9524C14.2719 4.11431 13.573 3.42859 12.7186 3.42859Z" fill="#FFA000" />
-                    <path d="M14.5829 4.79419H2.39166C1.56233 4.79419 0.818729 5.4132 0.739211 6.16976L0.0163179 13.0476C-0.0632003 13.8042 0.550283 14.4232 1.37961 14.4232H13.5709C14.4002 14.4232 15.1438 13.8042 15.2234 13.0476L15.9462 6.16976C16.0258 5.4132 15.4123 4.79419 14.5829 4.79419Z" fill="#FFCA28" />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_714_6439">
-                      <rect width="16" height="16" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
-                ) : (<svg width="16" height="16" className='mr-2 shrink-0' viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M14.4 3.42859H7.2L5.6 1.90479H1.6C0.72 1.90479 0 2.5905 0 3.42859V6.47621H16V4.9524C16 4.11431 15.28 3.42859 14.4 3.42859Z" fill="#FFA000" />
-                  <path d="M14.4 3.42859H1.6C0.72 3.42859 0 4.13879 0 5.00682V12.898C0 13.766 0.72 14.4762 1.6 14.4762H14.4C15.28 14.4762 16 13.766 16 12.898V5.00682C16 4.13879 15.28 3.42859 14.4 3.42859Z" fill="#FFCA28" />
-                </svg>
-                )}
+                {isSelected ? (<svg width="16" height="16" className='mr-2 shrink-0 preserve-color' fill="none" viewBox="0 0 16.938 16" ><defs><radialGradient id="20590c_0" cx="0" cy="0" r="1" gradientTransform="matrix(-1.30746 8.44444 -10.17364 -1.5752 10.224 5.778)" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FFF"></stop><stop offset="100%" stop-color="#FFF" stop-opacity="0"></stop></radialGradient><linearGradient id="20590c_1" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="#2B95FF"></stop><stop offset="100%" stop-color="#006CDB"></stop></linearGradient></defs><path fill="url(#20590c_1)" d="M.89 13.022a1.2 1.2 0 0 0 1.2 1.2H13.91a1.2 1.2 0 0 0 1.2-1.2V4.444c0-.981-.796-1.777-1.777-1.777H8.776c-.286 0-.57-.056-.836-.164l-1.384-.562a2.222 2.222 0 0 0-.836-.163H2.667c-.982 0-1.778.796-1.778 1.778v9.466Z"></path><path fill="#7ABCFF" d="M.911 12.661a1.244 1.244 0 0 0 1.204 1.561h11.969c.605 0 1.135-.408 1.289-.994l1.52-5.778a1.333 1.333 0 0 0-1.289-1.672H3.75c-.605 0-1.135.408-1.29.994l-1.549 5.89Z"></path><path fill="url(#20590c_0)" fill-opacity="0.6" fill-rule="evenodd" d="M.911 12.661a1.244 1.244 0 0 0 1.204 1.561h11.969c.605 0 1.135-.408 1.289-.994l1.52-5.778a1.333 1.333 0 0 0-1.289-1.672H3.75c-.605 0-1.135.408-1.29.994l-1.549 5.89Zm.43.113q-.1.38.14.692.24.312.634.312h11.969q.685 0 .86-.663l1.52-5.778q.11-.422-.156-.769-.267-.346-.704-.346H3.75q-.685 0-.86.663l-1.55 5.89Z"></path></svg>
+                ) : (<svg width="16" height="16" fill="none" className='mr-2 shrink-0 preserve-color' viewBox="0 0 16 16" ><defs><radialGradient id="a1e0d9_0" cx="0" cy="0" r="1" gradientTransform="matrix(0 6.71137 -9.762 0 8 4.444)" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FFF"></stop><stop offset="100%" stop-color="#FFF" stop-opacity="0"></stop></radialGradient><linearGradient id="a1e0d9_1" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="#2B95FF"></stop><stop offset="100%" stop-color="#006CDB"></stop></linearGradient></defs><path fill="url(#a1e0d9_1)" d="M.89 3.556V10.8a1.2 1.2 0 0 0 1.2 1.2H13.91a1.2 1.2 0 0 0 1.2-1.2V4.444c0-.981-.796-1.777-1.777-1.777H8.776c-.286 0-.57-.056-.836-.164l-1.384-.562a2.222 2.222 0 0 0-.836-.163H2.667c-.982 0-1.778.796-1.778 1.778Z"></path><path fill="#7ABCFF" d="M.89 12.889c0 .736.596 1.333 1.332 1.333h11.556c.736 0 1.333-.597 1.333-1.333V5.778c0-.737-.597-1.334-1.333-1.334H2.222c-.736 0-1.333.597-1.333 1.334v7.11Z" data-spm-anchor-id="a2q3o.26061305.0.i11.55c07cc1q3UejY"></path><path fill="url(#a1e0d9_0)" fill-opacity="0.4" fill-rule="evenodd" d="M.89 12.889c0 .736.596 1.333 1.332 1.333h11.556c.736 0 1.333-.597 1.333-1.333V5.778c0-.737-.597-1.334-1.333-1.334H2.222c-.736 0-1.333.597-1.333 1.334v7.11Zm.444 0q0 .368.26.628t.628.26h11.556q.368 0 .629-.26.26-.26.26-.628V5.778q0-.368-.26-.629-.26-.26-.629-.26H2.222q-.368 0-.628.26t-.26.629v7.11Z"></path></svg>)}
                 <span className='truncate flex-grow'>{title}</span>
               </div>
             )}
