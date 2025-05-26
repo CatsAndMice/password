@@ -1,7 +1,6 @@
 import React from 'react'
 import { DropTarget, DragSource } from 'react-dnd'
-import Folder from '@mui/icons-material/Folder'
-import FolderOpen from '@mui/icons-material/FolderOpen'
+
 const nodeSource = {
   canDrag(props) {
     return !props.isInput
