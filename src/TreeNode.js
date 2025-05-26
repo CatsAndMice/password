@@ -70,8 +70,8 @@ class TreeNode extends React.Component {
                 />
               </div>
             ) : (
-              <div className='tree-node-title'>
-                {isSelected ? (<svg width="16" height="16" className='mr-2' viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <div className='tree-node-title flex items-center '>
+                {isSelected ? (<svg width="16" height="16" className='mr-2 shrink-0' viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clip-path="url(#clip0_714_6439)">
                     <path d="M12.7186 3.42859H6.9899L5.43659 1.90479H1.55331C0.69899 1.90479 0 2.5905 0 3.42859L0 13.115L14.2719 13.4352V4.9524C14.2719 4.11431 13.573 3.42859 12.7186 3.42859Z" fill="#FFA000" />
                     <path d="M14.5829 4.79419H2.39166C1.56233 4.79419 0.818729 5.4132 0.739211 6.16976L0.0163179 13.0476C-0.0632003 13.8042 0.550283 14.4232 1.37961 14.4232H13.5709C14.4002 14.4232 15.1438 13.8042 15.2234 13.0476L15.9462 6.16976C16.0258 5.4132 15.4123 4.79419 14.5829 4.79419Z" fill="#FFCA28" />
@@ -82,12 +82,12 @@ class TreeNode extends React.Component {
                     </clipPath>
                   </defs>
                 </svg>
-                ) : (<svg width="16" height="16" className='mr-2' viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                ) : (<svg width="16" height="16" className='mr-2 shrink-0' viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M14.4 3.42859H7.2L5.6 1.90479H1.6C0.72 1.90479 0 2.5905 0 3.42859V6.47621H16V4.9524C16 4.11431 15.28 3.42859 14.4 3.42859Z" fill="#FFA000" />
                   <path d="M14.4 3.42859H1.6C0.72 3.42859 0 4.13879 0 5.00682V12.898C0 13.766 0.72 14.4762 1.6 14.4762H14.4C15.28 14.4762 16 13.766 16 12.898V5.00682C16 4.13879 15.28 3.42859 14.4 3.42859Z" fill="#FFCA28" />
                 </svg>
                 )}
-                {title}
+                <span className='truncate flex-grow'>{title}</span>
               </div>
             )}
             {(!isInput && badge > 0) && <div className='tree-node-badge'><span>{badge}</span></div>}
