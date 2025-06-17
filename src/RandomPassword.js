@@ -11,11 +11,11 @@ import TextFormatIcon from '@mui/icons-material/TextFormat'
 import GolfCourseIcon from '@mui/icons-material/GolfCourse'
 import VpnKeyIcon from '@mui/icons-material/VpnKey'
 import ReplayIcon from '@mui/icons-material/Replay'
-
+import Button from '@mui/material/Button'
 export default class RandomPassword extends React.Component {
   defaultSpecialCharacters = '!@#$%^&*()_+-=,.<>?/\\|[]{}:;"\'`~'
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     const specialCharacters = window.localStorage.getItem('specialCharacters@' + this.props.from) || this.defaultSpecialCharacters
     let charTypes = window.localStorage.getItem('charTypes@' + this.props.from)
@@ -115,7 +115,15 @@ export default class RandomPassword extends React.Component {
     return this.state.passwordValue
   }
 
-  render () {
+
+  handleReset = () => {
+    if (this.defaultSpecialCharacters === this.state.specialCharacters) return
+    this.setState({ specialCharacters: this.defaultSpecialCharacters })
+    window.localStorage.removeItem('specialCharacters@' + this.props.from)
+    setTimeout(() => { this.generateRandom() }, 50)
+  }
+
+  render() {
     const { specialCharacters, charTypes, lengthValue, passwordValue } = this.state
     return (
       <div className='random-password'>
@@ -137,7 +145,17 @@ export default class RandomPassword extends React.Component {
               />
               <FormControlLabel
                 control={<Checkbox checked={charTypes.includes('*')} onChange={this.handleCharChange} value='*' color='primary' />}
-                label={<TextField variant='standard' style={{ width: 240 }} disabled={!charTypes.includes('*')} value={specialCharacters} onKeyDown={this.handleKeyDownSpecialCharacters} onChange={this.handleChangeSpecialCharacters} />}
+                label={
+                  <>
+                    <TextField variant='standard' style={{ width: 240 }} disabled={!charTypes.includes('*')} value={specialCharacters} onKeyDown={this.handleKeyDownSpecialCharacters} onChange={this.handleChangeSpecialCharacters} />
+                    <Button
+                      size="small"
+                      onClick={this.handleReset}
+                    >
+                      重置
+                    </Button>
+                  </>
+                }
               />
             </FormGroup>
           </div>
