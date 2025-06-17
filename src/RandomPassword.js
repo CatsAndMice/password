@@ -152,7 +152,7 @@ export default class RandomPassword extends React.Component {
                       size="small"
                       onClick={this.handleReset}
                     >
-                      重置
+                      重置字符
                     </Button>
                   </>
                 }
