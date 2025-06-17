@@ -150,6 +150,7 @@ export default class RandomPassword extends React.Component {
                     <TextField variant='standard' style={{ width: 240 }} disabled={!charTypes.includes('*')} value={specialCharacters} onKeyDown={this.handleKeyDownSpecialCharacters} onChange={this.handleChangeSpecialCharacters} />
                     <Button
                       size="small"
+                      disabled={specialCharacters === this.defaultSpecialCharacters}
                       onClick={this.handleReset}
                     >
                       重置字符
