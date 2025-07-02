@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 import SendIcon from '@mui/icons-material/Send'
 import RandomPassword from '../RandomPassword'
+import AddIcon from '@mui/icons-material/Add'
 import D1API from '@/api/d1'
 const PasswordGeneratorDialog = ({ open, onClose }) => {
     const randomPasswordRef = useRef(null)
@@ -76,6 +77,14 @@ const PasswordGeneratorDialog = ({ open, onClose }) => {
                 <RandomPassword from='random' ref={randomPasswordRef} />
             </DialogContent>
             <DialogActions>
+                <Button
+                    // onClick={handleCopyAndCreate} 
+                    variant='contained'
+                    color='secondary'
+                    endIcon={<AddIcon />}
+                >
+                    复制并创建帐号
+                </Button>
                 <Button onClick={handleCopy} variant='contained' color='primary' endIcon={<SendIcon />}>复制密码 ({window.utools.isMacOs() ? '⌘' : 'Ctrl'}+C)</Button>
             </DialogActions>
         </Dialog>
