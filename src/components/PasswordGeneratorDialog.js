@@ -20,6 +20,13 @@ const PasswordGeneratorDialog = ({ open, onClose }) => {
         D1API.trackEvent({ message: '使用密码生成器' })
     }
 
+
+    const handleCopyAndCreate = () => {
+        const passwordValue = randomPasswordRef.current.getPasswordValue()
+        window.utools.copyText(passwordValue)
+        //TODO: 调用创建账号
+    }
+
     useEffect(() => {
         if (randomPasswordRef.current) {
             randomPasswordRef.current.generateRandom()
@@ -77,14 +84,7 @@ const PasswordGeneratorDialog = ({ open, onClose }) => {
                 <RandomPassword from='random' ref={randomPasswordRef} />
             </DialogContent>
             <DialogActions>
-                <Button
-                    // onClick={handleCopyAndCreate} 
-                    variant='contained'
-                    color='secondary'
-                    endIcon={<AddIcon />}
-                >
-                    复制并创建帐号
-                </Button>
+                <Button onClick={handleCopyAndCreate} >复制并创建帐号</Button>
                 <Button onClick={handleCopy} variant='contained' color='primary' endIcon={<SendIcon />}>复制密码 ({window.utools.isMacOs() ? '⌘' : 'Ctrl'}+C)</Button>
             </DialogActions>
         </Dialog>

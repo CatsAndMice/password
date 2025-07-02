@@ -26,6 +26,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import D1API from './api/d1'
 import ShareButton from './components/ShareButton'
 import { autoFill } from './utils/autoFill'  // 添加导入
+import AddIcon from '@mui/icons-material/Add'
 
 // 基础样式配置
 const baseTextFieldStyle = {
