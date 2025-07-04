@@ -20,6 +20,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import BackupSettings from './components/BackupSettings'
 import { getFavicon } from "./utils/getFavicon"
 import BatchOperations from "./components/BatchOperations"
+import PasswordGeneratorDialog from './components/PasswordGeneratorDialog'
 import D1API from '@/api/d1'
 class Home extends React.Component {
   state = {
@@ -31,7 +32,8 @@ class Home extends React.Component {
     importData: null,
     showFavorites: false,
     showBackupSettings: false,
-    showBatchOperations: false
+    showBatchOperations: false,
+    openPasswordGenerator: false
   }
 
   handleBatchOperationsClick = () => {
@@ -352,7 +354,7 @@ class Home extends React.Component {
         if (result.error) {
           return this.alertDbError()
         }
-        
+
         // 更新 decryptAccountDic 中的账号数据
         decryptAccountDic[id] = {
           ...decryptAccountDic[id],
@@ -455,6 +457,20 @@ class Home extends React.Component {
     }
   }
 
+
+  handleOpenPasswordGenerator = () => {
+    this.setState({
+      openPasswordGenerator: true
+    })
+  }
+
+  handleClosePasswordGenerator = () => {
+    this.setState({
+      openPasswordGenerator: false
+    })
+  }
+
+
   // 在 render 中添加导入对话框组件
   render() {
     const { searchKey, selectedGroupId, groupIds, groupTree, group2Accounts, sortedGroup, decryptAccountDic, snackbarMessage, exportData, importData, showFavorites, showBackupSettings, showBatchOperations } = this.state
@@ -471,7 +487,7 @@ class Home extends React.Component {
     }
     return (
       <div className='home'>
-        {!searchKey && (
+        {!searchKey && (<>
           <Header
             onFavoriteClick={this.handleFavoriteClick}
             showFavorites={this.state.showFavorites}
@@ -479,7 +495,16 @@ class Home extends React.Component {
             onBatchOperationsClick={this.handleBatchOperationsClick}
             groupIds={groupIds}
             group2Accounts={group2Accounts}
+            handleOpenPasswordGenerator={this.handleOpenPasswordGenerator}
           />
+          {/* 密码生成器 */}
+          <PasswordGeneratorDialog
+            data={selectedGroupId ? group2Accounts[selectedGroupId] : null}
+            open={this.state.openPasswordGenerator}
+            onClose={this.handleClosePasswordGenerator}
+            onCreate={this.handleAccountCreate}
+          />
+        </>
         )}
 
         {/* 添加备份设置对话框 */}

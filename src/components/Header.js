@@ -20,19 +20,19 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import FeedbackIcon from '@mui/icons-material/Feedback'
 import NewBadge from './NewBadge'
 import KeyIcon from '@mui/icons-material/Key'
-import PasswordGeneratorDialog from './PasswordGeneratorDialog'
+// import PasswordGeneratorDialog from './PasswordGeneratorDialog'
 import FolderIcon from '@mui/icons-material/Folder'
 
 
 const CURRENT_FEATURE_VERSION = '1.9.0' // 每次发布新功能时更新此版本号
 
 // 在组件顶部添加状态
-const Header = ({ onFavoriteClick, showFavorites, onBackupClick, onBatchOperationsClick, groupIds, group2Accounts }) => {
+const Header = ({ onFavoriteClick, showFavorites, onBackupClick,handleOpenPasswordGenerator, onBatchOperationsClick, groupIds, group2Accounts }) => {
 
   const groupCount = groupIds?.length || 0
   const accountCount = Object.values(group2Accounts || {}).reduce((total, accounts) => total + accounts.length, 0)
 
-  const [openPasswordGenerator, setOpenPasswordGenerator] = React.useState(false)
+  // const [openPasswordGenerator, setOpenPasswordGenerator] = React.useState(false)
   // 从 localStorage 读取初始状态
   const [isDarkMode, setIsDarkMode] = React.useState(() => {
     const savedMode = localStorage.getItem('theme-mode')
@@ -84,13 +84,13 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick, onBatchOperatio
     setAnchorEl(null)
   }
 
-  const handleOpenPasswordGenerator = () => {
-    setOpenPasswordGenerator(true)
-  }
+  // const handleOpenPasswordGenerator = () => {
+  //   setOpenPasswordGenerator(true)
+  // }
 
-  const handleClosePasswordGenerator = () => {
-    setOpenPasswordGenerator(false)
-  }
+  // const handleClosePasswordGenerator = () => {
+  //   setOpenPasswordGenerator(false)
+  // }
 
   // 添加系统主题监听
   React.useEffect(() => {
@@ -336,11 +336,6 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick, onBatchOperatio
           </Menu>
         </Toolbar>
       </AppBar>
-
-      <PasswordGeneratorDialog
-        open={openPasswordGenerator}
-        onClose={handleClosePasswordGenerator}
-      />
     </>
   )
 }

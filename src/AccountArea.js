@@ -14,9 +14,9 @@ import Button from '@mui/material/Button'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import OCRInputDialog from './components/OCRInputDialog'
+import { scrollAccount } from "./utils/scrollAccount"
 
 
-const ACCOUNT_ITEM_HEIGHT = 65 //每个帐号的高度
 export default class AccountArea extends React.Component {
   isMacOs = window.utools.isMacOs()
 
@@ -63,6 +63,16 @@ export default class AccountArea extends React.Component {
         }
       }, 10)
     }
+
+    window.emitter.off('selectedIndex')
+    const self = this
+    console.log('绑定');
+    
+    window.emitter.on('selectedIndex', (selectedIndex) => {
+      setTimeout(() => {
+        self.setState({ selectedIndex })
+      }, 10)
+    })
     window.addEventListener('keydown', this.keydownAction)
   }
 
@@ -92,20 +102,7 @@ export default class AccountArea extends React.Component {
     if (isNumber) {
       this.setState({ selectedIndex: index })
     }
-
-    setTimeout(() => {
-      const listBody = document.querySelector('.account-list-body')
-      if (listBody) {
-        // 根据是否有索引值决定滚动位置
-        if (isNumber) {
-          listBody.scrollTop = ACCOUNT_ITEM_HEIGHT * index
-        } else {
-          listBody.scrollTop = listBody.scrollHeight
-        }
-      }
-      const titleInput = document.querySelector('#accountFormTitle')
-      if (titleInput) titleInput.focus()
-    }, 50)
+    scrollAccount(isNumber, index)
   }
 
   handleCloseDeleteConfirm = () => {
@@ -149,9 +146,6 @@ export default class AccountArea extends React.Component {
   handleOCRConfirm = (accountData) => {
     this.handleCreate(accountData)
   }
-
-
-
 
   render() {
     const { keyIV, data, onUpdate, decryptAccountDic } = this.props

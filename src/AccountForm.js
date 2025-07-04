@@ -26,7 +26,6 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import D1API from './api/d1'
 import ShareButton from './components/ShareButton'
 import { autoFill } from './utils/autoFill'  // 添加导入
-import AddIcon from '@mui/icons-material/Add'
 
 // 基础样式配置
 const baseTextFieldStyle = {
@@ -358,14 +357,6 @@ export default class AccountForm extends React.Component {
           padding: 0,
           position: 'relative'
         }}>
-
-          <div
-            className="flex items-center justify-center w-8 h-8 rounded-md cursor-pointer transition-all duration-200 border border-dashed border-black/10 hover:bg-black/[0.04] hover:border-[#2196F3]/50"
-            onClick={this.handleIconClick}
-          >
-            <AddIcon className="text-[20px] text-[#00000099]" />
-          </div>
-
 
           {/* <Tooltip title={isLocked ? '点击解锁编辑' : '点击锁定'}> */}
           <Button

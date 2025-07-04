@@ -8,9 +8,9 @@ import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 import SendIcon from '@mui/icons-material/Send'
 import RandomPassword from '../RandomPassword'
-import AddIcon from '@mui/icons-material/Add'
+import { scrollAccount } from "../utils/scrollAccount"
 import D1API from '@/api/d1'
-const PasswordGeneratorDialog = ({ open, onClose }) => {
+const PasswordGeneratorDialog = ({ data, open, onClose, onCreate }) => {
     const randomPasswordRef = useRef(null)
 
     const handleCopy = () => {
@@ -24,7 +24,14 @@ const PasswordGeneratorDialog = ({ open, onClose }) => {
     const handleCopyAndCreate = () => {
         const passwordValue = randomPasswordRef.current.getPasswordValue()
         window.utools.copyText(passwordValue)
-        //TODO: 调用创建账号
+        onClose()
+        const index = onCreate({ password: passwordValue })
+        const isNumber = typeof index === 'number'
+        if (isNumber) {
+            window.emitter.emit('selectedIndex', index)
+        }
+        scrollAccount(isNumber, index)
+        D1API.trackEvent({ message: '使用密码生成器' })
     }
 
     useEffect(() => {
@@ -84,7 +91,7 @@ const PasswordGeneratorDialog = ({ open, onClose }) => {
                 <RandomPassword from='random' ref={randomPasswordRef} />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCopyAndCreate} >复制并创建帐号</Button>
+                <Button onClick={handleCopyAndCreate} disabled={!data}>复制并创建帐号</Button>
                 <Button onClick={handleCopy} variant='contained' color='primary' endIcon={<SendIcon />}>复制密码 ({window.utools.isMacOs() ? '⌘' : 'Ctrl'}+C)</Button>
             </DialogActions>
         </Dialog>
