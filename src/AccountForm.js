@@ -296,7 +296,7 @@ export default class AccountForm extends React.Component {
         }
       }))
 
-      D1API.trackEvent({ message: `跳转链接：${this.state.linkValue}` })
+      D1API.trackEvent({ message: `跳转链接` })
       // 延迟 1 秒后再跳转
       setTimeout(() => {
         window.utools.hideMainWindow(false)
