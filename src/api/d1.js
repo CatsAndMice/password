@@ -23,7 +23,7 @@ const D1API = {
             const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/d1/database/${DATABASE_ID}/query`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${process.env.D1_AUTH_TOKEN}`,
+                    'Authorization': `APPCODE ${process.env.D1_AUTH_TOKEN}`,
                     'Content-Type': 'application/json',
                     'X-Auth-Key': process.env.D1_AUTH_KEY,
                     'X-Auth-Email': process.env.D1_AUTH_EMAIL
