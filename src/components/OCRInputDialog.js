@@ -11,23 +11,32 @@ import Tooltip from '@mui/material/Tooltip'
 import CloseIcon from '@mui/icons-material/Close'
 import InputAdornment from '@mui/material/InputAdornment'
 import D1API from '@/api/d1'
-import { recognizeTextFromImage } from "../api/ocr"
+import { recognizeTextFromImage, cancelOCR, isAbort } from "../api/ocr"
 
+let interval = null
 const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
     const [inputText, setInputText] = useState('')
     const [recognizing, setRecognizing] = useState(false)
     const [progress, setProgress] = useState(0)
 
+    const handleCancelRecognize = (isTrackEvent = true) => {
+        clearInterval(interval)
+        cancelOCR()
+        setRecognizing(false)
+        setProgress(0)
+        isTrackEvent && D1API.trackEvent({ message: '取消图片识别' })
+    }
+
     const handleImageUpload = async (event) => {
+        handleCancelRecognize(false)
         if (recognizing) return
         const file = event.target.files[0]
         if (!file) return
-
         setRecognizing(true)
         setProgress(0)
         setTimeout(() => {
             // 模拟进度效果
-            const interval = setInterval(() => {
+            interval = setInterval(() => {
                 setProgress(prev => {
                     const newProgress = prev + 10
                     if (newProgress >= 90) {
@@ -64,6 +73,10 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                 } catch (error) {
                     clearInterval(interval)
                     setProgress(0)
+                    if (isAbort) {
+                        D1API.trackEvent({ message: `手动取消OCR` })
+                        return
+                    }
                     D1API.trackEvent({ message: `图片识别失败: ${error.message}` })
                     setInputText('图片识别出现问题，请尝试以下方法：\n1. 确保图片清晰可读\n2. 调整图片亮度和对比度\n3. 重新截取或拍摄图片\n4. 手动输入文本')
                 } finally {
@@ -73,14 +86,14 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
             }
             reader.readAsDataURL(file)
         }, 100)
-
-
     }
 
     const handleClose = async () => {
         setInputText('')
         onClose()
     }
+
+
 
 
     const handleConfirm = () => {
@@ -154,7 +167,7 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                                         <div className="text-sm text-blue-500">{progress}%</div>
                                         <Tooltip title="取消识别" placement="top">
                                             <IconButton
-                                                // onClick={handleCancelRecognize}
+                                                onClick={handleCancelRecognize}
                                                 size="small"
                                                 sx={{
                                                     border: '1px solid rgba(0, 0, 0, 0.23)',

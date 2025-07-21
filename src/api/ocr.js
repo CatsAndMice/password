@@ -1,9 +1,12 @@
-// https://tysbgpu.market.alicloudapi.com/api/predict/ocr_general
-
-
+let controller = null
+export let isAbort = false
 export const recognizeTextFromImage = async (imageData, options = {}) => {
+    controller = new AbortController()
+    const signal = controller.signal
+    isAbort = false
     const response = await fetch('https://tysbgpu.market.alicloudapi.com/api/predict/ocr_general', {
         method: 'POST',
+        signal, // 添加signal支持取消
         headers: {
             'Authorization': `APPCODE ${process.env.AppCode}`,
             'Content-Type': 'application/json; charset=UTF-8'
@@ -18,18 +21,14 @@ export const recognizeTextFromImage = async (imageData, options = {}) => {
             }
         })
     });
+    controller = null
     return await response.json();
 }
 
-// curl -i -k -X POST 'https://tysbgpu.market.alicloudapi.com/api/predict/ocr_general'  -H 'Authorization:APPCODE 你自己的AppCode' --data '{
-//     "image":    "图片二进制数据的base64编码/图片url"，
-//     "configure": 
-//         {
-//             "output_prob" : true,               # 
-//             "output_keypoints": false,          #是否输出文字框角点 
-//             "skip_detection": false,             #是否跳过文字检测步骤直接进行文字识别
-//             "without_predicting_direction": false   #是否关闭文字行方向预测
-//         }
-// }' -H 'Content-Type:application/json; charset=UTF-8'
-
-//根据API的要求，定义相对应的Content-Type
+export const cancelOCR = () => {
+    if (controller) {
+        controller.abort()
+        isAbort = true
+        controller = null
+    }
+}
