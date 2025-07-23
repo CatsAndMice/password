@@ -12,6 +12,13 @@ import GolfCourseIcon from '@mui/icons-material/GolfCourse'
 import VpnKeyIcon from '@mui/icons-material/VpnKey'
 import ReplayIcon from '@mui/icons-material/Replay'
 import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import zxcvbn from 'zxcvbn'
+import { SUGGESTION_TRANSLATIONS } from "./utils/const"
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 export default class RandomPassword extends React.Component {
   defaultSpecialCharacters = '!@#$%^&*()_+-=,.<>?/\\|[]{}:;"\'`~'
 
@@ -33,7 +40,8 @@ export default class RandomPassword extends React.Component {
       specialCharacters,
       charTypes,
       lengthValue,
-      passwordValue: ''
+      passwordValue: '',
+      passwordStrength: {}
     }
   }
 
@@ -96,7 +104,8 @@ export default class RandomPassword extends React.Component {
     for (var i = 0; i < this.state.lengthValue; i++) {
       passwordValue += sourceStr.charAt(Math.floor(Math.random() * sourceStr.length))
     }
-    this.setState({ passwordValue })
+    const passwordStrength = this.calculatePasswordStrength(passwordValue);
+    this.setState({ passwordValue, passwordStrength })
   }
 
   handleReplay = () => {
@@ -108,7 +117,8 @@ export default class RandomPassword extends React.Component {
     if (!value) {
       return this.generateRandom()
     }
-    this.setState({ passwordValue: value, lengthValue: value.length })
+    const passwordStrength = this.calculatePasswordStrength(value)
+    this.setState({ passwordValue: value, lengthValue: value.length, passwordStrength })
   }
 
   getPasswordValue = () => {
@@ -123,8 +133,21 @@ export default class RandomPassword extends React.Component {
     setTimeout(() => { this.generateRandom() }, 50)
   }
 
+  calculatePasswordStrength(password) {
+    if (!password) return { score: 0, color: 'error', label: '无' };
+    const result = zxcvbn(password);
+    const colors = ['error', 'warning', 'info', 'success', 'success'];
+    const labels = ['非常弱', '弱', '中等', '强', '非常强'];
+    return {
+      score: result.score,
+      color: colors[result.score],
+      label: labels[result.score],
+      feedback: result.feedback.suggestions?.map(s => SUGGESTION_TRANSLATIONS[s] || s) || []
+    };
+  }
+
   render() {
-    const { specialCharacters, charTypes, lengthValue, passwordValue } = this.state
+    const { specialCharacters, charTypes, lengthValue, passwordValue, passwordStrength } = this.state
     return (
       <div className='random-password'>
         <div>
@@ -193,6 +216,39 @@ export default class RandomPassword extends React.Component {
                 )
               }}
             />
+            <Box className="mt-1 flex justify-end items-center gap-2 ">
+              <Tooltip arrow placement="top" title={
+                (passwordStrength.feedback && passwordStrength.feedback.length > 0) ? (
+                  <React.Fragment>
+                    {passwordStrength.feedback?.map((f, index) => (
+                      <div key={index} style={{ margin: '2px 0' }}>
+                        {f}
+                      </div>
+                    ))}
+                  </React.Fragment>
+                ) : '无建议'
+              }>
+                <div className='flex items-center cursor-pointer'>
+                  {passwordStrength.score < 2 ? (
+                    <ErrorOutlineIcon className="text-red-500 !text-base" />
+                  ) : passwordStrength.score < 4 ? (
+                    <WarningAmberIcon className="text-yellow-500 !text-base" />
+                  ) : (
+                    <CheckCircleOutlineIcon className="text-green-500 !text-base" />
+                  )}
+                  <Typography variant='caption' className={`
+                  !font-medium
+                  !ml-1
+                  ${passwordStrength.score < 2 ? 'text-red-500' :
+                      passwordStrength.score < 4 ? 'text-yellow-500' : 'text-green-500'}
+                `}>
+                    {passwordStrength.score < 2 ? '弱密码' :
+                      passwordStrength.score < 4 ? '中等强度' : '强密码'}
+                    {passwordStrength.score < 4 && ' (建议改进)'}
+                  </Typography>
+                </div>
+              </Tooltip>
+            </Box>
           </div>
         </div>
       </div>)
