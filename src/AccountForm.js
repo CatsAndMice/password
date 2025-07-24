@@ -357,8 +357,6 @@ export default class AccountForm extends React.Component {
           padding: 0,
           position: 'relative'
         }}>
-
-          {/* <Tooltip title={isLocked ? '点击解锁编辑' : '点击锁定'}> */}
           <Button
             onClick={this.toggleLock}
             size='small'
@@ -376,7 +374,6 @@ export default class AccountForm extends React.Component {
           >
             {isLocked ? '已锁定' : '已解锁'}
           </Button>
-          {/* </Tooltip> */}
         </div>
         <SnackbarMessage message={message} />
         <div>
@@ -433,9 +430,6 @@ export default class AccountForm extends React.Component {
             }}
           />
         </div>
-
-
-
         {(expandedSections.password || !isLocked || passwordValue) && (
           <div>
             <TextField
@@ -515,8 +509,6 @@ export default class AccountForm extends React.Component {
             <PasswordStrengthIndicator password={passwordValue} />
           </div>
         )}
-
-
         {(expandedSections.link || !isLocked || linkValue) && (
           <div>
             <TextField
@@ -537,7 +529,6 @@ export default class AccountForm extends React.Component {
                     <SvgIcon fontSize="small" >
                       <svg t="1742436154120" className='account-form-prev-icon' style={{ fill: 'rgba(44, 62, 80, 0.7)' }} viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7012" width="20" height="20"><path d="M509.4 508.5m-469.5 0a469.5 469.5 0 1 0 939 0 469.5 469.5 0 1 0-939 0Z" p-id="7013"></path><path d="M617.9 467.2c-0.3-0.6-0.5-1.2-0.8-1.8-0.1-0.1-0.1-0.2-0.2-0.4-7.2-14.5-22.7-23.9-39.9-22.6-22.5 1.8-39.4 21.5-37.6 44 0.5 5.8 2.1 11.1 4.6 15.9 11.4 25.7 6.4 57-14.6 78.1l-110 110.2c-27.3 27.3-71.7 27.3-99 0-27.3-27.3-27.3-71.7 0-99l41-41-0.3-0.3c9.5-8.2 15-20.7 14-34.1-1.8-22.5-21.5-39.4-44-37.6-10.8 0.8-20.2 5.8-27 13.2l-0.1-0.1-41.8 41.8c-59.4 59.4-59.4 155.6 0 215 59.4 59.4 155.6 59.4 215 0l110.3-110.3c46.2-46.3 56.2-114.8 30.4-171z" fill="#FFFFFF" p-id="7014"></path><path d="M762.4 257.4c-59.4-59.4-155.6-59.4-215 0L437.1 367.7c-46.2 46.2-56.2 114.7-30.5 170.9 0.3 0.6 0.5 1.2 0.8 1.8 0.1 0.1 0.1 0.2 0.2 0.4 7.2 14.5 22.7 23.9 39.9 22.6 22.5-1.8 39.4-21.5 37.6-44-0.5-5.8-2.1-11.1-4.6-15.9-11.4-25.7-6.4-57 14.6-78.1l110.1-110.1c27.3-27.3 71.7-27.3 99 0 27.3 27.3 27.3 71.7 0 99l-41 41 0.3 0.3c-9.5 8.2-15 20.7-14 34.1 1.8 22.5 21.5 39.4 44 37.6 10.8-0.8 20.2-5.8 27-13.2l0.1 0.1 41.8-41.8c59.3-59.4 59.3-155.7 0-215z" fill="#FFFFFF" p-id="7015"></path></svg>
                     </SvgIcon>
-                    {/* <LinkIcon   /> */}
                   </InputAdornment>
                 ),
                 endAdornment: (
@@ -572,8 +563,6 @@ export default class AccountForm extends React.Component {
             />
           </div>
         )}
-
-
         {(expandedSections.remark || !isLocked || remarkValue) && (<div>
           <TextField
             fullWidth
