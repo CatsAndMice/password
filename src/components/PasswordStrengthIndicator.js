@@ -7,8 +7,8 @@ import Box from '@mui/material/Box'
 import zxcvbn from 'zxcvbn'
 import Tooltip from '@mui/material/Tooltip'
 import { SUGGESTION_TRANSLATIONS } from '../utils/const'
-const safelyScore = 3,
-    somewhatScore = 2
+const safelyScore = 3,//密码强度安全
+    somewhatScore = 2//密码强度一般
 const PasswordStrengthIndicator = ({ password }) => {
     const [passwordStrength, setPasswordStrength] = useState({})
     const calculatePasswordStrength = (password) => {
