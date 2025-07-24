@@ -234,7 +234,6 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                     </svg>
                     <div className="text-sm text-slate-400">
                         请按照格式输入：标题,用户名,密码,链接,说明（使用英文逗号分隔）
-                        <span className="ml-1 text-slate-300">输入框支持粘贴图片识别内容</span>
                     </div>
                 </div>
 
