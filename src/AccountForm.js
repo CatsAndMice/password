@@ -399,37 +399,41 @@ export default class AccountForm extends React.Component {
             }}
           />
         </div>
-        <div>
-          <TextField
-            fullWidth
-            label='用户名'
-            onChange={this.handleInputChang('username')}
-            value={usernameValue}
-            disabled={isLocked}
-            variant='standard'
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <AccountBoxIcon className='account-form-prev-icon' />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <Tooltip title={'复制用户名，快捷键 ' + (this.isMacOs ? 'Command' : 'Ctrl') + '+U'} placement='top-end'>
-                    <IconButton tabIndex={-1} onClick={this.handleCopy('usernameValue')} size='small'>
-                      <ContentCopyIcon />
-                    </IconButton>
-                  </Tooltip>
-                </InputAdornment>
-              )
-            }}
-            sx={{
-              ...baseTextFieldStyle,
-              opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
-              transition: 'opacity 0.2s', // 添加过渡效果
-            }}
-          />
-        </div>
+
+        {(expandedSections.username || !isLocked || usernameValue) && (
+          <div>
+            <TextField
+              fullWidth
+              label='用户名'
+              onChange={this.handleInputChang('username')}
+              value={usernameValue}
+              disabled={isLocked}
+              variant='standard'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <AccountBoxIcon className='account-form-prev-icon' />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <Tooltip title={'复制用户名，快捷键 ' + (this.isMacOs ? 'Command' : 'Ctrl') + '+U'} placement='top-end'>
+                      <IconButton tabIndex={-1} onClick={this.handleCopy('usernameValue')} size='small'>
+                        <ContentCopyIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                )
+              }}
+              sx={{
+                ...baseTextFieldStyle,
+                opacity: isLocked ? 0.9 : 1, // 轻微降低整体不透明度
+                transition: 'opacity 0.2s', // 添加过渡效果
+              }}
+            />
+          </div>
+        )}
+
         {(expandedSections.password || !isLocked || passwordValue) && (
           <div>
             <TextField
