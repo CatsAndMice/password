@@ -7,7 +7,8 @@ import Box from '@mui/material/Box'
 import zxcvbn from 'zxcvbn'
 import Tooltip from '@mui/material/Tooltip'
 import { SUGGESTION_TRANSLATIONS } from '../utils/const'
-
+const safelyScore = 3,
+    somewhatScore = 2
 const PasswordStrengthIndicator = ({ password }) => {
     const [passwordStrength, setPasswordStrength] = useState({})
     const calculatePasswordStrength = (password) => {
@@ -16,7 +17,7 @@ const PasswordStrengthIndicator = ({ password }) => {
         const colors = ['error', 'warning', 'info', 'success', 'success'];
         const labels = ['非常弱', '弱', '中等', '强', '非常强'];
 
-        if (result.score > 1 && result.score < 4 && result.feedback.suggestions.length === 0) {
+        if (result.score === 2 && result.feedback.suggestions.length === 0) {
             result.feedback.suggestions.push('建议增长密码长度')
         }
 
@@ -31,7 +32,7 @@ const PasswordStrengthIndicator = ({ password }) => {
         setPasswordStrength(calculatePasswordStrength(password))
     }, [password])
 
-    if (passwordStrength.label && passwordStrength.score < 4) {
+    if (passwordStrength.label && passwordStrength.score < safelyScore) {
         return (
             <Box className="mt-1 flex justify-end items-center gap-2">
                 <Tooltip arrow placement="top" title={
@@ -46,9 +47,9 @@ const PasswordStrengthIndicator = ({ password }) => {
                     ) : '无建议'
                 }>
                     <div className='flex items-center cursor-pointer'>
-                        {passwordStrength.score < 2 ? (
+                        {passwordStrength.score < somewhatScore ? (
                             <ErrorOutlineIcon className="text-red-500 !text-base" />
-                        ) : passwordStrength.score < 4 ? (
+                        ) : passwordStrength.score < safelyScore ? (
                             <WarningAmberIcon className="text-yellow-500 !text-base" />
                         ) : (
                             <CheckCircleOutlineIcon className="text-green-500 !text-base" />
@@ -56,12 +57,12 @@ const PasswordStrengthIndicator = ({ password }) => {
                         <Typography variant='caption' className={`
                 !font-medium
                 !ml-1
-                ${passwordStrength.score < 2 ? 'text-red-500' :
-                                passwordStrength.score < 4 ? 'text-yellow-500' : 'text-green-500'}
+                ${passwordStrength.score < somewhatScore ? 'text-red-500' :
+                                passwordStrength.score < safelyScore ? 'text-yellow-500' : 'text-green-500'}
               `}>
-                            {passwordStrength.score < 2 ? '弱密码' :
-                                passwordStrength.score < 4 ? '中等强度' : '强密码'}
-                            {passwordStrength.score < 4 && ' (建议改进)'}
+                            {passwordStrength.score < somewhatScore ? '弱密码' :
+                                passwordStrength.score < safelyScore ? '中等强度' : '强密码'}
+                            {passwordStrength.score < safelyScore && ' (建议改进)'}
                         </Typography>
                     </div>
                 </Tooltip>
