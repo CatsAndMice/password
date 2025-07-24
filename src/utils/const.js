@@ -3,7 +3,7 @@ export const FEEDBACK_URL = 'https://zwf4g5rfwiy.feishu.cn/share/base/form/shrcn
 export const SUGGESTION_TRANSLATIONS = {
   "Use a few words, avoid common phrases": "少词，避免常见短语",
   "No need for symbols, digits, or uppercase letters": "不需要符号、数字或大写字母",
-  "Add another word or two. Uncommon words are better.": "建议添加1-2个不常用的单词",
+  "Add another word or two. Uncommon words are better.": "建议增长密码长度",
   "Use a longer keyboard pattern with more turns": "使用更长的键盘路径并增加转折",
   "Avoid repeated words and characters": "避免重复的单词和字符",
   "Avoid sequences": "避免连续字符（如123、abc）",

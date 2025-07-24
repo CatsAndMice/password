@@ -26,7 +26,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import D1API from './api/d1'
 import ShareButton from './components/ShareButton'
 import { autoFill } from './utils/autoFill'  // 添加导入
-
+import PasswordStrengthIndicator from "./components/PasswordStrengthIndicator"
 // 基础样式配置
 const baseTextFieldStyle = {
   '& .MuiInput-underline:before': {
@@ -512,6 +512,7 @@ export default class AccountForm extends React.Component {
                 </div>
               </div>
             </Popover>
+            <PasswordStrengthIndicator password={passwordValue} />
           </div>
         )}
 
