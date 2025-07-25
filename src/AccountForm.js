@@ -357,23 +357,44 @@ export default class AccountForm extends React.Component {
           padding: 0,
           position: 'relative'
         }}>
-          <Button
-            onClick={this.toggleLock}
-            size='small'
-            startIcon={isLocked ? <LockOutlinedIcon /> : <LockOpenOutlinedIcon />}
-            sx={{
-              '&:hover': {
-                backgroundColor: isLocked ? 'rgba(0, 0, 0, 0.08)' : 'rgba(33, 150, 243, 0.12)',
-              },
-              transition: 'all 0.2s',
-              borderRadius: '6px',
-              color: isLocked ? 'rgba(0, 0, 0, 0.6)' : '#2196F3',
-              textTransform: 'none',
-              minWidth: 'auto'
-            }}
-          >
-            {isLocked ? '已锁定' : '已解锁'}
-          </Button>
+          <Tooltip title={isLocked ? "解锁" : "锁定"} placement='top'>
+            <Button
+              onClick={this.toggleLock}
+              size='small'
+              sx={{
+                '&:hover': {
+                  backgroundColor: isLocked ? 'rgba(0, 0, 0, 0.08)' : 'rgba(33, 150, 243, 0.12)',
+                },
+                transition: 'all 0.2s',
+                borderRadius: '6px',
+                color: isLocked ? 'rgba(0, 0, 0, 0.6)' : '#2196F3',
+                textTransform: 'none',
+                minWidth: 'auto'
+              }}
+            >
+              {isLocked ? <LockOutlinedIcon size='small' /> : <LockOpenOutlinedIcon size='small' />}
+            </Button>
+          </Tooltip>
+
+          {/* <Tooltip title={isFavorite ? "取消收藏" : "收藏"} placement='top'>
+            <Button
+              onClick={this.toggleFavorite}
+              size='small'
+              sx={{
+                '&:hover': {
+                  backgroundColor: isFavorite ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 193, 7, 0.12)',
+                },
+                transition: 'all 0.2s',
+                borderRadius: '6px',
+                color: isFavorite ? 'rgba(0, 0, 0, 0.6)' : '#FFC107',
+                textTransform: 'none',
+                minWidth: 'auto',
+                marginLeft: '8px'
+              }}
+            >
+              {isFavorite ? <StarIcon size='small' color='primary' /> : <StarBorderIcon size='small' />}
+            </Button>
+          </Tooltip> */}
         </div>
         <SnackbarMessage message={message} />
         <div>
