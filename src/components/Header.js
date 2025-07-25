@@ -175,7 +175,7 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick,handleOpenPasswo
               minWidth: 'auto',
             }}
           >
-            常用账号
+            常用收藏
           </Button>
 
           {/* 修改暗黑模式切换按钮 */}

@@ -663,22 +663,15 @@ class Home extends React.Component {
         if (!decryptedAcc.title && !decryptedAcc.username) {
           return
         }
-
-        // 确保 clickCount 存在，如果不存在则默认为 0
-        const clickCount = account.clickCount || 0
-        allAccounts.push({
-          ...account,
-          clickCount
-        })
+        if (account.isFavorite) {
+          allAccounts.push({
+            ...account
+          })
+        }
       })
     })
 
-    // 按点击次数降序排序并获取前20个
-    const favorites = allAccounts
-      .sort((a, b) => (b.clickCount || 0) - (a.clickCount || 0))
-      .slice(0, 20)
-
-    return favorites.length > 0 ? favorites : null
+    return allAccounts
   }
 }
 

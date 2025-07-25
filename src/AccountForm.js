@@ -27,6 +27,9 @@ import D1API from './api/d1'
 import ShareButton from './components/ShareButton'
 import { autoFill } from './utils/autoFill'  // 添加导入
 import PasswordStrengthIndicator from "./components/PasswordStrengthIndicator"
+import StarOutlineIcon from '@mui/icons-material/StarOutline'
+import StarIcon from '@mui/icons-material/Star'
+
 // 基础样式配置
 const baseTextFieldStyle = {
   '& .MuiInput-underline:before': {
@@ -92,13 +95,14 @@ export default class AccountForm extends React.Component {
     remarkValue: '',
     linkValue: '',
     passwordEye: false,
+    isFavorite: false,
     randomPasswordEl: null,
     message: { key: 0, type: 'info', body: '' }, // 添加消息状态
     isLocked: true,
     expandedSections: {
       password: false,
       link: false,
-      remark: false
+      remark: false,
     }
   }
 
@@ -141,10 +145,12 @@ export default class AccountForm extends React.Component {
     const { stateValue } = this.decryptAndUpdateState(this.props.data, this.props.keyIV)
     this.setState({
       ...stateValue,
+      isFavorite: this.props.data.isFavorite || false,
       expandedSections: {
         password: Boolean(stateValue.passwordValue),
         link: Boolean(stateValue.linkValue),
-        remark: Boolean(stateValue.remarkValue)
+        remark: Boolean(stateValue.remarkValue),
+
       }
     })
     window.addEventListener('keydown', this.keydownAction, true)
@@ -157,12 +163,15 @@ export default class AccountForm extends React.Component {
     if (mode === 'FAVORITE') {
       stateValue.isLocked = this.state.isLocked
     }
+    console.log(nextProps.data);
+
     this.setState({
       ...stateValue,
+      isFavorite: nextProps.data.isFavorite || false,
       expandedSections: {
         password: Boolean(stateValue.passwordValue),
         link: Boolean(stateValue.linkValue),
-        remark: Boolean(stateValue.remarkValue)
+        remark: Boolean(stateValue.remarkValue),
       }
     })
   }
@@ -239,20 +248,21 @@ export default class AccountForm extends React.Component {
     }, 300)
   }
 
-  updateClickCount = () => {
+  toggleFavorite = () => {
+    const isFavorite = this.state.isFavorite
     const updatedAccount = {
       ...this.props.data,
-      clickCount: (this.props.data.clickCount || 0) + 1
+      isFavorite: !isFavorite
     }
-    this.props.data.clickCount = updatedAccount.clickCount
+    //引用数据修改
+    this.props.data.isFavorite = !isFavorite
+    this.setState({ isFavorite: !isFavorite })
     this.props.onUpdate(updatedAccount)
   }
 
   handleCopy = (target) => () => {
     const targetValue = this.state[target]
     window.utools.copyText(targetValue)
-    // 增加点击计数
-    this.updateClickCount()
   }
 
   handlePasswordVisible = () => {
@@ -277,8 +287,6 @@ export default class AccountForm extends React.Component {
   handleOpenLink = () => {
     if (!this.state.linkValue) return
 
-    // 增加点击计数
-    this.updateClickCount()
 
     // 如果存在用户名或密码，将它们组合复制到剪贴板
     if (this.state.usernameValue || this.state.passwordValue) {
@@ -287,7 +295,6 @@ export default class AccountForm extends React.Component {
         this.state.passwordValue && `密码：${this.state.passwordValue}`
       ].filter(Boolean).join('\n')
       window.utools.copyText(copyText)
-      // this.props.showMessage && this.props.showMessage('已复制登录信息到剪贴板', 'info')
       this.setState(prevState => ({
         message: {
           key: prevState.message.key + 1,
@@ -346,7 +353,7 @@ export default class AccountForm extends React.Component {
 
   // 在 render 方法中使用
   render() {
-    const { titleValue, usernameValue, passwordValue, linkValue, remarkValue, passwordEye, randomPasswordEl, message, isLocked, expandedSections } = this.state
+    const { titleValue, usernameValue, passwordValue, linkValue, isFavorite, remarkValue, passwordEye, randomPasswordEl, message, isLocked, expandedSections } = this.state
     const { mode } = this.props // 从 props 中获取是否为搜索模式
 
     return (
@@ -361,31 +368,26 @@ export default class AccountForm extends React.Component {
             <IconButton
               onClick={this.toggleLock}
               size='small'
-              className='!rounded-full !p-1'
+              className='!rounded-full !p-1 !mr-2'
+              sx={{
+                color: isLocked ? 'rgba(0, 0, 0, 0.6)' : '#2196F3',
+              }}
             >
               {isLocked ? <LockOutlinedIcon size='small' /> : <LockOpenOutlinedIcon size='small' />}
             </IconButton>
           </Tooltip>
 
-          {/* <Tooltip title={isFavorite ? "取消收藏" : "收藏"} placement='top'>
-            <Button
+          <Tooltip title={isFavorite ? "取消收藏" : "收藏"} placement='top'>
+            <IconButton
               onClick={this.toggleFavorite}
               size='small'
               sx={{
-                '&:hover': {
-                  backgroundColor: isFavorite ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 193, 7, 0.12)',
-                },
-                transition: 'all 0.2s',
-                borderRadius: '6px',
-                color: isFavorite ? 'rgba(0, 0, 0, 0.6)' : '#FFC107',
-                textTransform: 'none',
-                minWidth: 'auto',
-                marginLeft: '8px'
+                color: 'rgba(0, 0, 0, 0.6)'
               }}
             >
-              {isFavorite ? <StarIcon size='small' color='primary' /> : <StarBorderIcon size='small' />}
-            </Button>
-          </Tooltip> */}
+              {isFavorite ? <StarIcon size='small' color='primary' style={{ color: '#2196F3' }} /> : <StarOutlineIcon size='small' />}
+            </IconButton>
+          </Tooltip>
         </div>
         <SnackbarMessage message={message} />
         <div>
@@ -559,7 +561,6 @@ export default class AccountForm extends React.Component {
                       <IconButton
                         tabIndex={-1}
                         onClick={() => {
-                          this.updateClickCount()
                           autoFill(this.state)
                         }}
                         size='small'

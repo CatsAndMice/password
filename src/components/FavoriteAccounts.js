@@ -100,7 +100,7 @@ const FavoriteAccounts = ({
                         backgroundColor: '#fff !important',
                         borderBottom: '1px solid rgba(224, 224, 224, 1) !important'
                       }}
-                    >使用次数</TableCell>
+                    >密码</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -116,33 +116,12 @@ const FavoriteAccounts = ({
                       <TableCell id={`${item._id}_title`}>{decryptAccountDic[item._id]?.title || '-'}</TableCell>
                       <TableCell id={`${item._id}_username`}>{decryptAccountDic[item._id]?.username || '-'}</TableCell>
                       <TableCell sx={{ color: 'text.secondary' }}>
-                        {item.clickCount >= 1000
-                          ? `${(item.clickCount / 1000).toFixed(1)}k`
-                          : item.clickCount || 0}
+                        ******
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
-              <Box
-                sx={{
-                  padding: '8px 0',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  display: 'flex',
-                  justifyContent: 'center'
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: 'rgba(0, 0, 0, 0.45)',
-                    fontSize: '12px',
-                    userSelect: 'none'
-                  }}
-                >
-                  仅展示使用频率最高的 20 个账号
-                </Typography>
-              </Box>
             </TableContainer>
           </div>
           <div className="search-form" style={{
@@ -173,7 +152,7 @@ const FavoriteAccounts = ({
         >
           <StarBorderIcon sx={{ fontSize: 64, mb: 2, opacity: 0.5 }} />
           <Typography variant="body1" sx={{ opacity: 0.75 }}>
-            暂无常用账号
+            暂无常用收藏
           </Typography>
         </Box>
       )}
