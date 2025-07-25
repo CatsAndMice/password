@@ -100,6 +100,7 @@ export default class AccountForm extends React.Component {
     message: { key: 0, type: 'info', body: '' }, // 添加消息状态
     isLocked: true,
     expandedSections: {
+      username: false,
       password: false,
       link: false,
       remark: false,
@@ -147,6 +148,7 @@ export default class AccountForm extends React.Component {
       ...stateValue,
       isFavorite: this.props.data.isFavorite || false,
       expandedSections: {
+        username: Boolean(stateValue.usernameValue),
         password: Boolean(stateValue.passwordValue),
         link: Boolean(stateValue.linkValue),
         remark: Boolean(stateValue.remarkValue),
@@ -168,6 +170,7 @@ export default class AccountForm extends React.Component {
       ...stateValue,
       isFavorite: nextProps.data.isFavorite || false,
       expandedSections: {
+        username: Boolean(stateValue.usernameValue),
         password: Boolean(stateValue.passwordValue),
         link: Boolean(stateValue.linkValue),
         remark: Boolean(stateValue.remarkValue),
@@ -638,6 +641,7 @@ export default class AccountForm extends React.Component {
                 const allExpanded = !Object.values(expandedSections).includes(false);
                 this.setState({
                   expandedSections: {
+                    username: !allExpanded,
                     password: !allExpanded,
                     link: !allExpanded,
                     remark: !allExpanded
