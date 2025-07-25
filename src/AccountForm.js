@@ -358,22 +358,13 @@ export default class AccountForm extends React.Component {
           position: 'relative'
         }}>
           <Tooltip title={isLocked ? "解锁" : "锁定"} placement='top'>
-            <Button
+            <IconButton
               onClick={this.toggleLock}
               size='small'
-              sx={{
-                '&:hover': {
-                  backgroundColor: isLocked ? 'rgba(0, 0, 0, 0.08)' : 'rgba(33, 150, 243, 0.12)',
-                },
-                transition: 'all 0.2s',
-                borderRadius: '6px',
-                color: isLocked ? 'rgba(0, 0, 0, 0.6)' : '#2196F3',
-                textTransform: 'none',
-                minWidth: 'auto'
-              }}
+              className='!rounded-full !p-1'
             >
               {isLocked ? <LockOutlinedIcon size='small' /> : <LockOpenOutlinedIcon size='small' />}
-            </Button>
+            </IconButton>
           </Tooltip>
 
           {/* <Tooltip title={isFavorite ? "取消收藏" : "收藏"} placement='top'>
