@@ -163,7 +163,6 @@ export default class AccountForm extends React.Component {
     if (mode === 'FAVORITE') {
       stateValue.isLocked = this.state.isLocked
     }
-    console.log(nextProps.data);
 
     this.setState({
       ...stateValue,
