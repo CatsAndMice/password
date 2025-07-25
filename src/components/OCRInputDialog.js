@@ -18,6 +18,7 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
     const [inputText, setInputText] = useState('')
     const [recognizing, setRecognizing] = useState(false)
     const [progress, setProgress] = useState(0)
+    const [isSimpleMode, setSimpleMode] = useState(utools.dbStorage.getItem("isSimpleMode") || false)
 
     const handleCancelRecognize = (isTrackEvent = true) => {
         clearInterval(interval)
@@ -93,22 +94,55 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
         onClose()
     }
 
-
-
-
     const handleConfirm = () => {
         if (!inputText.trim()) return
-        // 解析输入文本
-        const [title, username, password, ...others] = inputText.split(',').map(item => item.trim())
-        onConfirm({
-            title: title || '',
-            username: username || '',
-            password: password || '',
-            link: others[0] || '',
-            remark: others[1] || ''
-        })
+        if (isSimpleMode) {
+            // 解析输入文本
+            const [title, url] = inputText.split(',').map(item => item.trim())
+            onConfirm({
+                title: title || '',
+                username: '',
+                password: '',
+                link: url || '',
+                remark: ''
+            })
+        } else {
+            // 解析输入文本
+            const [title, username, password, ...others] = inputText.split(',').map(item => item.trim())
+            onConfirm({
+                title: title || '',
+                username: username || '',
+                password: password || '',
+                link: others[0] || '',
+                remark: others[1] || ''
+            })
+        }
+
         handleClose()
         D1API.trackEvent({ message: '快速新建帐号' })
+    }
+
+    const getHtml = () => {
+        const [title, username, password, ...others] = inputText.split(',').map(item => item.trim())
+        return (
+            <div className="space-y-2 text-slate-500">
+                <div>标题：{title || '未填写'}</div>
+                <div>用户名：{username || '未填写'}</div>
+                <div>密码：{password || '未填写'}</div>
+                <div>链接：{others[0] || '未填写'}</div>
+                <div>说明：{others[1] || '未填写'}</div>
+            </div>
+        )
+    }
+
+    const getSimpleHtml = () => {
+        const [title, url] = inputText.split(',').map(item => item.trim())
+        return (
+            <div className="space-y-2 text-slate-500">
+                <div>标题：{title || '未填写'}</div>
+                <div>链接：{url || '未填写'}</div>
+            </div>
+        )
     }
 
     return (
@@ -129,7 +163,39 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                 alignItems: 'center',
                 justifyContent: 'space-between'
             }}>
-                快速新增账号
+                <div className='flex items-center' >
+                    <span>快速新增账号</span>
+                    <div className="ml-3 flex items-center text-xs cursor-pointer" style={{
+                        color: '#9ca4b2',
+                        height: '24px',
+                    }}>
+                        <span className='text-center   border-l border-t inline-block  border-b border-gray-300 rounded-l-full px-2 ' style={{
+                            lineHeight: '22px',
+                            ...(isSimpleMode ? {} : { color: '#2196F3', borderColor: '#cde1fd', backgroundColor: '#eff6fe' })
+                        }}
+                            onClick={() => setSimpleMode(() => {
+                                utools.dbStorage.setItem("isSimpleMode", false)
+                                return false
+                            })}
+                        >
+                            完整版
+                        </span>
+                        <span className='border-r h-full' style={{
+                            borderColor: '#cde1fd',
+                        }} ></span>
+                        <span className='text-center border-r border-t inline-block  border-b border-gray-300 rounded-r-full px-2 ' style={{
+                            lineHeight: '22px',
+                            ...(isSimpleMode ? { color: '#2196F3', borderColor: '#cde1fd', backgroundColor: '#eff6fe' } : {})
+                        }}
+                            onClick={() => setSimpleMode(() => {
+                                utools.dbStorage.setItem("isSimpleMode", true)
+                                return true
+                            })}>
+                            简洁版
+                        </span>
+                    </div>
+                </div>
+
                 <IconButton
                     onClick={handleClose}
 
@@ -151,7 +217,7 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                     fullWidth
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
-                    placeholder=" 请按照格式输入：标题,用户名,密码,链接,说明（使用英文逗号分隔）"
+                    placeholder={isSimpleMode ? "请按照格式输入：标题,链接（使用英文逗号分隔）" : "请按照格式输入：标题,用户名,密码,链接,说明（使用英文逗号分隔）"}
                     variant="outlined"
                     sx={{
                         '& .MuiOutlinedInput-root': {
@@ -228,12 +294,13 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                         }
                     }}
                 />
+
                 <div className="p-3 pl-0 flex items-center gap-2">
                     <svg className="w-5 h-5 text-slate-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <div className="text-sm text-slate-400">
-                        请按照格式输入：标题,用户名,密码,链接,说明（使用英文逗号分隔）
+                        {isSimpleMode ? "请按照格式输入：标题,链接（使用英文逗号分隔）" : "请按照格式输入：标题,用户名,密码,链接,说明（使用英文逗号分隔）"}
                     </div>
                 </div>
 
@@ -245,20 +312,8 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                         </svg>
                         预览结果
                     </div>
-                    {(() => {
-                        const [title, username, password, ...others] = inputText.split(',').map(item => item.trim())
-                        return (
-                            <div className="space-y-2 text-slate-500">
-                                <div>标题：{title || '未填写'}</div>
-                                <div>用户名：{username || '未填写'}</div>
-                                <div>密码：{password || '未填写'}</div>
-                                <div>链接：{others[0] || '未填写'}</div>
-                                <div>说明：{others[1] || '未填写'}</div>
-                            </div>
-                        )
-                    })()}
+                    {isSimpleMode ? getSimpleHtml() : getHtml()}
                 </div>
-
             </DialogContent>
             <DialogActions className="p-4 gap-2">
                 <Button
@@ -279,7 +334,7 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                     确定
                 </Button>
             </DialogActions>
-        </Dialog>
+        </Dialog >
     )
 }
 
