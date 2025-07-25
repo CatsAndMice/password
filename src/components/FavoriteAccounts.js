@@ -28,7 +28,6 @@ const FavoriteAccounts = ({ keyIV, decryptAccountDic, data, onUpdate }) => {
     }
   }
 
-
   // // 处理选中项
   useEffect(() => {
     const counts = data.length - 1

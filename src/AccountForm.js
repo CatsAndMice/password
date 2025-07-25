@@ -257,6 +257,7 @@ export default class AccountForm extends React.Component {
     this.props.data.isFavorite = !isFavorite
     this.setState({ isFavorite: !isFavorite })
     this.props.onUpdate(updatedAccount)
+    D1API.trackEvent({ message: '切换是否收藏' })
   }
 
   handleCopy = (target) => () => {
