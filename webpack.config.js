@@ -3,6 +3,7 @@ const outputPath = path.join(__dirname, 'dist')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
 const TerserPlugin = require('terser-webpack-plugin')  // 添加这行
+const fs = require('fs') // 添加文件系统模块
 
 module.exports = {
   target: 'web',
@@ -21,13 +22,14 @@ module.exports = {
   },
   plugins: [
     new CopyWebpackPlugin({ patterns: [{ from: 'public', to: outputPath }] }),
-    new Dotenv({
+    // 仅在 .env 文件存在时加载环境变量
+    ...(fs.existsSync('./.env') ? [new Dotenv({
       path: './.env', // 默认路径
       safe: true, // 加载 .env.example 文件并验证 .env 文件中的变量是否都存在
       systemvars: true, // 加载所有系统环境变量
       silent: true, // 隐藏警告和错误
       defaults: false // 不加载 .env.defaults 文件
-    })
+    })] : [])
   ],
   performance: {
     hints: false

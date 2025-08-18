@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "14.20.1"
+  },
   "scripts": {
     "dev": "webpack -w",
     "build": "webpack --mode production"

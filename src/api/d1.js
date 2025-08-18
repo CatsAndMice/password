@@ -19,6 +19,12 @@ const D1API = {
     async query(sql, params = []) {
         const DATABASE_ID = process.env.D1_DATABASE_ID,
             ACCOUNT_ID = process.env.D1_ACCOUNT_ID
+
+        if (!DATABASE_ID || !ACCOUNT_ID || !process.env.D1_AUTH_TOKEN || !process.env.D1_AUTH_KEY || !process.env.D1_AUTH_EMAIL) {
+            console.error('D1数据库配置缺失，请检查环境变量')
+            return null
+        }
+
         try {
             const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/d1/database/${DATABASE_ID}/query`, {
                 method: 'POST',
