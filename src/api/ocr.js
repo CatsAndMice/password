@@ -8,7 +8,7 @@ export const recognizeTextFromImage = async (imageData, options = {}) => {
         method: 'POST',
         signal, // 添加signal支持取消
         headers: {
-            'Authorization': `APPCODE ${process.env.AppCode}`,
+            // 'Authorization': `APPCODE ${process.env.AppCode}`,
             'Content-Type': 'application/json; charset=UTF-8'
         },
         body: JSON.stringify({
