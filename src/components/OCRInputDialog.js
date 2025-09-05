@@ -6,88 +6,12 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
-import PhotoCamera from '@mui/icons-material/PhotoCamera'
-import Tooltip from '@mui/material/Tooltip'
 import CloseIcon from '@mui/icons-material/Close'
-import InputAdornment from '@mui/material/InputAdornment'
 import D1API from '@/api/d1'
-import { recognizeTextFromImage, cancelOCR, isAbort } from "../api/ocr"
 
-let interval = null
 const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
     const [inputText, setInputText] = useState('')
-    const [recognizing, setRecognizing] = useState(false)
-    const [progress, setProgress] = useState(0)
     const [isSimpleMode, setSimpleMode] = useState(utools.dbStorage.getItem("isSimpleMode") || false)
-
-    const handleCancelRecognize = (isTrackEvent = true) => {
-        clearInterval(interval)
-        cancelOCR()
-        setRecognizing(false)
-        setProgress(0)
-        isTrackEvent && D1API.trackEvent({ message: '取消图片识别' })
-    }
-
-    const handleImageUpload = async (event) => {
-        handleCancelRecognize(false)
-        if (recognizing) return
-        const file = event.target.files[0]
-        if (!file) return
-        setRecognizing(true)
-        setProgress(0)
-        setTimeout(() => {
-            // 模拟进度效果
-            interval = setInterval(() => {
-                setProgress(prev => {
-                    const newProgress = prev + 10
-                    if (newProgress >= 90) {
-                        clearInterval(interval)
-                        return 90
-                    }
-                    return newProgress
-                })
-            }, 200)
-            const reader = new FileReader()
-            reader.onload = async (e) => {
-                try {
-                    const base64Data = e.target.result.split(',')[1]
-                    const result = await recognizeTextFromImage(base64Data)
-                    clearInterval(interval)
-                    setProgress(100)
-                    // 增强健壮性的识别结果处理
-                    let recognizedText = ''
-                    if (result && result.success && Array.isArray(result.ret)) {
-                        recognizedText = result.ret
-                            .filter(item => item && item.word && typeof item.word === 'string')
-                            .map(item => item.word)
-                            .filter(word => word.length > 0)
-                            .join('')
-                    }
-                    setRecognizing(false)
-                    if (!recognizedText) {
-                        setInputText('未能识别到有效文字内容')
-                        D1API.trackEvent({ message: '未能识别到有效文字内容' })
-                        return
-                    }
-                    setInputText(recognizedText)
-                    D1API.trackEvent({ message: '图片识别成功' })
-                } catch (error) {
-                    clearInterval(interval)
-                    setProgress(0)
-                    if (isAbort) {
-                        D1API.trackEvent({ message: `手动取消OCR` })
-                        return
-                    }
-                    D1API.trackEvent({ message: `图片识别失败: ${error.message}` })
-                    setInputText('图片识别出现问题，请尝试以下方法：\n1. 确保图片清晰可读\n2. 调整图片亮度和对比度\n3. 重新截取或拍摄图片\n4. 手动输入文本')
-                } finally {
-                    setRecognizing(false)
-                    setProgress(0)
-                }
-            }
-            reader.readAsDataURL(file)
-        }, 100)
-    }
 
     const handleClose = async () => {
         setInputText('')
@@ -223,74 +147,6 @@ const OCRInputDialog = ({ open, onClose, onConfirm, onCreate }) => {
                         '& .MuiOutlinedInput-root': {
                             borderRadius: '8px',
                             backgroundColor: '#ffffff'
-                        }
-                    }}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end" sx={{ alignSelf: 'flex-start', mt: 1, mr: 1 }}>
-                                {recognizing ? (
-                                    <div className="flex items-center gap-2">
-                                        <div className="text-sm text-blue-500">{progress}%</div>
-                                        <Tooltip title="取消识别" placement="top">
-                                            <IconButton
-                                                onClick={handleCancelRecognize}
-                                                size="small"
-                                                sx={{
-                                                    border: '1px solid rgba(0, 0, 0, 0.23)',
-                                                    borderRadius: '4px',
-                                                    '&:hover': {
-                                                        backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                                                    }
-                                                }}
-                                            >
-                                                <CloseIcon fontSize="small" />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </div>
-                                ) : (
-                                    <React.Fragment>
-                                        <input
-                                            type="file"
-                                            accept="image/bmp,image/jpeg,image/png,image/pbm,image/webp"
-                                            style={{ display: 'none' }}
-                                            onChange={handleImageUpload}
-                                            id="image-upload"
-                                        />
-                                        <label htmlFor="image-upload">
-                                            <Tooltip title="上传图片识别" placement="top">
-                                                <IconButton
-                                                    component="span"
-                                                    size="small"
-                                                    sx={{
-                                                        border: '1px solid rgba(0, 0, 0, 0.23)',
-                                                        borderRadius: '4px',
-                                                        '&:hover': {
-                                                            backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                                                        }
-                                                    }}
-                                                >
-                                                    <PhotoCamera fontSize="small" />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </label>
-                                    </React.Fragment>
-                                )}
-                            </InputAdornment>
-                        )
-                    }}
-
-                    onPaste={async (e) => {
-                        const items = e.clipboardData.items;
-                        for (let item of items) {
-                            if (item.type.indexOf('image') !== -1) {
-                                e.preventDefault();
-                                const file = item.getAsFile();
-                                try {
-                                    await handleImageUpload({ target: { files: [file] } });
-                                } catch (error) {
-                                    console.error('OCR 识别失败:', error);
-                                }
-                            }
                         }
                     }}
                 />
