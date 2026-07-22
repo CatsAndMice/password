@@ -81,7 +81,7 @@ export default class Reset extends React.Component {
           gap: '15px'
         }}>
           <CircularProgress color='secondary' size={40} />
-          <div style={{ color: '#666', fontSize: '16px' }}>修改中...</div>
+          <div style={{ color: 'var(--color-text-secondary)', fontSize: '16px' }}>修改中...</div>
         </div>
       )
     }
@@ -98,15 +98,15 @@ export default class Reset extends React.Component {
           flexDirection: 'column',
           gap: '25px',
           padding: '40px',
-          background: 'rgba(255, 255, 255, 0.9)',
+          background: 'var(--color-bg-card)',
           borderRadius: '16px',
-          boxShadow: '0 0 10px rgba(0,0,0,0.1), 0 0 20px rgba(0,0,0,0.05)',
+          boxShadow: 'var(--shadow-popup)',
           backdropFilter: 'blur(10px)',
           width: '360px'
         }}>
           <h2 style={{
             margin: 0,
-            color: '#2c3e50',
+            color: 'var(--color-text-primary)',
             fontSize: '24px',
             fontWeight: '500',
             textAlign: 'center'
@@ -142,11 +142,11 @@ export default class Reset extends React.Component {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: '12px',
-                backgroundColor: '#ffffff',
+                backgroundColor: 'var(--color-bg-input)',
                 '& input': {
-                  padding: '12px 14px',  // 调整输入框内边距
-                  height: '1.4em',  // 设置输入框高度
-                  lineHeight: '1.4em'  // 设置行高
+                  padding: '12px 14px',
+                  height: '1.4em',
+                  lineHeight: '1.4em'
                 }
               }
             }}
@@ -182,7 +182,7 @@ export default class Reset extends React.Component {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: '12px',
-                backgroundColor: '#ffffff',
+                backgroundColor: 'var(--color-bg-input)',
                 '& input': {
                   padding: '12px 14px',
                   height: '1.4em',
@@ -222,7 +222,7 @@ export default class Reset extends React.Component {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: '12px',
-                backgroundColor: '#ffffff',
+                backgroundColor: 'var(--color-bg-input)',
                 '& input': {
                   padding: '12px 14px',  // 调整输入框内边距
                   height: '1.4em',  // 设置输入框高度
@@ -261,10 +261,10 @@ export default class Reset extends React.Component {
                   padding: '12px',
                   fontSize: '16px',
                   textTransform: 'none',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                  background: 'linear-gradient(45deg, #FF4081 30%, #F50057 90%)',
+                  boxShadow: 'var(--shadow-card)',
+                  background: 'linear-gradient(45deg, var(--color-error) 30%, #F50057 90%)',
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #F50057 30%, #C51162 90%)'
+                    background: 'linear-gradient(45deg, var(--color-error-hover) 30%, #C51162 90%)'
                   }
                 }}
               >
@@ -272,7 +272,7 @@ export default class Reset extends React.Component {
               </Button>
             </div>
             <div style={{
-              color: '#666',
+              color: 'var(--color-text-secondary)',
               fontSize: '13px',
               textAlign: 'center',
               marginTop: '5px'

@@ -29,7 +29,7 @@ class TreeRoot extends React.Component {
       <div onClick={onClick} className='tree-root' style={(isOverCurrent && canDrop) ?
         {
           opacity: 0.7,
-          background: 'rgba(255, 255, 255, 1)',
+          background: 'var(--color-bg-card)',
           transition: 'all 0.3s ease'
         } :
         { transition: 'all 0.3s ease' }

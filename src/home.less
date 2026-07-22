@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--color-bg-gradient);
 
   .home-loading-spinner {
     width: 70px;
@@ -14,11 +14,11 @@
   .home-loading-spinner>div {
     width: 18px;
     height: 18px;
-    background-color: #2196F3;
+    background-color: var(--color-primary);
     border-radius: 100%;
     display: inline-block;
     animation: sk-bouncedelay 1s infinite ease-in-out both;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-card);
   }
 
   .home-loading-spinner .home-loading-bounce1 {
@@ -61,17 +61,7 @@
 .home {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-}
-
-html[data-theme='dark'] {
-  .home-loading {
-    background: rgb(255, 255, 255);
-  }
-
-  .home {
-    background: rgb(255, 255, 255);
-  }
+  background: var(--color-bg-gradient);
 }
 
 .home-body {
@@ -83,13 +73,13 @@ html[data-theme='dark'] {
     &:first-child {
       width: 25%;
       height: 100%;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      border-right: 1px solid var(--color-divider);
       box-sizing: border-box;
       position: relative;
-      background: rgb(255, 255, 255);
+      background: var(--color-bg-card);
       transition: width 0.3s ease;
-      overflow: visible; // 修改这里，让按钮可以溢出显示
-      min-width: 0; // 添加这行，允许宽度收缩到0
+      overflow: visible;
+      min-width: 0;
       &.collapsed {
         width: 0;
         border-right: none;
@@ -103,7 +93,7 @@ html[data-theme='dark'] {
     &:last-child {
       width: 75%;
       height: 100%;
-      background: rgb(255, 255, 255);
+      background: var(--color-bg-card);
       backdrop-filter: blur(10px);
       transition: width 0.3s ease;
     }
@@ -118,9 +108,9 @@ html[data-theme='dark'] {
 
 .random-password-popover {
   padding: 20px 30px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: var(--color-bg-card);
   border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-card);
 
   .random-password-popover-footer {
     text-align: right;

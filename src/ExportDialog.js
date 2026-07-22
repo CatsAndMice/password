@@ -90,7 +90,7 @@ export default class ExportDialog extends React.Component {
         <DialogContent dividers>
           <DialogContentText sx={{
             paddingBottom: '10px',
-            color: '#2c3e50'
+            color: 'var(--color-text-primary)'
           }}>
             导出「{data.group.name}」帐号数据
           </DialogContentText>
@@ -114,7 +114,7 @@ export default class ExportDialog extends React.Component {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: '8px',
-                backgroundColor: '#ffffff',
+                backgroundColor: 'var(--color-bg-card)',
                 '& input': {
                   padding: '8px 14px',
                   height: '1.4em',

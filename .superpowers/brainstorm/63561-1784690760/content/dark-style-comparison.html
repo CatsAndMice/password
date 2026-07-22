@@ -1,0 +1,111 @@
+<h2>暗黑模式风格对比</h2>
+<p class="subtitle">三种暗黑背景 + 项目现有主题蓝 #2196F3 的搭配效果</p>
+
+<div class="section">
+  <h3>效果预览</h3>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+    <!-- A: 深灰/石墨底 -->
+    <div class="card" data-choice="a" onclick="toggleSelect(this)" style="cursor: pointer;">
+      <div class="card-image" style="background: #1a1a2e; padding: 20px; min-height: 200px;">
+        <div style="background: #2a2a3a; padding: 12px; border-radius: 6px; margin-bottom: 8px;">
+          <div style="color: #e0e0e0; font-weight: bold; font-size: 13px;">账号卡片标题</div>
+          <div style="color: #888; font-size: 11px;">user@example.com</div>
+        </div>
+        <button style="background: #2196F3; color: white; padding: 6px 14px; border: none; border-radius: 4px; font-size: 12px;">操作按钮</button>
+        <div style="margin-top: 8px; background: #2a2a3a; padding: 10px; border-radius: 6px;">
+          <div style="display: flex; gap: 6px;">
+            <span style="background: #2196F3; color: white; padding: 2px 8px; border-radius: 3px; font-size: 10px;">分组</span>
+            <span style="background: #2196F3; color: white; padding: 2px 8px; border-radius: 3px; font-size: 10px;">标签</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h3>A) 深灰/石墨底</h3>
+        <p>背景 #1a1a2e · 卡片 #2a2a3a · 文本 #e0e0e0</p>
+      </div>
+    </div>
+
+    <!-- B: 纯黑底 OLED -->
+    <div class="card" data-choice="b" onclick="toggleSelect(this)" style="cursor: pointer;">
+      <div class="card-image" style="background: #000000; padding: 20px; min-height: 200px;">
+        <div style="background: #111111; padding: 12px; border-radius: 6px; margin-bottom: 8px;">
+          <div style="color: #f0f0f0; font-weight: bold; font-size: 13px;">账号卡片标题</div>
+          <div style="color: #999; font-size: 11px;">user@example.com</div>
+        </div>
+        <button style="background: #2196F3; color: white; padding: 6px 14px; border: none; border-radius: 4px; font-size: 12px;">操作按钮</button>
+        <div style="margin-top: 8px; background: #111111; padding: 10px; border-radius: 6px;">
+          <div style="display: flex; gap: 6px;">
+            <span style="background: #2196F3; color: white; padding: 2px 8px; border-radius: 3px; font-size: 10px;">分组</span>
+            <span style="background: #2196F3; color: white; padding: 2px 8px; border-radius: 3px; font-size: 10px;">标签</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h3>B) 纯黑底 OLED</h3>
+        <p>背景 #000000 · 卡片 #111111 · 文本 #f0f0f0</p>
+      </div>
+    </div>
+
+    <!-- C: 偏蓝暗黑 -->
+    <div class="card" data-choice="c" onclick="toggleSelect(this)" style="cursor: pointer;">
+      <div class="card-image" style="background: #0d1117; padding: 20px; min-height: 200px;">
+        <div style="background: #161b22; padding: 12px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #21262d;">
+          <div style="color: #c9d1d9; font-weight: bold; font-size: 13px;">账号卡片标题</div>
+          <div style="color: #8b949e; font-size: 11px;">user@example.com</div>
+        </div>
+        <button style="background: #2196F3; color: white; padding: 6px 14px; border: none; border-radius: 4px; font-size: 12px;">操作按钮</button>
+        <div style="margin-top: 8px; background: #161b22; padding: 10px; border-radius: 6px; border: 1px solid #21262d;">
+          <div style="display: flex; gap: 6px;">
+            <span style="background: #2196F3; color: white; padding: 2px 8px; border-radius: 3px; font-size: 10px;">分组</span>
+            <span style="background: #2196F3; color: white; padding: 2px 8px; border-radius: 3px; font-size: 10px;">标签</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h3>C) 偏蓝暗黑 ⭐ 推荐</h3>
+        <p>背景 #0d1117 · 卡片 #161b22 · 文本 #c9d1d9</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>对比分析</h3>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+    <div style="background: #f8f9fa; padding: 12px; border-radius: 6px;">
+      <strong>A) 深灰/石墨</strong>
+      <ul style="font-size: 13px; margin-top: 4px; padding-left: 16px;">
+        <li>温暖、柔和</li>
+        <li>层次感一般</li>
+        <li>卡片与背景区分不够</li>
+      </ul>
+    </div>
+    <div style="background: #f8f9fa; padding: 12px; border-radius: 6px;">
+      <strong>B) 纯黑 OLED</strong>
+      <ul style="font-size: 13px; margin-top: 4px; padding-left: 16px;">
+        <li>极简、省电</li>
+        <li>对比度过高易疲劳</li>
+        <li>无层次感，扁平化</li>
+      </ul>
+    </div>
+    <div style="background: #e6f3ff; padding: 12px; border-radius: 6px; border: 1px solid #2196F3;">
+      <strong>C) 偏蓝暗黑 ⭐</strong>
+      <ul style="font-size: 13px; margin-top: 4px; padding-left: 16px;">
+        <li>与 #2196F3 蓝色最和谐</li>
+        <li>带边框的卡片层次清晰</li>
+        <li>专业感强，类似 VS Code / GitHub</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>推荐理由</h3>
+  <p style="color: #2196F3;">
+    项目主题蓝 #2196F3 已有 50+ 处使用。偏蓝暗黑底色（#0d1117）带冷蓝调，与现有蓝色天然搭配，无需调整主色调。<br>
+    边框分割线 #21262d 让卡片层次关系比 A 方案更清晰，比 B 方案更有呼吸感。<br>
+    这是 GitHub、VS Code 暗黑主题验证过的成熟搭配模式。
+  </p>
+</div>
+
+<p class="subtitle" style="margin-top: 24px;">点击上方的卡片选择一个方案</p>

@@ -55,10 +55,10 @@ const FavoriteAccounts = ({ keyIV, decryptAccountDic, data, onUpdate }) => {
                   width: '6px'
                 },
                 '&::-webkit-scrollbar-thumb': {
-                  background: 'rgba(0, 0, 0, 0.2)',
+                  background: 'var(--color-scrollbar-thumb)',
                   borderRadius: '3px',
                   '&:hover': {
-                    background: 'rgba(0, 0, 0, 0.3)'
+                    background: 'var(--color-scrollbar-thumb)'
                   }
                 },
                 '&::-webkit-scrollbar-track': {
@@ -72,23 +72,23 @@ const FavoriteAccounts = ({ keyIV, decryptAccountDic, data, onUpdate }) => {
                     <TableCell
                       sx={{
                         width: '35%',
-                        backgroundColor: '#fff !important',
-                        borderBottom: '1px solid rgba(224, 224, 224, 1) !important'
+                        backgroundColor: 'var(--color-bg-card) !important',
+                        borderBottom: '1px solid var(--color-border) !important'
                       }}
                     >标题</TableCell>
                     <TableCell
                       sx={{
                         width: '35%',
-                        backgroundColor: '#fff !important',
-                        borderBottom: '1px solid rgba(224, 224, 224, 1) !important'
+                        backgroundColor: 'var(--color-bg-card) !important',
+                        borderBottom: '1px solid var(--color-border) !important'
                       }}
                     >用户名</TableCell>
                     <TableCell
                       align="center"
                       sx={{
                         width: '20%',
-                        backgroundColor: '#fff !important',
-                        borderBottom: '1px solid rgba(224, 224, 224, 1) !important'
+                        backgroundColor: 'var(--color-bg-card) !important',
+                        borderBottom: '1px solid var(--color-border) !important'
                       }}
                     >密码</TableCell>
                   </TableRow>
@@ -136,8 +136,8 @@ const FavoriteAccounts = ({ keyIV, decryptAccountDic, data, onUpdate }) => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            color: 'rgba(0, 0, 0, 0.38)',
-            backgroundColor: '#fff'
+            color: 'var(--color-text-disabled)',
+            backgroundColor: 'var(--color-bg-card)'
           }}
         >
           <StarBorderIcon sx={{ fontSize: 64, mb: 2, opacity: 0.5 }} />

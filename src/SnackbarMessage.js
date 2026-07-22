@@ -37,7 +37,7 @@ export default class SnackbarMessage extends React.Component {
           severity={type}
           sx={{ 
             minWidth: '250px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+            boxShadow: 'var(--shadow-card)'
           }}
         >
           {body}

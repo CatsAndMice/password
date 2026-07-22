@@ -1,0 +1,67 @@
+:root, [data-theme='light'] {
+  --color-bg-primary: #f5f7fa;
+  --color-bg-card: #ffffff;
+  --color-bg-card-hover: #f8f9fa;
+  --color-bg-input: #ffffff;
+  --color-bg-overlay: rgba(0, 0, 0, 0.04);
+  --color-bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-disabled: #9ca3af;
+  --color-text-link: #2196F3;
+
+  --color-primary: #2196F3;
+  --color-primary-hover: #1976D2;
+  --color-primary-light: rgba(33, 150, 243, 0.1);
+  --color-primary-light2: rgba(33, 150, 243, 0.05);
+
+  --color-border: #e5e7eb;
+  --color-border-light: #f3f4f6;
+  --color-divider: rgba(0, 0, 0, 0.08);
+
+  --color-success: #4CAF50;
+  --color-warning: #e67e22;
+  --color-error: #f44336;
+  --color-error-hover: #d32f2f;
+
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-popup: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  --color-scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --color-scrollbar-track: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] {
+  --color-bg-primary: #1a1f2e;
+  --color-bg-card: #222838;
+  --color-bg-card-hover: #2d3448;
+  --color-bg-input: #1e2536;
+  --color-bg-overlay: rgba(255, 255, 255, 0.08);
+  --color-bg-gradient: linear-gradient(135deg, #1a1f2e 0%, #222838 100%);
+
+  --color-text-primary: #f0f2f5;
+  --color-text-secondary: #a0aab8;
+  --color-text-disabled: #7a8498;
+  --color-text-link: #8ab4ff;
+
+  --color-primary: #7ab8ff;
+  --color-primary-hover: #9ecaff;
+  --color-primary-light: rgba(122, 184, 255, 0.18);
+  --color-primary-light2: rgba(122, 184, 255, 0.09);
+
+  --color-border: #3a4256;
+  --color-border-light: #2e3548;
+  --color-divider: rgba(255, 255, 255, 0.1);
+
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+  --color-error-hover: #fb8a8a;
+
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-popup: 0 4px 16px rgba(0, 0, 0, 0.4);
+
+  --color-scrollbar-thumb: rgba(255, 255, 255, 0.18);
+  --color-scrollbar-track: rgba(255, 255, 255, 0.06);
+}

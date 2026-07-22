@@ -1,0 +1,80 @@
+<h2>当前主题系统现状分析</h2>
+<p class="subtitle">密码管家项目的主题实现概览</p>
+
+<div class="section">
+  <h3>当前架构</h3>
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>工作现状</h4>
+      <ul>
+        <li>三态切换：亮色 / 暗黑 / 跟随系统</li>
+        <li><code>data-theme</code> 属性控制，通过 localStorage 持久化</li>
+        <li>Header 组件提供用户切换入口</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>核心问题</h4>
+      <ul>
+        <li>暗黑模式使用 <code>filter: invert(1) hue-rotate(180deg)</code> 全局翻转</li>
+        <li>零个 CSS Custom Properties</li>
+        <li>约 200+ 处硬编码颜色散布在 20+ 文件</li>
+        <li>MUI ThemeProvider 未启用，默认调色板</li>
+        <li>无 Tailwind dark: 变体</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>暗黑模式的 filter 翻转效果对比</h3>
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">亮色模式（正常）</div>
+      <div class="mockup-body" style="background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 20px; border-radius: 8px;">
+        <div style="background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <div style="color: #2c3e50; font-weight: bold; margin-bottom: 4px;">账号卡片</div>
+          <div style="color: #666;">user@example.com</div>
+        </div>
+        <button style="background: #2196F3; color: white; padding: 8px 16px; border-radius: 4px; border: none;">操作按钮</button>
+      </div>
+    </div>
+    <div class="mockup">
+      <div class="mockup-header">暗黑模式（filter 翻转后）</div>
+      <div class="mockup-body" style="background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 20px; border-radius: 8px; filter: invert(1) hue-rotate(180deg);">
+        <div style="background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <div style="color: #2c3e50; font-weight: bold; margin-bottom: 4px;">账号卡片</div>
+          <div style="color: #666;">user@example.com</div>
+        </div>
+        <button style="background: #2196F3; color: white; padding: 8px 16px; border-radius: 4px; border: none;">操作按钮</button>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top: 12px; color: #e74c3c; font-size: 14px;">
+    ⚠ 蓝色按钮变成奇怪的橙/黄色调，色彩失真，不是真正的暗黑模式
+  </p>
+</div>
+
+<div class="section">
+  <h3>颜色分布</h3>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0;">
+    <div style="background: linear-gradient(135deg, #2196F3, #1976D2); color: white; padding: 16px; border-radius: 8px; text-align: center;">
+      <strong>主题蓝</strong><br><small>#2196F3 / #1976D2</small><br><small style="opacity:0.8">~50+ 处</small>
+    </div>
+    <div style="background: linear-gradient(135deg, #2c3e50, #34495e); color: white; padding: 16px; border-radius: 8px; text-align: center;">
+      <strong>文本深色</strong><br><small>#2c3e50 / #34495e</small><br><small style="opacity:0.8">~25+ 处</small>
+    </div>
+    <div style="background: #f5f5f5; color: #666; padding: 16px; border-radius: 8px; text-align: center; border: 1px solid #e0e0e0;">
+      <strong>灰色调</strong><br><small>#999, #666, #757575</small><br><small style="opacity:0.8">~20+ 处</small>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>分布位置</h3>
+  <div class="placeholder">
+    <strong>Less 文件</strong>：index.less, home.less, tree.less, account.less, search.less<br>
+    <strong>React 组件</strong>：20+ 个 .js 文件中的 inline style / sx prop<br>
+    <strong>Tailwind</strong>：少量 arbitrary values（如 text-[#2196F3]）<br>
+    <strong>MUI</strong>：theme.palette.grey[500] 仅 2 处，其余全为硬编码
+  </div>
+</div>

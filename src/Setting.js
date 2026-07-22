@@ -54,15 +54,15 @@ export default class Setting extends React.Component {
           flexDirection: 'column',
           gap: '25px',
           padding: '40px',
-          background: 'rgba(255, 255, 255, 0.9)',
+          background: 'var(--color-bg-card)',
           borderRadius: '16px',
-          boxShadow: '0 0 10px rgba(0,0,0,0.1), 0 0 20px rgba(0,0,0,0.05)',
+          boxShadow: 'var(--shadow-popup)',
           backdropFilter: 'blur(10px)',
           width: '360px'
         }}>
           <h2 style={{
             margin: 0,
-            color: '#2c3e50',
+            color: 'var(--color-text-primary)',
             fontSize: '24px',
             fontWeight: '500',
             textAlign: 'center'
@@ -98,7 +98,7 @@ export default class Setting extends React.Component {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: '12px',
-                backgroundColor: '#ffffff',
+                backgroundColor: 'var(--color-bg-input)',
                 '& input': {
                   padding: '12px 14px',
                   height: '1.4em',
@@ -138,7 +138,7 @@ export default class Setting extends React.Component {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: '12px',
-                backgroundColor: '#ffffff',
+                backgroundColor: 'var(--color-bg-input)',
                 '& input': {
                   padding: '12px 14px',
                   height: '1.4em',
@@ -162,10 +162,10 @@ export default class Setting extends React.Component {
                 padding: '12px',
                 fontSize: '16px',
                 textTransform: 'none',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                boxShadow: 'var(--shadow-card)',
+                background: 'linear-gradient(45deg, var(--color-primary) 30%, #21CBF3 90%)',
                 '&:hover': {
-                  background: 'linear-gradient(45deg, #1976D2 30%, #00BCD4 90%)'
+                  background: 'linear-gradient(45deg, var(--color-primary-hover) 30%, #00BCD4 90%)'
                 }
               }}
             >
@@ -185,7 +185,7 @@ export default class Setting extends React.Component {
             />
 
             <div style={{
-              color: '#666',
+              color: 'var(--color-text-secondary)',
               fontSize: '13px',
               textAlign: 'center',
               marginTop: '5px'

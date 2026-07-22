@@ -2,11 +2,11 @@
   display: flex;
   height: 100%;
   width: 100%;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: var(--color-bg-card);
 
   .search-list {
     width: 55%;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 1px solid var(--color-divider);
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
@@ -18,16 +18,16 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: var(--color-scrollbar-thumb);
       border-radius: 3px;
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: var(--color-scrollbar-thumb);
       }
     }
 
     &::-webkit-scrollbar-track {
-      background-color: transparent;
+      background-color: var(--color-scrollbar-track);
     }
 
     table {
@@ -41,34 +41,34 @@
         transition: all 0.2s ease;
 
         &:hover {
-          background-color: rgba(33, 150, 243, 0.05);
+          background-color: var(--color-primary-light2);
         }
       }
 
       td {
         padding: 8px 10px;
         word-break: break-all;
-        color: #2c3e50;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        color: var(--color-text-primary);
+        border-bottom: 1px solid var(--color-border-light);
       }
 
       thead {
         th {
-          background-color: rgba(255, 255, 255, 0.9);
+          background-color: var(--color-bg-card);
           position: sticky;
           top: 0;
           padding: 8px 10px;
           font-size: 12px;
-          color: #2c3e50;
+          color: var(--color-text-primary);
           font-weight: 500;
           text-align: left;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+          border-bottom: 1px solid var(--color-border-light);
         }
       }
     }
 
     .search-selected {
-      background-color: rgba(33, 150, 243, 0.1);
+      background-color: var(--color-primary-light);
     }
   }
 
@@ -84,10 +84,10 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  color: #909399;
+  color: var(--color-text-secondary);
   font-size: 14px;
   font-weight: 400;
-  background-color: #fff;
+  background-color: var(--color-bg-card);
 
   &::before {
     content: '🔍';
@@ -102,19 +102,19 @@
 
   th {
     padding: 12px 16px;
-    background-color: #f5f7fa;
-    color: #606266;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-secondary);
     font-weight: 500;
     font-size: 14px;
     text-align: left;
-    border-bottom: 1px solid #ebeef5;
+    border-bottom: 1px solid var(--color-border);
   }
 
   td {
     padding: 12px 16px;
     font-size: 14px;
-    color: #606266;
-    border-bottom: 1px solid #ebeef5;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .search-table-row {
@@ -122,12 +122,12 @@
     cursor: pointer;
 
     &:hover {
-      background-color: #f5f7fa;
+      background-color: var(--color-bg-primary);
     }
 
     &.search-selected {
-      background-color: #e6f3ff;
-      color: #409eff;
+      background-color: var(--color-primary-light);
+      color: var(--color-primary);
     }
   }
 

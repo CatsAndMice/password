@@ -65,7 +65,7 @@ class AccountItem extends React.Component {
                 style={{
                   fontSize: '14px',
                   fontWeight: 500,
-                  color: '#2c3e50',
+                  color: 'var(--color-text-primary)',
                   marginBottom: '4px',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -77,7 +77,7 @@ class AccountItem extends React.Component {
                 id={data.account._id + '_username'}
                 style={{
                   fontSize: '13px',
-                  color: 'rgba(44, 62, 80, 0.7)',
+                  color: 'var(--color-text-secondary)',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap'

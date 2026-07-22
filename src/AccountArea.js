@@ -198,7 +198,7 @@ export default class AccountArea extends React.Component {
             >
               <DialogTitle sx={{
                 fontSize: '16px',
-                color: '#2c3e50',
+                color: 'var(--color-text-primary)',
                 padding: '16px 24px',
                 fontWeight: 500,
                 // borderBottom: '1px solid rgba(0, 0, 0, 0.05)'

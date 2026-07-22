@@ -55,7 +55,7 @@ const LazyAvatar = ({ src, alt }) => {
                     onError={handleError}
                     onLoad={handleLoad}
                 >
-                    <LinkIcon sx={{ fontSize: 18, color: 'rgba(44, 62, 80, 0.5)' }} />
+                    <LinkIcon sx={{ fontSize: 18, color: 'var(--color-text-secondary)' }} />
                 </Avatar>
             )
             }

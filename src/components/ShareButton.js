@@ -24,24 +24,24 @@ const ShareButton = ({ onClick }) => (
         bottom: '16px',
         width: '32px',
         height: '32px',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backgroundColor: 'var(--color-bg-card)',
         backdropFilter: 'blur(8px)',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-        boxShadow: '0 0 10px rgba(0,0,0,0.1), 0 0 20px rgba(0,0,0,0.05)',
+        boxShadow: 'var(--shadow-popup)',
         '&:hover': {
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
+          backgroundColor: 'var(--color-bg-card)',
+          boxShadow: 'var(--shadow-popup)',
         },
         '&:active': {
           transform: 'scale(0.96)',
-          boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+          boxShadow: '0 1px 4px var(--color-divider)',
         },
         zIndex: 1000,
       }}
     >
       <ShareOutlinedIcon sx={{
         fontSize: 16,
-        color: 'rgba(0, 0, 0, 1)'
+        color: 'var(--color-text-primary)'
       }} />
     </IconButton>
   </Tooltip>

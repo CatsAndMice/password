@@ -2,14 +2,14 @@
   display: flex;
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: var(--color-bg-card);
   box-sizing: border-box;
 
   &>div {
     &:first-child {
       width: 40%;
       height: 100%;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      border-right: 1px solid var(--color-divider);
       box-sizing: border-box;
       position: relative;
     }
@@ -40,16 +40,16 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: var(--color-scrollbar-thumb);
       border-radius: 3px;
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: var(--color-scrollbar-thumb);
       }
     }
 
     &::-webkit-scrollbar-track {
-      background-color: transparent;
+      background-color: var(--color-scrollbar-track);
     }
 
   }
@@ -59,8 +59,8 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    background-color: rgba(255, 255, 255, 1);
+    border-top: 1px solid var(--color-border-light);
+    background-color: var(--color-bg-card);
     border-radius: 0 0 8px 8px;
     padding: 0 8px;
 
@@ -74,20 +74,20 @@
       transition: all 0.2s ease;
 
       &:hover {
-        background-color: rgba(33, 150, 243, 0.08);
+        background-color: var(--color-primary-light2);
       }
 
       .MuiIconButton-root {
-        color: #2196F3;
+        color: var(--color-primary);
         transition: all 0.2s ease;
 
         &:hover {
-          color: #1976D2;
+          color: var(--color-primary-hover);
           transform: scale(1.1);
         }
 
         &.Mui-disabled {
-          color: rgba(0, 0, 0, 0.26);
+          color: var(--color-text-disabled);
 
           &:hover {
             transform: none;
@@ -97,14 +97,14 @@
 
       &:last-child {
         .MuiIconButton-root {
-          color: #f44336;
+          color: var(--color-error);
 
           &:hover {
-            color: #d32f2f;
+            color: var(--color-error-hover);
           }
 
           &.Mui-disabled {
-            color: rgba(0, 0, 0, 0.26);
+            color: var(--color-text-disabled);
           }
         }
       }
@@ -123,7 +123,7 @@
   margin-bottom: 4px;
 
   .account-item-body {
-    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--color-bg-card);
     cursor: pointer;
     padding: 4px 8px;
     box-sizing: border-box;
@@ -135,21 +135,21 @@
     justify-content: center;
     border-radius: 8px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-card);
     font-size: 14px;
     font-weight: 500;
-    color: #2c3e50;
+    color: var(--color-text-primary);
     letter-spacing: 0.2px;
     line-height: 1.5;
 
     &:hover {
-      background-color: rgba(33, 150, 243, 0.06);
+      background-color: var(--color-primary-light2);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(33, 150, 243, 0.06);
     }
 
     .account-item-username {
-      color: rgba(44, 62, 80, 0.75);
+      color: var(--color-text-secondary);
       font-size: 12px;
       font-weight: 500;
       letter-spacing: 0.3px;
@@ -163,18 +163,17 @@
   .account-item-sort {
     height: 3px;
     width: 100%;
-    background: linear-gradient(45deg, #2196F3 0%, #64B5F6 100%);
+    background: linear-gradient(45deg, var(--color-primary) 0%, #64B5F6 100%);
     border-radius: 1.5px;
     opacity: 0;
     transition: opacity 0.2s ease;
   }
 
   .account-item-selected {
-    background-color: rgba(33, 150, 243, 0.15);
-    // box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+    background-color: var(--color-primary-light);
 
     &:hover {
-      background-color: rgba(33, 150, 243, 0.1);
+      background-color: var(--color-primary-light);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(33, 150, 243, 0.12);
     }
@@ -187,19 +186,18 @@
 
 .account-form {
   width: 100%;
-  height:100%; // 非搜索状态下减去头部高度
+  height:100%;
   padding: 16px;
   box-sizing: border-box;
   overflow-y: auto;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: var(--color-bg-card);
 
   &::-webkit-scrollbar {
     display: none;
-    /* Chrome, Safari and Opera */
   }
 
   &.search-mode {
-    height: 100%; // 搜索状态下使用全高
+    height: 100%;
   }
 
   &>div {
@@ -212,12 +210,12 @@
   }
 
   .account-form-prev-icon {
-    color: #2196F3;
+    color: var(--color-primary);
     transition: color 0.2s ease;
 
     &:hover {
-      color: #1976D2;
-      fill: #1976D2 !important;
+      color: var(--color-primary-hover);
+      fill: var(--color-primary-hover) !important;
     }
   }
 

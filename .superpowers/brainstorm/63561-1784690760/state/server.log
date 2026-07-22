@@ -1,0 +1,6 @@
+{"type":"server-started","port":62546,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:62546","screen_dir":"/Users/lihai/Desktop/工作/项目/password/.superpowers/brainstorm/63561-1784690760/content","state_dir":"/Users/lihai/Desktop/工作/项目/password/.superpowers/brainstorm/63561-1784690760/state"}
+{"type":"screen-added","file":"/Users/lihai/Desktop/工作/项目/password/.superpowers/brainstorm/63561-1784690760/content/current-state.html"}
+{"type":"screen-added","file":"/Users/lihai/Desktop/工作/项目/password/.superpowers/brainstorm/63561-1784690760/content/dark-style-comparison.html"}
+{"source":"user-event","type":"click","text":"账号卡片标题\n          user@example.com\n        \n        操作按钮\n        \n          \n            分组\n            标签\n          \n        \n      \n      \n        C) 偏蓝暗黑 ⭐ 推荐\n        背景 #0d1117 · 卡片 #161b22 · 文本 #c9d1d9","choice":"c","id":null,"timestamp":1784691006264}
+{"type":"screen-added","file":"/Users/lihai/Desktop/工作/项目/password/.superpowers/brainstorm/63561-1784690760/content/waiting.html"}
+{"type":"server-stopped","reason":"idle timeout"}

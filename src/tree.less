@@ -7,9 +7,9 @@
     height:100%;
     .tree-body {
         flex: 1;
-        background-color: rgba(255, 255, 255, 1);
+        background-color: var(--color-bg-card);
         user-select: none;
-        color: #2c3e50;
+        color: var(--color-text-primary);
         font-size: 12px;
         overflow-x: hidden;
         overflow-y: auto;
@@ -21,8 +21,8 @@
         display: flex;
         align-items: center;
         justify-content: space-around;
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
-        background-color: rgba(255, 255, 255, 1);
+        border-top: 1px solid var(--color-border-light);
+        background-color: var(--color-bg-card);
         border-radius: 0 0 8px 8px;
         padding: 0 8px;
         
@@ -36,21 +36,21 @@
             transition: all 0.2s ease;
             
             &:hover {
-                background-color: rgba(33, 150, 243, 0.08);
+                background-color: var(--color-primary-light2);
             }
         }
         
         .tree-footer-button {
-            color: #2196F3;
+            color: var(--color-primary);
             transition: all 0.2s ease;
             
             &:hover {
-                color: #1976D2;
+                color: var(--color-primary-hover);
                 transform: scale(1.1);
             }
             
             &.disabled {
-                color: rgba(0, 0, 0, 0.26);
+                color: var(--color-text-disabled);
                 
                 &:hover {
                     transform: none;
@@ -90,7 +90,7 @@
         top: 0;
         left: 0;
         height: 100%;
-        background-color: rgba(255, 255, 255, 0.4);
+        background-color: var(--color-bg-card-hover);
         width: 100%;
         z-index: 2;
         overflow: hidden;
@@ -101,17 +101,17 @@
         transition: all 0.2s ease;
 
         &:hover {
-            background-color: rgba(33, 150, 243, 0.08);
+            background-color: var(--color-primary-light2);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
         }
     }
 
     .tree-node-selected {
-        background-color: rgba(33, 150, 243, 0.15);
+        background-color: var(--color-primary-light);
         box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
 
         &:hover {
-            background-color: rgba(33, 150, 243, 0.1);
+            background-color: var(--color-primary-light);
             box-shadow: 0 4px 12px rgba(33, 150, 243, 0.12);
         }
     }
@@ -126,13 +126,15 @@
             height: 100%;
             outline: none;
             box-sizing: border-box;
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--color-border);
             border-radius: 6px;
             padding: 0 8px;
+            color: var(--color-text-primary);
+            background-color: var(--color-bg-input);
             transition: all 0.2s ease;
 
             &:focus {
-                border-color: #2196F3;
+                border-color: var(--color-primary);
                 box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
             }
         }
@@ -142,7 +144,7 @@
         position: absolute;
         padding: 3px 6px;
         top: 0;
-        background-color: #2196F3;
+        background-color: var(--color-primary);
         border-radius: 6px;
         font-size: 12px;
         color: #ffffff;
@@ -160,7 +162,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: #2c3e50;
+        color: var(--color-text-primary);
         padding: 0 8px;
         font-weight: 400;
     }
@@ -170,8 +172,8 @@
 
         &>span {
             font-size: 12px;
-            background-color: rgba(33, 150, 243, 0.2);
-            color: #2c3e50;
+            background-color: var(--color-primary-light);
+            color: var(--color-text-primary);
             min-width: 18px;
             height: 18px;
             border-radius: 9px;
@@ -198,7 +200,7 @@
         transition: all 0.2s ease;
 
         &:hover {
-            background-color: rgba(33, 150, 243, 0.08);
+            background-color: var(--color-primary-light2);
         }
     }
 
@@ -209,7 +211,7 @@
         left: 50%;
         width: 6px;
         height: 6px;
-        border: 1.5px solid #2c3e50;
+        border: 1.5px solid var(--color-text-primary);
         border-left: 0;
         border-bottom: 0;
         transform: translate(-25%, -50%) rotate(45deg);
@@ -223,7 +225,7 @@
         left: 50%;
         width: 6px;
         height: 6px;
-        border: 1.5px solid #2c3e50;
+        border: 1.5px solid var(--color-text-primary);
         border-left: 0;
         border-top: 0;
         transform: translate(-50%, -75%) rotate(45deg);
