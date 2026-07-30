@@ -94,11 +94,11 @@ const Header = ({ onFavoriteClick, showFavorites, onBackupClick, handleOpenPassw
         <Toolbar variant="dense" sx={{ height: '50px', padding: '0 16px !important' }}>
           <Typography variant="h6" sx={{ flexGrow: 1, fontSize: '14px', display: 'flex', alignItems: 'center', gap: '16px', color: 'var(--color-text-secondary)', '& .stat-item': { display: 'flex', alignItems: 'center', gap: '4px' } }}>
             <div className="stat-item">
-              <FolderIcon className="text-gray-500" sx={{ fontSize: 16 }} />
+              <FolderIcon sx={{ fontSize: 16, color: 'var(--color-text-secondary)' }} />
               <span className="font-mono font-medium">全部分组：{groupCount}</span>
             </div>
             <div className="stat-item">
-              <KeyIcon className="text-gray-500" sx={{ fontSize: 16 }} />
+              <KeyIcon sx={{ fontSize: 16, color: 'var(--color-text-secondary)' }} />
               <span className="font-mono font-medium">全部账号：{accountCount}</span>
             </div>
           </Typography>

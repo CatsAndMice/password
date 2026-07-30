@@ -7,11 +7,11 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogActions from '@mui/material/DialogActions'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
-import { TreeSelect } from "@arco-design/web-react"
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import InputLabel from '@mui/material/InputLabel'
+import FormControl from '@mui/material/FormControl'
 
-/**
- * 批量删除确认弹窗
- */
 function BatchDeleteDialog({ open, count, onClose, onConfirm }) {
   return (
     <Dialog open={open} onClose={onClose}>
@@ -25,9 +25,15 @@ function BatchDeleteDialog({ open, count, onClose, onConfirm }) {
   )
 }
 
-/**
- * 批量移动账号弹窗，使用 TreeSelect 选择目标分组
- */
+const renderTreeOptions = (nodes, depth = 0) => {
+  return nodes.map(node => [
+    <MenuItem key={node._id} value={node._id} sx={{ pl: 2 + depth * 2 }}>
+      {node.name}
+    </MenuItem>,
+    node.childs ? renderTreeOptions(node.childs, depth + 1) : null
+  ])
+}
+
 function BatchMoveDialog({ open, groupTree, targetGroupId, onChangeGroup, onClose, onConfirm }) {
   return (
     <Dialog open={open} onClose={(event, reason) => { if (reason !== 'backdropClick') onClose() }} disableEscapeKeyDown>
@@ -39,11 +45,12 @@ function BatchMoveDialog({ open, groupTree, targetGroupId, onChangeGroup, onClos
       </DialogTitle>
       <DialogContent dividers>
         <DialogContentText sx={{ mb: 2 }}>选择要移动到的目标分组：</DialogContentText>
-        <div style={{ minWidth: '300px', maxHeight: '400px', overflow: 'auto' }}>
-          <TreeSelect treeData={groupTree} placeholder="请选择目标分组" value={targetGroupId}
-            onChange={onChangeGroup} style={{ width: '100%' }}
-            fieldNames={{ key: '_id', title: 'name', children: 'childs' }} />
-        </div>
+        <FormControl fullWidth size="small">
+          <InputLabel>目标分组</InputLabel>
+          <Select value={targetGroupId || ''} label="目标分组" onChange={e => onChangeGroup(e.target.value)}>
+            {renderTreeOptions(groupTree)}
+          </Select>
+        </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>取消</Button>

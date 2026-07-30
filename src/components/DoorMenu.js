@@ -20,7 +20,7 @@ const DoorMenu = ({ anchorEl, open, onClose, canRecover, onResetClick, onRecover
         borderRadius: '12px', minWidth: 180,
         '&:before': {
           content: '""', display: 'block', position: 'absolute', top: 0, right: 14,
-          width: 10, height: 10, bgcolor: 'background.paper', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
+          width: 10, height: 10, bgcolor: 'var(--color-bg-card)', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
         },
       }
     }}

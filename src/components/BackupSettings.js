@@ -87,7 +87,7 @@ const BackupSettings = ({ onClose, showMessage }) => {
 
     return (
         <Box sx={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Box sx={{ position: 'sticky', top: 0, backgroundColor: 'background.paper', zIndex: 10, borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{ position: 'sticky', top: 0, backgroundColor: 'var(--color-bg-card)', zIndex: 10, borderBottom: '1px solid var(--color-divider)' }}>>
                 <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}
                     sx={{ minHeight: '40px', '& .MuiTab-root': { minHeight: '40px', padding: '6px 16px', alignItems: 'flex-start', textAlign: 'left', textTransform: 'none' } }}>
                     <Tab label="本地备份" />
