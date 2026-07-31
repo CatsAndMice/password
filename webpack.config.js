@@ -21,7 +21,7 @@ module.exports = {
     }
   },
   plugins: [
-    new CopyWebpackPlugin({ patterns: [{ from: 'public', to: outputPath }] }),
+    new CopyWebpackPlugin({ patterns: [{ from: 'public', to: outputPath, globOptions: { ignore: ['**/*.map', '**/*.js.gz'] } }] }),
     // 仅在 .env 文件存在时加载环境变量
     ...(fs.existsSync('./.env') ? [new Dotenv({
       path: './.env', // 默认路径
