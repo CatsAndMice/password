@@ -151,15 +151,15 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
           </Select>
         </FormControl>
       </Box>
-      <TableContainer sx={{ flex: 1, overflow: 'auto' }}>
-        <Table stickyHeader size="small" sx={{ '& .MuiTableCell-head': { fontWeight: 'bold', whiteSpace: 'nowrap', zIndex: 1 } }}>
+      <TableContainer sx={{ flex: 1, overflow: 'auto', '&::-webkit-scrollbar': { width: '6px', height: '6px' }, '&::-webkit-scrollbar-thumb': { background: 'var(--color-scrollbar-thumb)', borderRadius: '3px' }, '&::-webkit-scrollbar-track': { background: 'transparent' } }}>
+        <Table stickyHeader size="small" sx={{ '& .MuiTableCell-head': { fontWeight: 'bold', whiteSpace: 'nowrap', zIndex: 1, backgroundColor: 'var(--color-bg-card-hover)' }, '& .MuiTableHead-root': { position: 'sticky', top: 0, zIndex: 10 }, '& .MuiTableCell-root': { borderBottom: 'none' } }}>
           <TableHead>
             <TableRow>
-              <TableCell padding="checkbox" sx={{ position: 'sticky', left: 0, zIndex: 2, backgroundColor: 'var(--color-bg-card-hover)' }}>
+              <TableCell padding="checkbox" >
                 <Checkbox indeterminate={someSelected} checked={allSelected} onChange={handleSelectAll} size="small" />
               </TableCell>
-              <TableCell sx={{ position: 'sticky', left: 48, zIndex: 2, backgroundColor: 'var(--color-bg-card-hover)', minWidth: 120 }}>分组名</TableCell>
-              <TableCell sx={{ position: 'sticky', left: 168, zIndex: 2, backgroundColor: 'var(--color-bg-card-hover)', minWidth: 150 }}>标题</TableCell>
+              <TableCell sx={{ minWidth: 120 }}>分组名</TableCell>
+              <TableCell sx={{ minWidth: 150 }}>标题</TableCell>
               <TableCell sx={{ minWidth: 150 }}>用户名</TableCell>
               <TableCell sx={{ minWidth: 200 }}>密码</TableCell>
               <TableCell sx={{ minWidth: 200 }}>链接</TableCell>
@@ -170,11 +170,11 @@ const BatchOperations = ({ onClose, showMessage, groupTree, keyIV, decryptAccoun
             {filteredList.map(row => (
               <TableRow key={row.id} hover selected={selectedIds.includes(row.id)} onClick={() => handleSelectRow(row.id)}
                 sx={{ cursor: 'pointer', '&.Mui-selected': { backgroundColor: 'var(--color-primary-light2) !important' } }}>
-                <TableCell padding="checkbox" sx={{ position: 'sticky', left: 0, zIndex: 1, backgroundColor: selectedIds.includes(row.id) ? 'var(--color-primary-light2)' : 'var(--color-bg-card)' }}>
+                <TableCell padding="checkbox" sx={{ whiteSpace: 'nowrap' }}>
                   <Checkbox checked={selectedIds.includes(row.id)} size="small" />
                 </TableCell>
-                <TableCell sx={{ position: 'sticky', left: 48, zIndex: 1, backgroundColor: selectedIds.includes(row.id) ? 'var(--color-primary-light2)' : 'var(--color-bg-card)', whiteSpace: 'nowrap' }}>{row.name}</TableCell>
-                <TableCell sx={{ position: 'sticky', left: 168, zIndex: 1, backgroundColor: selectedIds.includes(row.id) ? 'var(--color-primary-light2)' : 'var(--color-bg-card)', whiteSpace: 'nowrap' }}>{row.title}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.name}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.title}</TableCell>
                 <TableCell>{row.username}</TableCell>
                 <TableCell>{row.password}</TableCell>
                 <TableCell sx={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.link}</TableCell>
